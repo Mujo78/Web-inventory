@@ -5,5 +5,7 @@ router.get("/", (req, res) => {
     res.send("Gets")
 })
 
+router.get("/:id")
+
 
 module.exports = router
