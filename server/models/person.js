@@ -1,40 +1,36 @@
 const mongoose = require("mongoose")
 
 const personSchema = mongoose.Schema({
-    firstName: {
+    first_name: {
         type: String,
-        required: true
+        maxlength: 50
     },
-    lastName: {
+    last_name: {
         type: String,
-        required: true
+        maxlength: 50
     },
     phone_number:{
         type: String, 
-        required: true,
-        unique: true
+        unique: true,
+        maxlength: 12
     },
     address: {
         type: String,
-        required: true
+        maxlength: 100
     },
     email: {
         type: String,
-        required: true,
         unique: true
-    },
-    date_of_employment:{
-        type: Date,
-        required: true
     },
     cancellation_date:{
         type: Date,
         required: false
     }
 }, {
-    timestamps: true,
-    createdAt: 'date_of_employment',
-    updatedAt: false
+    timestamps: {
+        createdAt: 'date_of_employment',
+        updatedAt: true
+    }
 })
 
 

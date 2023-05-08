@@ -10,6 +10,8 @@ connectDB();
 app.use(express.json())
 
 app.use("/", require("./routes/role-routes"))
+app.use("/", require("./routes/person-routes"))
+app.use("/", require("./routes/user-routes"))
 
 app.use(errorHandler)
 

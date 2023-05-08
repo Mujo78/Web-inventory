@@ -3,13 +3,13 @@ const Person = require("./person");
 const Role = require("./role")
 
 const userSchema = mongoose.Schema({
-    userName:{
+    username:{
         type: String,
-        required: true
+        maxlength: 100
     },
     password: {
         type: String,
-        required: true
+        minlength: 5
     },
     person_id:{
         type: mongoose.Schema.Types.ObjectId,
@@ -18,7 +18,8 @@ const userSchema = mongoose.Schema({
     },
     role_id:{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Role'
+        ref: 'Role',
+        required: true
     }
 }, {
     timestamps: true
