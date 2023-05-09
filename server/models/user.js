@@ -14,7 +14,8 @@ const userSchema = mongoose.Schema({
     person_id:{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Person',
-        required: true
+        required: true,
+        unique: true
     },
     role_id:{
         type: mongoose.Schema.Types.ObjectId,

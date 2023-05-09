@@ -12,6 +12,8 @@ app.use(express.json())
 app.use("/", require("./routes/role-routes"))
 app.use("/", require("./routes/person-routes"))
 app.use("/", require("./routes/user-routes"))
+app.use("/", require("./routes/supplier-routes"))
+app.use("/", require("./routes/material-routes"))
 
 app.use(errorHandler)
 
