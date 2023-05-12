@@ -14,6 +14,9 @@ app.use("/", require("./routes/person-routes"))
 app.use("/", require("./routes/user-routes"))
 app.use("/", require("./routes/supplier-routes"))
 app.use("/", require("./routes/material-routes"))
+app.use("/", require("./routes/product-routes"))
+app.use("/", require("./routes/product-process-routes"))
+app.use("/", require("./routes/product-process-item-routes"))
 
 app.use(errorHandler)
 
