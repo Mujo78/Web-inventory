@@ -36,7 +36,7 @@ const registration = asyncHandler(async (req, res) => {
             phone_number: phone_number,
             address: address,
             email: first_name.toLowerCase() + "." + last_name.toLowerCase() + "@company.com",
-            cancellation_date: ""
+            cancellation_date: null
         })
         
         let password = first_name.charAt(0).toUpperCase() + first_name.slice(1) + "." + last_name.charAt(0).toUpperCase() + last_name.slice(1);
@@ -60,6 +60,31 @@ const registration = asyncHandler(async (req, res) => {
         return res.status(200).json(newUser)
 })
 
+const editProfile = asyncHandler( async(req, res) => {
+    const user = await User.findOne({_id: req.params.id})
+
+    const {
+        first_name,
+        last_name,
+        address,
+        phone_number
+    } = req.body;
+
+    const updates = {}
+    if(first_name !== null) updates.first_name = first_name
+    if(last_name !== null) updates.last_name = last_name
+    if(address !== null) updates.address = address
+    if(phone_number !== null) updates.phone_number = phone_number
+    if(first_name !== null && last_name !== null) updates.email = first_name.toLowerCase() + "." + last_name.toLowerCase() + "@company.com"
+
+    const person = await Person.findOneAndUpdate(
+                                {_id: user.person_id}, 
+                                updates, {new: true})
+    res.status(200).json(person)
+})
+
+
 module.exports = {
-    registration
+    registration,
+    editProfile
 }
