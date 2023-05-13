@@ -45,6 +45,8 @@ exports.addNewMaterial = [
     check("is_it_used")
         .notEmpty()
         .withMessage(POST_USED_MATERIAL)
+        .isBoolean()
+        .withMessage("Is it used must be boolean!")
         .bail(),
     check("supplier_id")
         .notEmpty()

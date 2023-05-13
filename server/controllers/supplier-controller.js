@@ -1,4 +1,5 @@
 const asyncHandler = require("express-async-handler")
+const {v4: uuidv4} = require("uuid")
 const { validationResult } = require("express-validator")
 const Supplier = require("../models/supplier")
 
@@ -10,7 +11,13 @@ const addSupplier = asyncHandler( async(req,res) => {
         res.status(400).json(errors)
     }
 
-    const { name } = req.body;
+    const { 
+        name,
+        pdv,
+        phone_number,
+        contact_person,
+        email
+    } = req.body;
     const supplier = await Supplier.findOne({name: name})
 
     if(supplier){
@@ -18,10 +25,68 @@ const addSupplier = asyncHandler( async(req,res) => {
         throw new Error("Supplier is already in database!")
     }
 
-    const newOne = await Supplier.create(req.body)
+    const newOne = await Supplier.create({
+        name: name,
+        uid: uuidv4(),
+        pdv: pdv,
+        phone_number: phone_number,
+        contact_person: contact_person,
+        email: email,
+        end_date: null
+    })
     res.status(200).json(`Successfully added new supplier: ${newOne.name}`)
+
+})
+
+const allSuppliers =  asyncHandler( async(req, res) => {
+    
+    const allSuppliers = await Supplier.find()
+    if(allSuppliers) return res.status(200).json(allSuppliers)
+    
+    res.status(400).json("There are no suppliers available!")
+})
+
+const supplierById =  asyncHandler( async(req, res) => {
+    
+    const supplier = await Supplier.findOne({_id: req.params.id})
+    if(supplier) return res.status(200).json(supplier)
+
+    res.status(400).json("There are no suppliers available!")
+})
+
+const editSupplier = asyncHandler( async(req, res) => {
+    
+    const {
+        name,
+        pdv,
+        phone_number,
+        contact_person,
+        email,
+        end_date
+    } = req.body;
+
+    const updates = {}
+
+    if(name) updates.name = name
+    if(pdv) updates.pdv = pdv
+    if(phone_number) updates.phone_number = phone_number
+    if(contact_person) updates.contact_person = contact_person
+    if(email) updates.email = email
+    if(end_date) updates.end_date = end_date
+
+    const supplier = await Supplier.findByIdAndUpdate({_id: req.params.id}, updates, {new: true})
+    
+    if(!supplier){
+        res.status(400) 
+        throw new Error("There was some error, try again later or report problem!")
+    }
+
+    return res.status(200).json(`${supplier.name} successfully updated!`)
 })
 
 module.exports = {
-    addSupplier
+    addSupplier,
+    allSuppliers,
+    supplierById,
+    editSupplier
 }

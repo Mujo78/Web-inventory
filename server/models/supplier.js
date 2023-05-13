@@ -6,7 +6,7 @@ const supplierSchema = mongoose.Schema({
         required: true
     },
     uid: {
-        type: Number,
+        type: String,
         required: true,
         unique: true
     },

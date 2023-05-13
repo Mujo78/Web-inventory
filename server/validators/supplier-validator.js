@@ -7,9 +7,7 @@ const {
     POST_PHONENUMBER_SUPPLIER,
     POST_PHONE_LETTER,
     POST_SUPPLIER_NAME,
-    POST_UID_SUPPLIER,
     POST_PDVNUMERIC_SUPPLIER,
-    POST_UIDNUMERIC_SUPPLIER,
     POST_EMAIL_CORRECT
 } = require("../constants/supplier-constants")
 
@@ -17,12 +15,6 @@ exports.addNewSupplier = [
     check("name")
         .notEmpty()
         .withMessage(POST_SUPPLIER_NAME)
-        .bail(),
-    check("uid")
-        .notEmpty()
-        .withMessage(POST_UID_SUPPLIER)
-        .isNumeric()
-        .withMessage(POST_UIDNUMERIC_SUPPLIER)
         .bail(),
     check("pdv")
         .notEmpty()

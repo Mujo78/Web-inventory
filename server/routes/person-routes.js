@@ -12,6 +12,6 @@ router.get("/", (req, res) => {
 
 router.get("/:id")
 router.post("/registration",createPersonValidator, validate, registration)
-router.post("/edit-profile/:id",authMiddleware,createPersonValidator, validate, editProfile)
+router.put("/edit-profile/:id",authMiddleware,createPersonValidator, validate, editProfile)
 
 module.exports = router
