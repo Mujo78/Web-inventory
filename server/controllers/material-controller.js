@@ -10,8 +10,6 @@ const addMaterial = asyncHandler( async(req, res) => {
         return res.status(400).json(errors)
     }
 
-    // is_it_used - depending on using in ppi
-
     const {
         name, supplier_id
     } = req.body

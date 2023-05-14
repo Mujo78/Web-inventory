@@ -33,9 +33,5 @@ exports.addNewProduct = [
         .withMessage(POST_PRODUCT_MARKUP)
         .isNumeric()
         .withMessage(POST_MARKUP_NUMERIC)
-        .bail(),
-    check("price")
-        .notEmpty()
-        .withMessage(POST_PRODUCT_PRICE)
         .bail()
 ]

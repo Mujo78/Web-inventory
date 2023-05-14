@@ -1,12 +1,16 @@
 const express = require("express")
 const validate = require("../middleware/validate")
 const Product_Process = require("../models/product-process")
-const { addProductProcess } = require("../controllers/product-process-controller")
-const { creatProductProcess } = require("../validators/product-process-validator")
+const { addProductProcess, getProcesses, getProcessById, editProcess } = require("../controllers/product-process-controller")
+const { createProductProcess, editProductProcess } = require("../validators/product-process-validator")
+const { authMiddleware } = require("../middleware/auth-middleware")
+
 
 const router = express.Router()
-
-router.post("/add-product-process", creatProductProcess, validate, addProductProcess)
+router.get("/product-processes", getProcesses)
+router.get("/product-process/:id", getProcessById)
+router.post("/add-product-process", createProductProcess, validate, addProductProcess)
+router.put("/edit-product-process/:id", editProductProcess, validate, editProcess)
 
 
 module.exports = router;

@@ -5,9 +5,9 @@ const { addNewMaterial } = require("../validators/material-validator")
 const { authMiddleware } = require("../middleware/auth-middleware")
 const router = express.Router()
 
-router.get("/materials",authMiddleware, getMaterials)
-router.get("/material/:id",authMiddleware, getMaterialById)
-router.post("/add-material",authMiddleware, addNewMaterial, validate, addMaterial)
+router.get("/materials", getMaterials)
+router.get("/material/:id", getMaterialById)
+router.post("/add-material", addNewMaterial, validate, addMaterial)
 router.put("/edit-material/:id",authMiddleware, addNewMaterial, validate, editMaterial)
 
 module.exports = router

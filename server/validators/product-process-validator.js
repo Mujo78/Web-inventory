@@ -8,7 +8,22 @@ const{
 } = require("../constants/product-process-constants")
 const Product_Process = require("../models/product-process")
 
-exports.creatProductProcess = [
+exports.createProductProcess = [
+    check("name")
+        .notEmpty()
+        .withMessage(POST_NAME_PP)
+        .isLength({min: 3})
+        .withMessage(POST_NAME_LENGTH)
+        .custom(async (n) =>{
+            const pp = await Product_Process.findOne({name: n})
+            if(pp){
+                return Promise.reject(PP_ALREADY_EXISTS(n)) 
+            }
+        })
+        .bail()
+]
+
+exports.editProductProcess = [
     check("name")
         .notEmpty()
         .withMessage(POST_NAME_PP)
