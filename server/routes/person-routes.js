@@ -6,12 +6,8 @@ const { authMiddleware } = require("../middleware/auth-middleware")
 
 const router = express.Router()
 
-router.get("/", (req, res) => {
-    res.send("Gets")
-})
-
 router.get("/:id")
 router.post("/registration",createPersonValidator, validate, registration)
-router.put("/edit-profile/:id",authMiddleware,createPersonValidator, validate, editProfile)
+router.put("/edit-profile/:id",createPersonValidator, validate, editProfile)
 
 module.exports = router

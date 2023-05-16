@@ -22,7 +22,7 @@ const login = asyncHandler(async (req, res) =>{
                             .populate("person_id")
                             .populate("role_id")
                             
-    console.log(user)
+
     if(user?.person_id?.cancellation_date === null){
         const isPasswordValid = await bcrypt.compare(password, user.password)
         if(isPasswordValid){
@@ -66,11 +66,9 @@ const changePassword = asyncHandler( async (req, res) => {
     if(isPasswordValid){
         if(!oldAndNew){
             if(newPassword === confirmPassword){
-                let hash = await bcrypt.hash(newPassword, 10)
-        
-                user.password = hash;
-        
-                await user.save()
+                let hash = await bcrypt.hash(newPassword, 10)        
+                await user.updateOne({$set: {password: hash}}, {new: true})
+
                 return res.status(200).json("Password successfully changed!")
             }
             res.status(400)
@@ -87,16 +85,9 @@ const changePassword = asyncHandler( async (req, res) => {
 
 const resignation = asyncHandler( async(req, res) => {
     const user = await User.findOne({_id: req.params.id})
-    const person = await Person.findOneAndUpdate(
-                                {_id: user.person_id}, 
-                                {cancellation_date: Date.now()}, 
-                                {new: true},
-                                (err) =>{
-                                    if(err){
-                                        return res.status(400).json(err)
-                                    }
-                                    return res.status(200).json()
-                                })
+    await Person.findOneAndUpdate({id: user.person_id}, {cancellation_date: Date.now()}, {new: true})
+    
+    return res.status(200).json()
 })
 
 module.exports = {

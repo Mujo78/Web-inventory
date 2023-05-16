@@ -2,6 +2,7 @@ const asyncHandler = require("express-async-handler")
 const {v4: uuidv4} = require("uuid")
 const { validationResult } = require("express-validator")
 const Supplier = require("../models/supplier")
+const Material = require("../models/material")
 
 const addSupplier = asyncHandler( async(req,res) => {
 
@@ -84,9 +85,24 @@ const editSupplier = asyncHandler( async(req, res) => {
     return res.status(200).json(`${supplier.name} successfully updated!`)
 })
 
+const supplierMaterials = asyncHandler( async (req, res) =>{
+    const supplier = await Supplier.findById(req.params.id)
+    
+    if(!supplier) {
+        res.status(400)
+        throw new Error("There was an error, please try again later!")
+    }
+
+    const supplierMaterials = await Material.find({supplier_id: supplier.id})
+    if(supplierMaterials.length > 0) return res.status(200).json(supplierMaterials)
+
+    res.status(400).json("There are no materials from this supplier!")
+})
+
 module.exports = {
     addSupplier,
     allSuppliers,
     supplierById,
-    editSupplier
+    editSupplier,
+    supplierMaterials
 }

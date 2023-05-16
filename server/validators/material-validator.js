@@ -10,7 +10,6 @@ const{
     POST_SUPPLIER_MATERIAL,
     POST_UNIT_LENGTH,
     POST_UNIT_MATERIAL,
-    POST_USED_MATERIAL
 } = require("../constants/material-constants")
 
 exports.addNewMaterial = [
@@ -41,12 +40,6 @@ exports.addNewMaterial = [
         .withMessage(POST_UNIT_MATERIAL)
         .isLength({max: 5})
         .withMessage(POST_UNIT_LENGTH)
-        .bail(),
-    check("is_it_used")
-        .notEmpty()
-        .withMessage(POST_USED_MATERIAL)
-        .isBoolean()
-        .withMessage("Is it used must be boolean!")
         .bail(),
     check("supplier_id")
         .notEmpty()

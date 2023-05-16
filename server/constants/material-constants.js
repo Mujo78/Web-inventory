@@ -7,7 +7,6 @@ const POST_PRICE_MATERIAL = "Price is required!"
 const POST_PRICE_NUMERIC = "Price must be numeric!"
 const POST_UNIT_MATERIAL = "Unit is required!"
 const POST_UNIT_LENGTH = "Unit length error! (max 5)"
-const POST_USED_MATERIAL = "Is it used is required!"
 const POST_SUPPLIER_MATERIAL = "Supplier is required!"
 
 
@@ -22,6 +21,5 @@ module.exports = {
     POST_UNIT_LENGTH,
     POST_UNIT_MATERIAL,
     POST_UNIT_MATERIAL,
-    POST_USED_MATERIAL,
     POST_SUPPLIER_MATERIAL
 }

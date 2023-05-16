@@ -6,7 +6,8 @@ const productProcessItemSchema = mongoose.Schema({
     material_id:{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Material",
-        required: true
+        required: true,
+        unique: false
     },
     product_process_id:{
         type: mongoose.Schema.Types.ObjectId,

@@ -11,7 +11,9 @@ const addMaterial = asyncHandler( async(req, res) => {
     }
 
     const {
-        name, supplier_id
+        name, supplier_id,
+        quantity, min_quantity,
+        price, unit_of_measure
     } = req.body
 
     const supplier = await Material.findOne({name: name, supplier_id: supplier_id})
@@ -20,7 +22,15 @@ const addMaterial = asyncHandler( async(req, res) => {
         throw new Error("That material from this supplier is already in database!")
     }
 
-    const newMaterial = await Material.create(req.body)
+    const newMaterial = await Material.create({
+        name: name,
+        supplier_id: supplier_id,
+        quantity: quantity,
+        min_quantity: min_quantity,
+        price: price,
+        unit_of_measure: unit_of_measure,
+        is_it_used: false
+    })
     res.status(200).json(newMaterial)
 
 })

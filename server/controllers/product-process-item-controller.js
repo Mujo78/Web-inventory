@@ -25,18 +25,17 @@ const addProcessItem = asyncHandler( async(req, res) => {
     }
 
     const material = await Material.findById(material_id)
-    let qnty = material.quantity;
-
+   
     if(material.quantity < quantity) {
         res.status(400)
         throw new Error(`In our stock there is only: ${material.quantity} ${material.name}!`)
     }
 
     material.quantity = material.quantity - quantity;
-    if(material.quantity < material.min_quantity) material.quantity += qnty;
+    if(material.quantity < material.min_quantity) material.quantity += 20;
 
     await Product_Process.findOneAndUpdate({_id: product_process_id}, {$inc: {price: material.price * quantity}}, {new: true})
-    await material.updateOne({$set: {quantity: material.quantity}}, {new: true})
+    await material.updateOne({$set: {quantity: material.quantity ,is_it_used: true}}, {new: true})
 
     const newItem = await Product_Process_Item.create({
         material_id: material_id,

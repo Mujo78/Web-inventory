@@ -29,12 +29,6 @@ exports.editProductProcess = [
         .withMessage(POST_NAME_PP)
         .isLength({min: 3})
         .withMessage(POST_NAME_LENGTH)
-        .custom(async (n) =>{
-            const pp = await Product_Process.findOne({name: n})
-            if(pp){
-                return Promise.reject(PP_ALREADY_EXISTS(n)) 
-            }
-        })
         .bail(),
     check("price")
         .notEmpty()

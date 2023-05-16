@@ -6,6 +6,10 @@ const productProcessSchema = mongoose.Schema({
         required: true,
         minlength: 3
     },
+    start_date: {
+        type: Date,
+        required: false
+    },
     end_date:{
         type: Date,
         required: false
@@ -16,7 +20,8 @@ const productProcessSchema = mongoose.Schema({
     }
 }, {
     timestamps: {
-        createdAt: 'start_date'
+        createdAt: false,
+        updatedAt: true
     }
 })
 

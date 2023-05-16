@@ -8,6 +8,6 @@ const router = express.Router()
 router.get("/materials", getMaterials)
 router.get("/material/:id", getMaterialById)
 router.post("/add-material", addNewMaterial, validate, addMaterial)
-router.put("/edit-material/:id",authMiddleware, addNewMaterial, validate, editMaterial)
+router.put("/edit-material/:id", addNewMaterial, validate, editMaterial)
 
 module.exports = router
