@@ -8,7 +8,7 @@ const { adminCheck } = require("../middleware/admin-check")
 
 
 router.post("/login",loginUserValidator,validate,login)
-router.post("/change-password",authMiddleware,changePassword)
+router.put("/change-password",authMiddleware,changePassword)
 router.post("/resignation/:id",authMiddleware, resignation)
 
 

@@ -80,8 +80,8 @@ const editProduct = asyncHandler( async(req, res) => {
         updates.price = Math.round((productToEdit.price * (1 + (mark_up / 100))) * 100) / 100
     }
 
-    await productToEdit.updateOne(updates, {new: true})
-    if(productToEdit) return res.status(200).json(`Product: ${productToEdit.name} successfully updateed!`)
+    const newOne =  await Product.findByIdAndUpdate(req.params.id, updates, {new: true})
+    if(newOne) return res.status(200).json(`Product: ${newOne.name} successfully updateed!`)
 
     res.status(400).json("There was an error, please try again later!")
 })

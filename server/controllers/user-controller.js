@@ -67,7 +67,7 @@ const changePassword = asyncHandler( async (req, res) => {
         if(!oldAndNew){
             if(newPassword === confirmPassword){
                 let hash = await bcrypt.hash(newPassword, 10)        
-                await user.updateOne({$set: {password: hash}}, {new: true})
+                await User.findByIdAndUpdate(user.id, {$set: {password: hash}}, {new: true})
 
                 return res.status(200).json("Password successfully changed!")
             }

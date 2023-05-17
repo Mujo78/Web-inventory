@@ -16,18 +16,20 @@ const addMaterial = asyncHandler( async(req, res) => {
         price, unit_of_measure
     } = req.body
 
-    const supplier = await Material.findOne({name: name, supplier_id: supplier_id})
-    if(supplier){
+    const supplierWithMaterial = await Material.findOne({name: name, supplier_id: supplier_id})
+    if(supplierWithMaterial){
         res.status(400)
         throw new Error("That material from this supplier is already in database!")
     }
+
+    const supplier = await Supplier.findById(supplier_id)
 
     const newMaterial = await Material.create({
         name: name,
         supplier_id: supplier_id,
         quantity: quantity,
         min_quantity: min_quantity,
-        price: price,
+        price: Math.round((price * (1 + (supplier.pdv / 100))) * 100) / 100,
         unit_of_measure: unit_of_measure,
         is_it_used: false
     })
@@ -52,33 +54,44 @@ const getMaterialById = asyncHandler (async (req, res) => {
 })
 
 const editMaterial = asyncHandler( async (req, res) => {
-    
+    const errors = validationResult(req);
+
+    if(!errors.isEmpty()){
+        res.status(400).json(errors)
+    }
     const {
         name,
         quantity,
         min_quantity,
         price,
         unit_of_measure,
-        is_it_used,
         supplier_id
     } = req.body;
 
+    const materialToUpdate = await Material.findById(req.params.id)
+    const supplier = await Supplier.findById(supplier_id)
+    
     const updates = {}
-    if(name) updates.name = name
-    if(quantity) updates.quantity = quantity
-    if(min_quantity) updates.min_quantity = min_quantity
-    if(price) updates.price = price
-    if(unit_of_measure) updates.unit_of_measure = unit_of_measure
-    if(is_it_used) updates.is_it_used = is_it_used
-    if(supplier_id) updates.supplier_id = supplier_id
-
-    const material = await Material.findByIdAndUpdate({_id: req.params.id}, updates, {new: true})
-    if(!material){
-        res.status(400)
-        throw new Error ("There was some error, please try again later!")
+    if(name !== materialToUpdate.name) updates.name = name
+    if(quantity !== materialToUpdate.quantity) updates.quantity = quantity
+    if(min_quantity !== materialToUpdate.min_quantity) updates.min_quantity = min_quantity
+    if(price !== materialToUpdate.price) {
+        updates.price =Math.round((price  * (1 + (supplier.pdv / 100))) * 100) / 100
+    }
+    if(unit_of_measure !== materialToUpdate.unit_of_measure) updates.unit_of_measure = unit_of_measure
+    if(supplier_id !== materialToUpdate.supplier_id) {
+        const oldSupplier = await Supplier.findById(materialToUpdate.supplier_id)
+        const priceWithoutPdv = Math.round((materialToUpdate.price / (1 + (oldSupplier.pdv / 100))) * 100) / 100
+        const pr = price !== materialToUpdate.price ? price : priceWithoutPdv
+        updates.price = Math.round((pr  * (1 + (supplier.pdv / 100))) * 100) / 100,
+        updates.supplier_id = supplier_id
     }
 
-    res.status(200).json(material)
+    
+    const newOne = await Material.findByIdAndUpdate(req.params.id, updates, {new: true})
+    if(newOne) return res.status(200).json(`Product: ${newOne.name} is successfully updated!`)
+
+    res.status(400).json("There was an error, please try again later!")
 })
 
 module.exports = {
