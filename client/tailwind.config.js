@@ -16,27 +16,27 @@ module.exports = {
         'Rubik': ['Rubik', 'sans-serif']
       },
       animation: {
-        'slide-left': 'slide-left 1.5s  ease-out forwards',
-        'slide-right': 'slide-right 1.5s ease-out forwards',
-        'slide-back-left': 'slide-back-left 1.5s ease-out forwards',
-        'slide-back-right': 'slide-back-right 1.5s ease-out forwards',
+        'slide-left': 'slide-left 2s  ease-out forwards',
+        'slide-right': 'slide-right 3s ease-out forwards',
+        'slide-back-left': 'slide-back-left 2s ease-out forwards',
+        'slide-back-right': 'slide-back-right 3s ease-out forwards',
       },
       keyframes: {
         'slide-left': {
-          '0%': { transform: 'translateX(0)' },
-          '100%': { transform: 'translateX(-300%)' },
+          '0%': { transform: 'translateX(0)'},
+          '100%': { transform: 'translateX(-300%)'},
         },
         'slide-right': {
-          '0%': { transform: 'translateX(0%)' },
-          '100%': { transform: 'translateX(33%)' },
+          '0%': { transform: 'translateX(0%)', opacity: 0 },
+          '100%': { transform: 'translateX(33%)', opacity:3 },
         },
         'slide-back-left': {
           '0%': { transform: 'translateX(-300%)' },
           '100%': { transform: 'translateX(0)' },
         },
         'slide-back-right': {
-          '0%': { transform: 'translateX(33%)' },
-          '100%': { transform: 'translateX(0)' },
+          '0%': { transform: 'translateX(33%)', opacity: 0 },
+          '100%': { transform: 'translateX(0)', opacity: 3 },
         },
       },
     },

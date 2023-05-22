@@ -35,7 +35,7 @@ const ForgetPasswordForm = () => {
 
 
   return (
-    <div className='w-2/4 mx-auto'>
+    <>
     <h1 className='text-24 font-Rubik text-6xl pb-7 text-center font-bold'>Forgot password</h1>
     <Formik
         initialValues={initialValues}
@@ -81,7 +81,7 @@ const ForgetPasswordForm = () => {
                 <Button gradientMonochrome='success' className=' outline-none' type="submit">Submit</Button>
             </Form>
     </Formik>
-    </div>
+    </>
   )
 }
 
