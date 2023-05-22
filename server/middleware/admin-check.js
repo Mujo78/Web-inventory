@@ -2,7 +2,7 @@ const asyncHandler = require("express-async-handler")
 const {verify} = require("jsonwebtoken")
 
 exports.adminCheck = asyncHandler(async(req, res, next) => {
-    const token = req.header("accessToken")
+    const token = req.headers.authorization?.startsWith("Bearer")
 
     if(!token) return res.status(401).json()
 
