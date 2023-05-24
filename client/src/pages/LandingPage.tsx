@@ -30,7 +30,7 @@ const LandingPage : React.FC = () => {
     }else{
       navigate("/")
     }
-  })
+  }, [user, navigate])
 
   const [forgotPass, setForgotPass] = useState<boolean>(false)
     console.log(forgotPass)
