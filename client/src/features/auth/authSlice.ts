@@ -4,10 +4,11 @@ import { RootState } from "../../app/store"
 
 
 export interface AuthState {
-    accessUser: string,
+    accessUser: string | null,
     isError: boolean,
     isSuccess: boolean,
-    isLoading: boolean
+    isLoading: boolean,
+    message: string
 }
 
 export interface LoginUser {
@@ -18,10 +19,11 @@ export interface LoginUser {
 const user = localStorage.getItem('accessUser')
 
 const initialState: AuthState = {
-    accessUser: user ? user : "",
+    accessUser: user ? user : null,
     isError: false,
     isSuccess: false,
-    isLoading: false
+    isLoading: false,
+    message: ""
 }
 
 export const login = createAsyncThunk("/auth/login", async(loginData: LoginUser, thunkAPI) => {
@@ -33,6 +35,12 @@ export const login = createAsyncThunk("/auth/login", async(loginData: LoginUser,
         return thunkAPI.rejectWithValue(message)
     }
 })
+
+export const logout = createAsyncThunk("auth/logout",
+    async() => {
+        await authServices.logout()
+    }
+)
 
 export const authSlice = createSlice({
     name: "auth",
@@ -47,20 +55,21 @@ export const authSlice = createSlice({
     extraReducers(builder) {
         builder
             .addCase(login.pending, (state) => {
-                state.isError = false;
                 state.isLoading = true;
             })
             .addCase(login.fulfilled, (state, action) => {
                 state.isError = false;
                 state.isSuccess = true;
-                state.isLoading = false;
                 state.accessUser = action.payload
             })
-            .addCase(login.rejected, (state) =>{
+            .addCase(login.rejected, (state, action) =>{
                 state.isError = true;
                 state.isLoading = false;
-                state.isSuccess = false;
-                state.accessUser = ""
+                state.accessUser = null;
+                state.message = action.payload as string;
+            })
+            .addCase(logout.fulfilled, (state) => {
+                state.accessUser = null
             })
     },
 })

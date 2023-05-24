@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux'
 import { useAppDispatch } from '../app/hooks'
 import { authUser, login, reset } from '../features/auth/authSlice'
 import { classNm } from '../pages/LandingPage'
+import { useNavigate } from 'react-router-dom'
 
 type User = {
     username: string,
@@ -15,25 +16,36 @@ type User = {
 
 const LoginForm = () => {
 
+    const navigate = useNavigate()
+
     const initialValues: User = {
         username: "",
         password:""
     }
     const dispatch = useAppDispatch();
-    const {accessUser, isError, isLoading, isSuccess} = useSelector(authUser)
+    const {accessUser, isError, isLoading, message, isSuccess} = useSelector(authUser)
     
 
     useEffect(() =>{
+
+        if(accessUser || isSuccess){
+            navigate("/dashboard")
+        }else{
+            navigate("/")
+        }
+
         if(!isError){
             dispatch(reset())
         }
-    }, [accessUser, isError, isSuccess, dispatch])
+
+    }, [accessUser, isError, isSuccess, dispatch, navigate])
 
 
     const handleSubmit = ( values: User) => {
        
         dispatch(login(values))
     }
+
 
 
   return (
@@ -78,7 +90,7 @@ const LoginForm = () => {
                         <ErrorMessage name='password' component="span" className='text-red-600 text-sm' />
                 </div>
                 <div>
-                {isError && <span className='text-red-600'>Username or password is incorrect!</span>}
+                {isError && <span className='text-red-600'>{message}</span>}
                 </div>
                 <Button gradientMonochrome='success' className=' outline-none' type="submit">Submit</Button>
             </Form>

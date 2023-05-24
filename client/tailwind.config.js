@@ -9,9 +9,6 @@ module.exports = {
       container: {
         center: true
       },
-      outlineWidth: {
-        "nones" : "0px"
-      },
       fontFamily:{
         'Rubik': ['Rubik', 'sans-serif']
       },

@@ -1,9 +1,10 @@
-import { useState} from 'react'
+import { useEffect, useState} from 'react'
 
 import LoginForm from '../components/LoginForm'
 import InfoLogin from '../components/InfoLogin'
 import ForgetPasswordForm from '../components/ForgetPasswordForm'
 import InfoForgot from '../components/InfoForgot'
+import { useNavigate } from 'react-router-dom'
 
 type User = {
     username: string,
@@ -19,6 +20,17 @@ export const classNm = 'w-full border-x-0 border-t-0 focus:ring-0 focus:border-g
 export const animationLeftClass = "transition-transform duration-300 ease-out transform translate-x-0 sm:translate-x-full"
 
 const LandingPage : React.FC = () => {
+
+  const user = localStorage.getItem("user")
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if(user){
+      navigate("/dashboard")
+    }else{
+      navigate("/")
+    }
+  })
 
   const [forgotPass, setForgotPass] = useState<boolean>(false)
     console.log(forgotPass)
