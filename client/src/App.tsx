@@ -1,28 +1,31 @@
-import React, { useEffect } from 'react';
 import './App.css';
 import LandingPage from './pages/LandingPage';
-import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements, useNavigate } from 'react-router-dom';
-import LoginForm from './components/LoginForm';
-import ForgetPasswordForm from './components/ForgetPasswordForm';
+import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from 'react-router-dom';
 import Layout from './components/Layout';
 import Dashboard from './pages/Dashboard';
 import ErrorPage from './pages/ErrorPage';
 import UserReq from './helpers/UserReq';
-import PageOne from './pages/pageOne';
-import PageTwo from './pages/pageTwo';
 import HomeLayout from './components/HomeLayout';
+import Products from './pages/Products';
+import Materials from './pages/Materials';
+import ProductProcess from './pages/ProductProcess';
+import Suppliers from './pages/Suppliers';
+import Employee from './pages/Employee';
+import Settings from './pages/Settings';
 
 
 const router = createBrowserRouter(createRoutesFromElements(
   
   <Route path='/' element={<Layout />}>
     <Route index element={<LandingPage />} />
-    <Route element={<UserReq />}>
-      <Route path='/' element={<HomeLayout />}>
+      <Route path='/' element={<HomeLayout />} loader={async () => await UserReq()}>
         <Route path='dashboard' element={<Dashboard />} />
-        <Route path='option' element={<PageOne />} />
-        <Route path='options' element={<PageTwo />} />
-      </Route>
+        <Route path='products' element={<Products />} />
+        <Route path='materials' element={<Materials />} />
+        <Route path='product-process' element={<ProductProcess />} />
+        <Route path='suppliers' element={<Suppliers />} />
+        <Route path='settings' element={<Settings />} />
+        <Route path='employee' element={<Employee />} />
     </Route>
     <Route path='*' element={<ErrorPage />} />
   </Route>

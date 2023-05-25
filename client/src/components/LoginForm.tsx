@@ -84,7 +84,7 @@ const LoginForm = () => {
                         id="password"
                         type="password"
                         name='password'
-                        className={`${classNm} ${ErrorMessage.displayName === 'password' && `border-red-600`}`}
+                        className={classNm}
                         placeholder='********'
                         />
                         <ErrorMessage name='password' component="span" className='text-red-600 text-sm' />

@@ -16,7 +16,7 @@ type Props = {
     setForgotPass: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export const classNm = 'w-full border-x-0 border-t-0 focus:ring-0 focus:border-green-500'
+export const classNm = 'w-full border-0 border-b focus:ring-0 focus:border-green-500'
 export const animationLeftClass = "transition-transform duration-300 ease-out transform translate-x-0 sm:translate-x-full"
 
 const LandingPage : React.FC = () => {

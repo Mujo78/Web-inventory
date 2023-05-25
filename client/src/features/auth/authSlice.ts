@@ -4,7 +4,7 @@ import { RootState } from "../../app/store"
 
 
 export interface AuthState {
-    accessUser: string | null,
+    accessUser: any,
     isError: boolean,
     isSuccess: boolean,
     isLoading: boolean,
@@ -16,10 +16,11 @@ export interface LoginUser {
     password: string
 }
 
-const user = localStorage.getItem('accessUser')
+const user = localStorage.getItem('user')
+const storedObject = user !== null ? JSON.parse(user) : null
 
 const initialState: AuthState = {
-    accessUser: user ? user : null,
+    accessUser: storedObject,
     isError: false,
     isSuccess: false,
     isLoading: false,
