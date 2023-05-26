@@ -16,8 +16,8 @@ const Layout: React.FC = () => {
   }, [user, navigate])
 
   return (
-    <div className='flex  px-0 py-0'>
-      <main>
+    <div className='flex w-full'>
+      <main className='w-full'>
         <Outlet />
       </main>
     </div>
