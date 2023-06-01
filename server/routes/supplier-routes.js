@@ -9,9 +9,9 @@ const Supplier = require("../models/supplier")
 const router = express.Router()
 
 router.get("/suppliers", allSuppliers)
-router.get("/supplier/:id",authMiddleware, supplierById)
+router.get("/supplier/:id", supplierById)
 router.get("/supplier-material/:id", supplierMaterials)
-router.post("/supplier-add",authMiddleware, addNewSupplier, validate, addSupplier)
-router.put("/edit-supplier/:id", addNewSupplier, validate, editSupplier)
+router.post("/supplier-add", addNewSupplier, addSupplier)
+router.put("/edit-supplier/:id", addNewSupplier, editSupplier)
 
 module.exports = router

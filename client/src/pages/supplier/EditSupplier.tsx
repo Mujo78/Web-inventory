@@ -1,54 +1,71 @@
-import { Button, Label, Toast } from 'flowbite-react'
-import { ErrorMessage, Field, Form, Formik } from 'formik'
-import React from 'react'
-import { supplierValidationSchema } from '../../validations/supplierValidation'
-import { classNm } from '../LandingPage'
+import React, { useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import { Supp } from './AddSupplier'
 import { useAppDispatch } from '../../app/hooks'
 import { useSelector } from 'react-redux'
-import { addNewSupplier, reset, supplier } from '../../features/supplier/suppSlice'
+import { Supplier, editSupplier, supplier } from '../../features/supplier/suppSlice'
+import { ErrorMessage, Field, Form, Formik } from 'formik'
+import { supplierValidationSchema } from '../../validations/supplierValidation'
+import { Button, Label, ToggleSwitch } from 'flowbite-react'
+import { classNm } from '../LandingPage'
+import ErrorPage from '../ErrorPage'
 
-export type Supp = {
-    name : string,
-    pdv : number,
-    phone_number : string,
-    contact_person : string,
-    email: string,
-    end_date? : Date
-}
-
-const AddSupplier = () => {
-
-    const initialState : Supp = {
-        name: "",
-        pdv: 0,
-        phone_number: "",
-        contact_person: "",
-        email: ""
+const EditSupplier: React.FC = () => {
+    
+    let {id} = useParams()
+    
+    const {isError,suppliers, isLoading, isSuccess, message} = useSelector(supplier)
+    const supp: Supplier | undefined =  suppliers.find(n => n._id === id)
+    
+    const [checked, setChecked] = useState<boolean>(supp?.end_date ? true : false)
+    const navigate = useNavigate()
+    const dispatch = useAppDispatch()
+    
+    
+    const initialState : Supp ={
+        name: supp?.name || "",
+        pdv: supp?.pdv || 0,
+        phone_number: supp?.phone_number || "",
+        contact_person: supp?.contact_person || "",
+        email: supp?.email || "",
+        end_date: supp?.end_date || undefined,
     }
 
-    const dispatch = useAppDispatch();
-    const {isError, isLoading, isSuccess, message} = useSelector(supplier)
 
-    const handleSubmit = (values: Supp) => {
+    const handleEdit = (supplierData: Supp) =>{
+        if(checked) {
+            const endDate = new Date()
+            supplierData.end_date = endDate;
+        }
 
-        dispatch(addNewSupplier(values))
-        dispatch(reset())
+        if(id) {
+            dispatch(editSupplier({id, supplierData}))
+            navigate("/suppliers")
+        }
+        console.log("Successfully updated Supplier:" + supplierData.name)
+    }
+
+    const handleChange = (checked: boolean) => {
+        setChecked(n => !n)
+    }
+
+    const goBack = () => {
+        navigate("/suppliers")
     }
 
   return (
-    <>
-        <h1 className='text-24 font-Rubik text-4xl mt-9 pb-7 text-center font-bold'>Add new Supplier</h1>
+    <div>
+        {supp ? (
+            <>
+        <h1 className='text-24 font-Rubik text-4xl mt-9 pb-5 text-center font-bold'>
+            Edit Supplier
+        </h1>
         <Formik
             initialValues={initialState}
             validationSchema={supplierValidationSchema}
-            onSubmit={(values, {resetForm}) => {
-                handleSubmit(values)
-                if(isSuccess){
-                    resetForm()
-                }
-            }}
-            >
-            <Form className="flex flex-col justify-center items-center mt-12">
+            onSubmit={handleEdit}
+        >
+             <Form className="flex flex-col justify-center items-center mt-12">
                 <div className='w-3/5'>
                     <div className='flex mb-6'>
                         <div className='w-4/6'>
@@ -63,6 +80,7 @@ const AddSupplier = () => {
                                 name="name"
                                 placeholder="Name"
                                 type="text"
+                                autoComplete="on"
                                 className={classNm}
                                 />
                             <ErrorMessage name='name' component="span" className='text-red-600 text-xs' />
@@ -78,6 +96,7 @@ const AddSupplier = () => {
                                     id="pdv"
                                     type="number"
                                     name="pdv"
+                                    autoComplete="on"
                                     min={0}
                                     max={100}
                                     className={classNm}
@@ -97,6 +116,7 @@ const AddSupplier = () => {
                                     id="phone_number"
                                     placeholder="+387xx xxx xxx"
                                     type="text"
+                                    autoComplete="on"
                                     name="phone_number"
                                     className={classNm}
                                 />
@@ -113,6 +133,7 @@ const AddSupplier = () => {
                                     id="contact_person"
                                     name="contact_person"
                                     type="text"
+                                    autoComplete="on"
                                     placeholder="First name"
                                     className={classNm}
                                 />
@@ -120,33 +141,50 @@ const AddSupplier = () => {
                         </div>
                     </div>
                     <div className='mb-6'>
-                        <div>
-                            <div className="mb-2 block">
-                                <Label
-                                    htmlFor="email"
-                                    value="Email*"
+                        <div className='flex'>
+                            <div className='w-3/5'>
+                                <div className="mb-2 block">
+                                    <Label
+                                        htmlFor="email"
+                                        value="Email*"
+                                    />
+                                </div>
+                                    <Field
+                                        id="email"
+                                        type="email"
+                                        name="email"
+                                        autoComplete="on"
+                                        placeholder="something@example.com"
+                                        className={classNm}
+                                    />
+                                    <ErrorMessage name='email' component="span" className='text-red-600 text-xs' />
+                            </div>
+                            <div className='ml-auto w-2/5 items-center flex justify-center'>
+                                <ToggleSwitch
+                                    checked = {checked}
+                                    label="End contract?"
+                                    onChange={handleChange}
                                 />
                             </div>
-                                <Field
-                                    id="email"
-                                    type="email"
-                                    name="email"
-                                    placeholder="something@example.com"
-                                    className={classNm}
-                                />
-                                <ErrorMessage name='email' component="span" className='text-red-600 text-xs' />
                         </div>
                         {isError && <span className='text-xs text-red-600'>{message}</span>}
                     </div>
-
-                            <Button type="submit" className='ml-auto px-6' color="success">
-                                Submit
+                    <div className='flex justify-end flex-wrap'>
+                            <Button type="button" onClick={goBack} className='mr-5 border-green-500 ' color="light" >
+                                Cancel
                             </Button>
+                            <Button type="submit" className=' px-6' color="success">
+                                Save changes
+                            </Button>
+                    </div>
                 </div>
             </Form>
+
         </Formik>
-    </>
+        </>
+        ) : <ErrorPage />}
+    </div>
   )
 }
 
-export default AddSupplier
+export default EditSupplier

@@ -4,17 +4,6 @@ import DashSidebar from './DashSidebar'
 
 const Layout: React.FC = () => {
 
-  const user = localStorage.getItem("user")
-  const navigate = useNavigate()
-
-  useEffect(() =>{
-      if(user){
-          navigate("/dashboard")
-      }else{
-        navigate("/")
-      }
-  }, [user, navigate])
-
   return (
     <div className='flex w-full'>
       <main className='w-full'>

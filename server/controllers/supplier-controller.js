@@ -19,12 +19,6 @@ const addSupplier = asyncHandler( async(req,res) => {
         contact_person,
         email
     } = req.body;
-    const supplier = await Supplier.findOne({name: name})
-
-    if(supplier){
-        res.status(400)
-        throw new Error("Supplier is already in database!")
-    }
 
     const newOne = await Supplier.create({
         name: name,

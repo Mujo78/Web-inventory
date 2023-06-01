@@ -1,16 +1,10 @@
 import React, {useState } from 'react'
-import { useSelector } from 'react-redux'
-import { supplier } from '../../features/supplier/suppSlice'
 import { Alert, Navbar } from 'flowbite-react'
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
-import { match } from 'assert'
 
-const Suppliers: React.FC = () => {
+const SupplierLayout: React.FC = () => {
 
   const [showAlert , setShowAlert] = useState(true)
-
-  const {suppliers} = useSelector(supplier)
-
 
   const location = useLocation()
 
@@ -26,7 +20,7 @@ const Suppliers: React.FC = () => {
         className='w-full font-semibold'
         onDismiss={dismissIt}
       >
-        Number of suppliers in our company: {suppliers.length}
+        Important update: Check out our latest supplier information below!
       </Alert>}
       <Navbar
           className='!bg-gray-200 my-3 py-4 !border-gray-400'
@@ -38,7 +32,7 @@ const Suppliers: React.FC = () => {
           <Navbar.Link
           className='hover:!text-green-500'
             as={Link}
-            to="."
+            to="suppliers"
           >
             Overview
           </Navbar.Link>
@@ -57,4 +51,4 @@ const Suppliers: React.FC = () => {
   )
 }
 
-export default Suppliers
+export default SupplierLayout

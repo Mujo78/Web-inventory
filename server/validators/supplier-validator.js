@@ -8,13 +8,23 @@ const {
     POST_PHONE_LETTER,
     POST_SUPPLIER_NAME,
     POST_PDVNUMERIC_SUPPLIER,
-    POST_EMAIL_CORRECT
-} = require("../constants/supplier-constants")
+    POST_EMAIL_CORRECT,
+    EMAIL_ALREADY_USED,
+    PHONE_ALREADY_USED,
+    SUPPLIER_DUPLICATE
+} = require("../constants/supplier-constants");
+const Supplier = require("../models/supplier");
 
 exports.addNewSupplier = [
     check("name")
         .notEmpty()
         .withMessage(POST_SUPPLIER_NAME)
+        .custom(async (n) =>{
+            const supplier = await Supplier.findOne({name: n})
+            if(supplier){
+                return Promise.reject(SUPPLIER_DUPLICATE)
+            }
+        })
         .bail(),
     check("pdv")
         .notEmpty()
@@ -34,6 +44,12 @@ exports.addNewSupplier = [
             return /^\d+$/.test(value);
         })
         .withMessage(POST_PHONE_LETTER)
+        .custom(async (n) =>{
+            const supplierPhone = await Supplier.findOne({phone_number: n})
+            if(supplierPhone){
+                return Promise.reject(PHONE_ALREADY_USED)
+            }
+        })
         .bail(),
     check("contact_person")
         .notEmpty()
@@ -44,5 +60,11 @@ exports.addNewSupplier = [
         .withMessage(POST_EMAIL_SUPPLIER)
         .isEmail()
         .withMessage(POST_EMAIL_CORRECT)
+        .custom(async (value) => {
+            const supplierEmail = await Supplier.findOne({email: value})
+            if(supplierEmail){
+                return Promise.reject(EMAIL_ALREADY_USED)
+            }
+        })
         .bail()
 ]

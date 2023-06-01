@@ -7,7 +7,10 @@ const POST_CONTACT_PERSON = "Contact person is required!"
 const POST_EMAIL_SUPPLIER = "Email is required!"
 const POST_PDVNUMERIC_SUPPLIER = "PDV must be numeric!"
 const POST_EMAIL_CORRECT = "Please add correct email address!"
-
+const EMAIL_ALREADY_USED = 'Email is already used!'
+const PHONE_ALREADY_USED = 'Phone number already used!'
+const SUPPLIER_DUPLICATE = "Supplier is already added!"
+ 
 module.exports = {
     POST_SUPPLIER_NAME,
     POST_PDV_SUPPLIER,
@@ -17,5 +20,8 @@ module.exports = {
     POST_CONTACT_PERSON,
     POST_EMAIL_SUPPLIER,
     POST_PDVNUMERIC_SUPPLIER,
-    POST_EMAIL_CORRECT
+    POST_EMAIL_CORRECT,
+    EMAIL_ALREADY_USED,
+    PHONE_ALREADY_USED,
+    SUPPLIER_DUPLICATE
 }
