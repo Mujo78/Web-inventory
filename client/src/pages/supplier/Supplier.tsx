@@ -7,13 +7,11 @@ import {FiEdit} from "react-icons/fi"
 import { useNavigate } from 'react-router-dom'
 import {GrOverview} from "react-icons/gr"
 
-const Supplier = () => {
+const Supplier: React.FC = () => {
 
   const dispatch = useAppDispatch()
-  const {suppliers, isError, message} = useSelector(supplier)
+  const {suppliers, status, message} = useSelector(supplier)
   const navigate = useNavigate()
-
-  console.log(suppliers)
 
   useEffect(() => {
 
@@ -25,12 +23,12 @@ const Supplier = () => {
     navigate(`/edit-supplier/${id}`)
   }
   const supplierDetail = (id: string) => {
-    navigate(`/overview-supplier/${id}`)
+    navigate(`/supplier/${id}`)
   }
-
+  	console.log(suppliers)
   return (
     <div className='h-4/5 scroll-smooths overflow-y-auto '>
-      {!isError && suppliers.length > 0 ? (
+      {status !== "failed" && suppliers.length > 0 ? (
         <div className='flex flex-wrap'>
           {suppliers.map(n => (
                 <Card className='mt-2 w-full mr-2' key={n._id}>

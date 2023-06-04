@@ -23,22 +23,22 @@ const LoginForm = () => {
         password:""
     }
     const dispatch = useAppDispatch();
-    const {accessUser, isError, isLoading, message, isSuccess} = useSelector(authUser)
+    const {accessUser, status, message} = useSelector(authUser)
     
 
     useEffect(() =>{
 
-        if(accessUser || isSuccess){
+        if(accessUser || status === "idle"){
             navigate("/dashboard")
         }else{
             navigate("/")
         }
 
-        if(!isError){
+        if(status !== "failed"){
             dispatch(reset())
         }
 
-    }, [accessUser, isError, isSuccess, dispatch, navigate])
+    }, [accessUser, status, dispatch, navigate])
 
 
     const handleSubmit = (values: User) => {
@@ -90,7 +90,7 @@ const LoginForm = () => {
                         <ErrorMessage name='password' component="span" className='text-red-600 text-sm' />
                 </div>
                 <div>
-                {isError && <span className='text-red-600'>{message}</span>}
+                {status === "failed" && <span className='text-red-600'>{message}</span>}
                 </div>
                 <Button gradientMonochrome='success' className=' outline-none' type="submit">Submit</Button>
             </Form>

@@ -4,11 +4,11 @@ import { useAppDispatch } from '../../app/hooks'
 import { useSelector } from 'react-redux'
 import { Supplier, supplier } from '../../features/supplier/suppSlice'
 
-const SupplierDetails = () => {
+const SupplierDetails: React.FC = () => {
 
     let {id} = useParams()
     
-    const {isError,suppliers, isLoading, isSuccess, message} = useSelector(supplier)
+    const {suppliers, status, message} = useSelector(supplier)
     const supp: Supplier | undefined =  suppliers.find(n => n._id === id)
     
     const navigate = useNavigate()

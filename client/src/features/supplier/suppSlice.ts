@@ -16,18 +16,14 @@ export interface Supplier {
 }
 
 export interface suppState {
-   suppliers: Supplier[],
-   isError: boolean,
-    isSuccess: boolean,
-    isLoading: boolean,
+    suppliers: Supplier[],
+    status: 'idle' | 'loading' | 'failed',
     message: string
 }
 
 const initialState: suppState = {
     suppliers: [],
-    isError: false,
-    isSuccess: false,
-    isLoading: false,
+    status: 'idle',
     message: ''
 }
 
@@ -78,49 +74,42 @@ export const suppSlice = createSlice({
     initialState,
     reducers:{
         reset: (state) => {
-            state.isLoading = false
-            state.isError = false
-            state.isSuccess = false
-        }},
+            state.status = "idle"
+        }
+    },
     extraReducers(builder){
         builder
         .addCase(addNewSupplier.pending, (state) => {
-            state.isLoading = true
+            state.status = "loading"
         })
         .addCase(addNewSupplier.fulfilled, (state, action) => {
-            state.isLoading = false
-            state.isSuccess = true
+            state.status = "idle"
             state.suppliers.push(action.payload)
         })
         .addCase(addNewSupplier.rejected, (state, action) =>{
-            state.isLoading = false
-            state.isError = true
+            state.status = "failed"
             state.message = action.payload as string
         })
         .addCase(editSupplier.pending, (state) => {
-            state.isLoading = true
+            state.status = "loading"
         })
         .addCase(editSupplier.fulfilled, (state, action) => {
-            state.isLoading = false
-            state.isSuccess = true
+            state.status = "idle"
             state.suppliers.push(action.payload)
         })
         .addCase(editSupplier.rejected, (state, action) =>{
-            state.isLoading = false
-            state.isError = true
+            state.status = "failed"
             state.message = action.payload as string
         })
         .addCase(getSuppliers.fulfilled, (state, action) => {
-            state.isLoading = false
-            state.isSuccess = true
+            state.status = "idle"
             state.suppliers = action.payload
         })
         .addCase(getSuppliers.pending, (state) => {
-            state.isLoading = true
+            state.status = "loading"
         })
         .addCase(getSuppliers.rejected, (state, action) => {
-            state.isLoading = false
-            state.isError = true
+            state.status = "failed"
             state.message = action.payload as string
         })
     }

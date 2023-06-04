@@ -16,7 +16,7 @@ export type Supp = {
     end_date? : Date
 }
 
-const AddSupplier = () => {
+const AddSupplier: React.FC = () => {
 
     const initialState : Supp = {
         name: "",
@@ -27,7 +27,7 @@ const AddSupplier = () => {
     }
 
     const dispatch = useAppDispatch();
-    const {isError, isLoading, isSuccess, message} = useSelector(supplier)
+    const {status, message} = useSelector(supplier)
 
     const handleSubmit = (values: Supp) => {
 
@@ -43,7 +43,7 @@ const AddSupplier = () => {
             validationSchema={supplierValidationSchema}
             onSubmit={(values, {resetForm}) => {
                 handleSubmit(values)
-                if(isSuccess){
+                if(status === "idle"){
                     resetForm()
                 }
             }}
@@ -136,7 +136,7 @@ const AddSupplier = () => {
                                 />
                                 <ErrorMessage name='email' component="span" className='text-red-600 text-xs' />
                         </div>
-                        {isError && <span className='text-xs text-red-600'>{message}</span>}
+                        {status === "failed" && <span className='text-xs text-red-600'>{message}</span>}
                     </div>
 
                             <Button type="submit" className='ml-auto px-6' color="success">

@@ -5,9 +5,7 @@ import { RootState } from "../../app/store"
 
 export interface AuthState {
     accessUser: any,
-    isError: boolean,
-    isSuccess: boolean,
-    isLoading: boolean,
+    status: 'idle' | 'loading' | 'failed',
     message: string
 }
 
@@ -21,9 +19,7 @@ const storedObject = user !== null ? JSON.parse(user) : null
 
 const initialState: AuthState = {
     accessUser: storedObject,
-    isError: false,
-    isSuccess: false,
-    isLoading: false,
+    status: 'idle',
     message: ""
 }
 
@@ -48,24 +44,20 @@ export const authSlice = createSlice({
     initialState,
     reducers: {
         reset: (state) => {
-            state.isLoading = false
-            state.isError = false
-            state.isSuccess = false
+            state.status = "idle"
         }
     },
     extraReducers(builder) {
         builder
             .addCase(login.pending, (state) => {
-                state.isLoading = true;
+                state.status = "loading";
             })
             .addCase(login.fulfilled, (state, action) => {
-                state.isError = false;
-                state.isSuccess = true;
+                state.status = "idle";
                 state.accessUser = action.payload
             })
             .addCase(login.rejected, (state, action) =>{
-                state.isError = true;
-                state.isLoading = false;
+                state.status = "failed";
                 state.accessUser = null;
                 state.message = action.payload as string;
             })

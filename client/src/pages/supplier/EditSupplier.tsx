@@ -14,7 +14,7 @@ const EditSupplier: React.FC = () => {
     
     let {id} = useParams()
     
-    const {isError,suppliers, isLoading, isSuccess, message} = useSelector(supplier)
+    const {status,suppliers, message} = useSelector(supplier)
     const supp: Supplier | undefined =  suppliers.find(n => n._id === id)
     
     const [checked, setChecked] = useState<boolean>(supp?.end_date ? true : false)
@@ -167,7 +167,7 @@ const EditSupplier: React.FC = () => {
                                 />
                             </div>
                         </div>
-                        {isError && <span className='text-xs text-red-600'>{message}</span>}
+                        {status === "failed" && <span className='text-xs text-red-600'>{message}</span>}
                     </div>
                     <div className='flex justify-end flex-wrap'>
                             <Button type="button" onClick={goBack} className='mr-5 border-green-500 ' color="light" >

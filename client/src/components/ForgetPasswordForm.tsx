@@ -18,16 +18,8 @@ const ForgetPasswordForm = () => {
         password:""
     }
     const dispatch = useAppDispatch();
-    const {accessUser, isError, isLoading, isSuccess} = useSelector(authUser)
+    const {accessUser, status} = useSelector(authUser)
     
-
-    useEffect(() =>{
-        if(!isError){
-            dispatch(reset())
-        }
-    }, [accessUser, isError, isSuccess, dispatch])
-
-
     const handleSubmit = ( values: User) => {
        
         dispatch(login(values))
@@ -76,7 +68,7 @@ const ForgetPasswordForm = () => {
                         <ErrorMessage name='password' component="span" className='text-red-600 text-sm' />
                 </div>
                 <div>
-                {isError && <span className='text-red-600'>Username or password is incorrect!</span>}
+                {status === "failed" && <span className='text-red-600'>Username or password is incorrect!</span>}
                 </div>
                 <Button gradientMonochrome='success' className=' outline-none' type="submit">Submit</Button>
             </Form>

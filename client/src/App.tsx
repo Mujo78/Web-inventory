@@ -6,7 +6,7 @@ import Dashboard from './pages/Dashboard';
 import ErrorPage from './pages/ErrorPage';
 import HomeLayout from './components/HomeLayout';
 import Products from './pages/Products';
-import Materials from './pages/Materials';
+import Materials from './pages/materials/Materials';
 import ProductProcess from './pages/ProductProcess';
 import SupplierLayout from './pages/supplier/SupplierLayout';
 import Employee from './pages/Employee';
@@ -18,6 +18,10 @@ import Authorized from './helpers/Authorized';
 import UserRequired from './helpers/UserRequired';
 import RequiredUser from './helpers/RequiredUser';
 import SupplierDetails from './pages/supplier/SupplierDetails';
+import MaterialLayout from './pages/materials/MaterialLayout';
+import AddMaterial from './pages/materials/AddMaterial';
+import MaterialDetails from './pages/materials/MaterialDetails';
+import EditMaterial from './pages/materials/EditMaterial';
 
 
 const router = createBrowserRouter(createRoutesFromElements(
@@ -27,12 +31,17 @@ const router = createBrowserRouter(createRoutesFromElements(
         <Route path='/' element={<HomeLayout />} loader={UserRequired}>
           <Route path='dashboard' element={<Dashboard />} />
           <Route path='products' element={<Products />} />
-          <Route path='materials' element={<Materials />} />
+          <Route path='/' element={<MaterialLayout />}>
+              <Route path='materials' element={<Materials />} />
+              <Route path='add-material' element={<AddMaterial />} />
+              <Route path='material/:id' element={<MaterialDetails />} />
+              <Route path='edit-material/:id' element={<EditMaterial />} />
+          </Route>
           <Route path='product-process' element={<ProductProcess />} />
           <Route path="/" element={<SupplierLayout />}>
             <Route path='suppliers' element={<Supplier />}/>
             <Route path='add-supplier' element={<AddSupplier />} />
-            <Route path='overview-supplier/:id' element={<SupplierDetails />} />
+            <Route path='supplier/:id' element={<SupplierDetails />} />
             <Route path='edit-supplier/:id' element={<EditSupplier />} />
           </Route>
           <Route path='settings' element={<Settings />} />

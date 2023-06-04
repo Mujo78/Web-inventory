@@ -39,7 +39,7 @@ const addMaterial = asyncHandler( async(req, res) => {
 
 const getMaterials = asyncHandler (async (req, res) => {
 
-    const allMaterials = await Material.find()
+    const allMaterials = await Material.find().populate("supplier_id")
     if(!allMaterials) return res.status(400).json("There are no materials available at this moment!")
 
     res.status(200).json(allMaterials)
@@ -94,9 +94,19 @@ const editMaterial = asyncHandler( async (req, res) => {
     res.status(400).json("There was an error, please try again later!")
 })
 
+const deleteMaterial = asyncHandler (async (req, res) => {
+
+    const material = await Material.findByIdAndDelete(req.params.id)
+    if(!material) return res.status(400).json("There was an error, please try again later!")
+    
+    res.status(200).json(material._id)
+})
+
+
 module.exports = {
     addMaterial,
     getMaterials,
     editMaterial,
+    deleteMaterial,
     getMaterialById
 }

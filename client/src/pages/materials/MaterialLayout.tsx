@@ -2,24 +2,11 @@ import React, {useState } from 'react'
 import { Alert, Navbar } from 'flowbite-react'
 import { Link, NavLink, Outlet } from 'react-router-dom'
 
-const SupplierLayout: React.FC = () => {
 
-  const [showAlert , setShowAlert] = useState(true)
-
-  const dismissIt = () =>{
-    setShowAlert(n => !n)
-  }
-
+const MaterialLayout: React.FC = () => {
   return (
     <div className='w-full'>
-      {showAlert && <Alert
-        color="success"
-        className='w-full font-semibold'
-        onDismiss={dismissIt}
-      >
-        Important update: Check out our latest supplier information below!
-      </Alert>}
-      <Navbar
+       <Navbar
           className='!bg-gray-200 my-3 py-4 !border-gray-400'
             fluid
             rounded
@@ -29,16 +16,16 @@ const SupplierLayout: React.FC = () => {
           <Navbar.Link
           className='hover:!text-green-500'
             as={Link}
-            to="suppliers"
+            to="materials"
           >
             Overview
           </Navbar.Link>
           <Navbar.Link
           className='hover:!text-green-500'
             as={NavLink}
-            to="add-supplier"
+            to="add-material"
           >
-            Add supplier
+            Add material
           </Navbar.Link>
         </Navbar.Collapse>
       </Navbar>
@@ -48,4 +35,4 @@ const SupplierLayout: React.FC = () => {
   )
 }
 
-export default SupplierLayout
+export default MaterialLayout
