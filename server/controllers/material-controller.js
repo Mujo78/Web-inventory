@@ -39,7 +39,7 @@ const addMaterial = asyncHandler( async(req, res) => {
 
 const getMaterials = asyncHandler (async (req, res) => {
 
-    const allMaterials = await Material.find().populate("supplier_id")
+    const allMaterials = await Material.find()
     if(!allMaterials) return res.status(400).json("There are no materials available at this moment!")
 
     res.status(200).json(allMaterials)

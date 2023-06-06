@@ -5,7 +5,7 @@ import { supplierValidationSchema } from '../../validations/supplierValidation'
 import { classNm } from '../LandingPage'
 import { useAppDispatch } from '../../app/hooks'
 import { useSelector } from 'react-redux'
-import { addNewSupplier, reset, supplier } from '../../features/supplier/suppSlice'
+import { addNewSupplier, reset, resetmessage, supplier } from '../../features/supplier/suppSlice'
 
 export type Supp = {
     name : string,
@@ -32,7 +32,6 @@ const AddSupplier: React.FC = () => {
     const handleSubmit = (values: Supp) => {
 
         dispatch(addNewSupplier(values))
-        dispatch(reset())
     }
 
   return (

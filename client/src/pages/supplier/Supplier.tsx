@@ -2,7 +2,7 @@ import React, {useEffect} from 'react'
 import { useSelector } from 'react-redux'
 import { getSuppliers, supplier } from '../../features/supplier/suppSlice'
 import { useAppDispatch } from '../../app/hooks'
-import { Button, Card } from 'flowbite-react'
+import { Alert, Button, Card } from 'flowbite-react'
 import {FiEdit} from "react-icons/fi"
 import { useNavigate } from 'react-router-dom'
 import {GrOverview} from "react-icons/gr"
@@ -10,7 +10,7 @@ import {GrOverview} from "react-icons/gr"
 const Supplier: React.FC = () => {
 
   const dispatch = useAppDispatch()
-  const {suppliers, status, message} = useSelector(supplier)
+  const {suppliers, status} = useSelector(supplier)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -64,7 +64,11 @@ const Supplier: React.FC = () => {
             </Card>
           ))}
         </div>
-      ) : <h1>{message}</h1>}
+      ) : <div>
+        <Alert color="info" className='flex items-center mt-6'>
+            <h1>There are no suppliers available.</h1>
+        </Alert>
+        </div>}
     </div>
   )
 }

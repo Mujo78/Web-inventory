@@ -1,9 +1,12 @@
-import React, {useState } from 'react'
-import { Alert, Navbar } from 'flowbite-react'
-import { Link, NavLink, Outlet } from 'react-router-dom'
+import React from 'react'
+import { Navbar } from 'flowbite-react'
+import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 
 
 const MaterialLayout: React.FC = () => {
+
+  const location = useLocation()
+
   return (
     <div className='w-full'>
        <Navbar
@@ -14,15 +17,17 @@ const MaterialLayout: React.FC = () => {
         <Navbar.Toggle />
         <Navbar.Collapse>
           <Navbar.Link
-          className='hover:!text-green-500'
+            className={`hover:!text-green-500 ${location.pathname === "/materials" && `!text-green-500`}`}
             as={Link}
+            active={location.pathname === "/materials" && true}
             to="materials"
           >
             Overview
           </Navbar.Link>
           <Navbar.Link
-          className='hover:!text-green-500'
+            className={`hover:!text-green-500 ${location.pathname === "/add-material" && `!text-green-500`}`}
             as={NavLink}
+            active={location.pathname === "/add-material" && true}
             to="add-material"
           >
             Add material

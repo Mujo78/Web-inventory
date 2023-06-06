@@ -14,6 +14,15 @@ export interface Material {
     supplier_id: Supplier
 }
 
+export interface MaterialInterface {
+    name: string,
+    supplier_id: string,
+    quantity: number,
+    min_quantity: number,
+    price: number,
+    unit_of_measure: string
+  }
+
 export interface materialState {
     materials: Material[],
     status: 'idle' | 'loading' | 'failed',
@@ -46,16 +55,41 @@ export const deleteMaterialById = createAsyncThunk("materials/delete", async (id
     }
 })
 
+export const createMaterial = createAsyncThunk("materials/post", async (materialData: MaterialInterface, thunkAPI) => {
+    try {
+        return await materialServices.addMaterial(materialData)
+    } catch (error: any) {
+        const message = error.response.data.message
+
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
+
 export const materialSlice = createSlice({
     name: "material",
     initialState,
     reducers: {
         reset: (state) => {
             state.status = "idle"
+        },
+        resetmessage: (state) => {
+            state.message = ""
         }
     },
     extraReducers(builder){
         builder
+            .addCase(createMaterial.pending, (state) => {
+                state.status = "loading"
+            })
+            .addCase(createMaterial.fulfilled, (state, action) => {
+                state.status = "idle"
+                state.materials.push(action.payload)
+            })
+            .addCase(createMaterial.rejected, (state, action) =>{
+                state.status = "failed"
+                state.message = action.payload as string
+            })
             .addCase(getMaterials.pending, (state) => {
                 state.status = "loading"
             })
@@ -76,7 +110,7 @@ export const materialSlice = createSlice({
             })
             .addCase(deleteMaterialById.fulfilled, (state, action) => {
                 state.status = "idle"
-                state.materials.filter((n) => n._id !== action.payload)
+                state.materials = state.materials.filter((n) => n._id !== action.payload)
             })
     }
     

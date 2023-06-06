@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import { MaterialInterface } from "./materialSlice";
 
 const getMaterials = async () => {
     const response = await axios.get("/materials")
@@ -13,9 +13,16 @@ const deleteMaterial = async (id: string) => {
     return response.data
 }
 
+const addMaterial = async (materialData: MaterialInterface) => {
+    const response = await axios.post("/add-material", materialData)
+
+    return response.data
+}
+
 const materialServices = {
     getMaterials,
-    deleteMaterial
+    deleteMaterial,
+    addMaterial
 }
 
 export default materialServices

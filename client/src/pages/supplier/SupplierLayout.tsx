@@ -1,6 +1,6 @@
 import React, {useState } from 'react'
 import { Alert, Navbar } from 'flowbite-react'
-import { Link, NavLink, Outlet } from 'react-router-dom'
+import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 
 const SupplierLayout: React.FC = () => {
 
@@ -9,6 +9,8 @@ const SupplierLayout: React.FC = () => {
   const dismissIt = () =>{
     setShowAlert(n => !n)
   }
+
+  const location = useLocation()
 
   return (
     <div className='w-full'>
@@ -27,15 +29,17 @@ const SupplierLayout: React.FC = () => {
         <Navbar.Toggle />
         <Navbar.Collapse>
           <Navbar.Link
-          className='hover:!text-green-500'
+          className={`hover:!text-green-500 ${location.pathname === "/suppliers" && `!text-green-500`}`}
             as={Link}
+            active={location.pathname === "/suppliers" && true}
             to="suppliers"
           >
             Overview
           </Navbar.Link>
           <Navbar.Link
-          className='hover:!text-green-500'
+            className={`hover:!text-green-500 ${location.pathname === "/add-supplier" && `!text-green-500`}`}
             as={NavLink}
+            active={location.pathname === "/add-supplier" && true}
             to="add-supplier"
           >
             Add supplier

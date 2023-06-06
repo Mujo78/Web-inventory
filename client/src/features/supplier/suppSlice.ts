@@ -75,6 +75,9 @@ export const suppSlice = createSlice({
     reducers:{
         reset: (state) => {
             state.status = "idle"
+        },
+        resetmessage: (state) => {
+            state.message = ""
         }
     },
     extraReducers(builder){
@@ -116,5 +119,5 @@ export const suppSlice = createSlice({
 })
 
 export const supplier = (state: RootState) => state.supp;
-export const {reset} = suppSlice.actions
+export const {reset, resetmessage} = suppSlice.actions
 export default suppSlice.reducer
