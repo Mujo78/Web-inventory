@@ -25,26 +25,25 @@ const AddSupplier: React.FC = () => {
         contact_person: "",
         email: ""
     }
-
+    
     const dispatch = useAppDispatch();
     const {status, message} = useSelector(supplier)
 
     const handleSubmit = (values: Supp) => {
-
+        dispatch(reset())
         dispatch(addNewSupplier(values))
     }
 
+    console.log(status)
   return (
     <>
         <h1 className='text-24 font-Rubik text-4xl mt-9 pb-7 text-center font-bold'>Add new Supplier</h1>
         <Formik
             initialValues={initialState}
             validationSchema={supplierValidationSchema}
-            onSubmit={(values, {resetForm}) => {
+            onSubmit={(values, helpers) => {
                 handleSubmit(values)
-                if(status === "idle"){
-                    resetForm()
-                }
+                helpers.resetForm()
             }}
             >
             <Form className="flex flex-col justify-center items-center mt-12">

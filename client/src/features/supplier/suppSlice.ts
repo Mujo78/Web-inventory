@@ -51,7 +51,7 @@ export const addNewSupplier = createAsyncThunk("supp/add", async(supplierData: N
     try{
         return await suppServices.addSupplier(supplierData)
     }catch(error: any){
-        console.log(error)
+
         const message = error.response.data.errors[0].msg
 
         return thunkAPI.rejectWithValue(message)

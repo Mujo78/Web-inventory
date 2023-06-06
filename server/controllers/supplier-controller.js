@@ -9,7 +9,7 @@ const addSupplier = asyncHandler( async(req,res) => {
     const errors = validationResult(req)
 
     if(!errors.isEmpty()){
-        res.status(400).json(errors)
+        return res.status(400).json(errors)
     }
 
     const { 
@@ -29,7 +29,8 @@ const addSupplier = asyncHandler( async(req,res) => {
         email: email,
         end_date: null
     })
-    res.status(200).json(`Successfully added new supplier: ${newOne.name}`)
+    
+    return res.status(200).json(`Successfully added new supplier: ${newOne.name}`)
 
 })
 
@@ -93,10 +94,36 @@ const supplierMaterials = asyncHandler( async (req, res) =>{
     res.status(400).json("There are no materials from this supplier!")
 })
 
+const suppliersMaterials = asyncHandler( async (req, res) =>{
+    const suppliers = await Supplier.find()
+    
+    const suppWithMatt = []
+
+    if(!suppliers) {
+        res.status(400)
+        throw new Error("There was no suppliers in database!")
+    }
+
+    for (const i of suppliers){
+
+        const materials = await Material.countDocuments({supplier_id: i._id})
+
+        const suppData = {
+            supplier: i.toObject(),
+            materials
+        }
+
+        suppWithMatt.push(suppData)
+    }
+
+    return res.status(200).json(suppWithMatt)
+})
+
 module.exports = {
     addSupplier,
     allSuppliers,
     supplierById,
     editSupplier,
-    supplierMaterials
+    supplierMaterials,
+    suppliersMaterials
 }
