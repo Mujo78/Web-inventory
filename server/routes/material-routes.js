@@ -6,9 +6,9 @@ const { authMiddleware } = require("../middleware/auth-middleware")
 const router = express.Router()
 
 router.get("/materials", getMaterials)
-router.post("/add-material", addNewMaterial, validate, addMaterial)
+router.post("/add-material", addNewMaterial, addMaterial)
 router.get("/material/:id", getMaterialById)
 router.delete("/delete-material/:id", deleteMaterial)
-router.put("/edit-material/:id", addNewMaterial, validate, editMaterial)
+router.put("/edit-material/:id", addNewMaterial, editMaterial)
 
 module.exports = router

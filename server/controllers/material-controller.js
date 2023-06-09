@@ -68,6 +68,14 @@ const editMaterial = asyncHandler( async (req, res) => {
         supplier_id
     } = req.body;
 
+    if(name && supplier_id){
+        const supplierWithMaterial = await Material.findOne({name: name, supplier_id: supplier_id})
+        if(supplierWithMaterial){
+            res.status(400)
+            throw new Error("That material from this supplier is already in database!")
+        }
+    }
+
     const materialToUpdate = await Material.findById(req.params.id)
     const supplier = await Supplier.findById(supplier_id)
     

@@ -57,9 +57,10 @@ const EditSupplier: React.FC = () => {
     <div>
         {supp ? (
             <>
-        <h1 className='text-24 font-Rubik text-4xl mt-9 pb-5 text-center font-bold'>
+        <h1 className='text-24 font-Rubik text-4xl mt-9 pb-5 ml-5 font-bold'>
             Edit Supplier
         </h1>
+        <hr/>
         <Formik
             initialValues={initialState}
             validationSchema={supplierValidationSchema}

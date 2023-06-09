@@ -5,7 +5,7 @@ import { supplierValidationSchema } from '../../validations/supplierValidation'
 import { classNm } from '../LandingPage'
 import { useAppDispatch } from '../../app/hooks'
 import { useSelector } from 'react-redux'
-import { addNewSupplier, reset, resetmessage, supplier } from '../../features/supplier/suppSlice'
+import { addNewSupplier, reset, supplier } from '../../features/supplier/suppSlice'
 
 export type Supp = {
     name : string,
@@ -37,7 +37,8 @@ const AddSupplier: React.FC = () => {
     console.log(status)
   return (
     <>
-        <h1 className='text-24 font-Rubik text-4xl mt-9 pb-7 text-center font-bold'>Add new Supplier</h1>
+        <h1 className='text-24 font-Rubik text-4xl mt-9 pb-7 ml-5 font-bold'>Add new Supplier</h1>
+        <hr/>
         <Formik
             initialValues={initialState}
             validationSchema={supplierValidationSchema}

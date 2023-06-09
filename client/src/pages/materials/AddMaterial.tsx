@@ -10,7 +10,7 @@ import { getSuppliers, supplier } from '../../features/supplier/suppSlice'
 
 const AddMaterial : React.FC = () => {
   
-  const initialState = {
+  const initialState : MaterialInterface = {
     name: "",
     supplier_id: "",
     min_quantity: 0,
@@ -35,9 +35,10 @@ const AddMaterial : React.FC = () => {
   
   return (
     <div>
-      <h1 className='text-24 font-Rubik text-4xl mt-9 pb-5 text-center font-bold'>
+      <h1 className='text-24 font-Rubik text-4xl mt-9 pb-5 ml-5 font-bold'>
             Add new Material
         </h1>
+        <hr/>
         <Formik
             initialValues={initialState}
             validationSchema={materialValidationSchema}
@@ -48,7 +49,7 @@ const AddMaterial : React.FC = () => {
                 }
             }}
             >
-            <Form className="flex flex-col justify-center items-center mt-12">
+            <Form className="flex flex-col justify-center mt-24 items-center ">
                 <div className='w-2/4'>
                     <div className='flex mb-6'>
                         <div className='w-6/12'>

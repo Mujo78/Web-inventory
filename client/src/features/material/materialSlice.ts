@@ -11,7 +11,7 @@ export interface Material {
     price: number,
     unit_of_measure: string,
     is_it_used: boolean,
-    supplier_id: Supplier
+    supplier_id: string
 }
 
 export interface MaterialInterface {
@@ -65,6 +65,16 @@ export const createMaterial = createAsyncThunk("materials/post", async (material
     }
 })
 
+export const editMaterial = createAsyncThunk("material/edit", async ({id, materialData}: {id: string, materialData: MaterialInterface}, thunkAPI) => {
+    try{
+        return await materialServices.editMaterial(id, materialData)
+    }catch(error: any){
+        const message = error.response.data.message;
+
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
 
 export const materialSlice = createSlice({
     name: "material",
@@ -111,6 +121,17 @@ export const materialSlice = createSlice({
             .addCase(deleteMaterialById.fulfilled, (state, action) => {
                 state.status = "idle"
                 state.materials = state.materials.filter((n) => n._id !== action.payload)
+            })
+            .addCase(editMaterial.rejected, (state, action) => {
+                state.status = "failed"
+                state.message = action.payload as string
+            })
+            .addCase(editMaterial.pending, (state) => {
+                state.status = "loading"
+            })
+            .addCase(editMaterial.fulfilled, (state, action) => {
+                state.status = "idle"
+                state.materials.push(action.payload)
             })
     }
     
