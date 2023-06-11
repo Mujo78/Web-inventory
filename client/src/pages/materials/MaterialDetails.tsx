@@ -1,9 +1,9 @@
 import React from 'react'
 
-const MaterialDetails = () => {
+const MaterialDetails: React.FC = () => {
   return (
     <div>
-      
+      Material details goes here!
     </div>
   )
 }

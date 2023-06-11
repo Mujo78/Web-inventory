@@ -1,20 +1,24 @@
 import React, { useEffect, useState } from 'react'
 import { useAppDispatch } from '../../app/hooks'
 import { useSelector } from 'react-redux'
-import { Material, deleteMaterialById, getMaterials, material } from '../../features/material/materialSlice'
-import { Alert, Button, Card, TextInput } from 'flowbite-react'
+import { Material, getMaterials, material } from '../../features/material/materialSlice'
+import { Alert, Button, TextInput } from 'flowbite-react'
 import MaterialChart from '../../components/MaterialChart'
-import {FiEdit} from "react-icons/fi"
 import { useNavigate } from 'react-router-dom'
-import {GrOverview} from "react-icons/gr"
-import { AiOutlineDelete } from 'react-icons/ai'
+import MaterialCard from '../../components/MaterialCard'
 
 const Materials: React.FC = () => {
+
+  const dispatch = useAppDispatch()
+  useEffect(() =>{
+    
+    dispatch(getMaterials())
+    
+  }, [dispatch])
 
   const navigate = useNavigate()
   const [searchInput, setSearchInput] = useState<string>("")
   const [searched, setSearched] = useState<Material[]>([])
-  const dispatch = useAppDispatch()
   const {materials, status, message} = useSelector(material)
 
 
@@ -24,25 +28,8 @@ const Materials: React.FC = () => {
 
   const onSubmit = (event: React.FormEvent) => {
     event.preventDefault()
-  }
 
-  useEffect(() =>{
-    
-    dispatch(getMaterials())
-    
-  }, [dispatch])
-
-  const editMaterial = (id: string) =>{
-    navigate(`/edit-material/${id}`)
-  }
-
-  const deleteMaterial = (id: string) => {
-    dispatch(deleteMaterialById(id))
-  }
-  
-  console.log(message)
-  const viewMaterial = (id: string) =>{
-    navigate(`/material/${id}`)
+    setSearched(materials.filter(n => n.name === searchInput || n.name.startsWith(searchInput.slice(0,3))))
   }
 
   return (
@@ -56,7 +43,7 @@ const Materials: React.FC = () => {
               onChange={onChange}
               className='mb-3 w-11/12 pr-3'
               id="search-input"
-              placeholder="seds"
+              placeholder="Material One"
               type="text"
             />
             <Button type="submit" color="success">
@@ -66,37 +53,32 @@ const Materials: React.FC = () => {
         </form>
 
         <div className='pt-4 pb-12 h-full'>
-        {materials.length > 0 ? 
-            <div className= 'h-full mb-5 overflow-y-auto'>
-          {materials.map(n => (
-              <Card key={n._id} className='mb-3 mr-3'>
-                <div className='flex justify-between'>
-                  <div className='flex w-4/6'>
-                    <h1>{n.name}</h1> 
-                    <h1 className='mx-auto'>{n.quantity}x</h1>
-                  </div>
-                  <div className='flex'>
-                  <Button onClick={() => editMaterial(n._id)} size="sm" className='ml-auto px-0 mr-3 py-0 hover:!bg-white focus:ring-green-500 hover:transform hover:scale-125 transition-all ease-out border-x-2 bg-white'>
-                      <FiEdit style={{color: "black", height: "20px"}} />
-                  </Button>
-                  <Button onClick={() => viewMaterial(n._id)} size="sm" className='ml-auto px-0 py-0 hover:!bg-white focus:ring-green-500 hover:transform hover:scale-125 transition-all ease-out border-x-2 bg-white'>
-                      <GrOverview style={{color: "black", height: "20px"}} />
-                  </Button>
-                  <Button onClick={() => deleteMaterial(n._id)} size="sm" className='ml-auto px-0 py-0 hover:!bg-white focus:ring-green-500 hover:transform hover:scale-125 transition-all ease-out border-x-2 bg-white'>
-                      <AiOutlineDelete style={{color: "red", height: "20px"}} />
-                  </Button>
-                  </div>
-                </div>
-              </Card>
-          ))} </div> : 
+          <div className= 'h-full mb-5 overflow-y-auto'>
+          {materials.length > 0 ?
+            searchInput ?
+              searched.length > 0 ? 
+                searched.map( n => (
+                    <MaterialCard key={n._id} _id={n._id} name={n.name} quantity={n.quantity} />
+                )) : 
+                <div>
+                  <Alert color="info" className='text-center flex items-center' >
+                    <p>There are no such materials available.</p>
+                  </Alert>
+                </div> 
+            :
+              materials.map(m => (
+                  <MaterialCard key={m._id} _id={m._id} name={m.name} quantity={m.quantity} />
+              )) 
+            :
             <div>
-              <Alert color="info" className='text-center flex items-center' >
-                <p>There are no materials available.</p>
-              </Alert>
-            </div>
+                <Alert color="info" className='text-center flex items-center' >
+                  <p>There are no materials available.</p>
+                </Alert>
+            </div> 
         }
         </div>
-        </div>    
+        </div>
+        </div>   
         <div className='p-4 ml-4 border-2 rounded-md w-1/3'>
           <MaterialChart />
         </div>

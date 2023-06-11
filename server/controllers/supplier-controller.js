@@ -109,7 +109,7 @@ const suppliersMaterials = asyncHandler( async (req, res) =>{
         const materials = await Material.countDocuments({supplier_id: i._id})
 
         const suppData = {
-            supplier: i.toObject(),
+            supplier: i.name,
             materials
         }
 
