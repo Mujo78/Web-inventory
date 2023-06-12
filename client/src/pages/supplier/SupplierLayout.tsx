@@ -4,7 +4,7 @@ import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 
 const SupplierLayout: React.FC = () => {
 
-  const [showAlert , setShowAlert] = useState(true)
+  const [showAlert , setShowAlert] = useState<boolean>(true)
 
   const dismissIt = () =>{
     setShowAlert(n => !n)

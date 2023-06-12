@@ -3,13 +3,15 @@ import counterReducer from '../features/counter/counterSlice';
 import authReducer from "../features/auth/authSlice";
 import suppReducer from "../features/supplier/suppSlice";
 import materialReducer from "../features/material/materialSlice";
+import processReducer from "../features/processes/processSlice"
 
 export const store = configureStore({
   reducer: {
     counter: counterReducer,
     auth: authReducer,
     supp:suppReducer,
-    matt: materialReducer
+    matt: materialReducer,
+    process: processReducer
   },
 });
 

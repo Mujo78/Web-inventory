@@ -62,7 +62,7 @@ const DashSidebar = () => {
             </Sidebar.Item>
             <Sidebar.Item
               as={NavLink}
-              to="product-process"
+              to="processes"
               icon={FcProcess}
               className="mt-3"
             >

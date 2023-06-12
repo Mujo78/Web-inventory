@@ -7,7 +7,7 @@ import ErrorPage from './pages/ErrorPage';
 import HomeLayout from './components/HomeLayout';
 import Products from './pages/Products';
 import Materials from './pages/materials/Materials';
-import ProductProcess from './pages/ProductProcess';
+import ProductProcess from './pages/product_process/ProductProcess';
 import SupplierLayout from './pages/supplier/SupplierLayout';
 import Employee from './pages/Employee';
 import Settings from './pages/Settings';
@@ -22,6 +22,9 @@ import MaterialLayout from './pages/materials/MaterialLayout';
 import AddMaterial from './pages/materials/AddMaterial';
 import MaterialDetails from './pages/materials/MaterialDetails';
 import EditMaterial from './pages/materials/EditMaterial';
+import ProductProcessLayout from './pages/product_process/ProductProcessLayout';
+import AddProductProcess from './pages/product_process/AddPP';
+import EditProductProcess from './pages/product_process/EditPP';
 
 
 const router = createBrowserRouter(createRoutesFromElements(
@@ -37,7 +40,11 @@ const router = createBrowserRouter(createRoutesFromElements(
               <Route path='material/:id' element={<MaterialDetails />} />
               <Route path='edit-material/:id' element={<EditMaterial />} />
           </Route>
-          <Route path='product-process' element={<ProductProcess />} />
+          <Route path='/' element={<ProductProcessLayout />} >
+            <Route path='processes' element={<ProductProcess />} />
+            <Route path='add-process' element={<AddProductProcess />} />
+            <Route path='edit-process/:id' element={<EditProductProcess />} />
+          </Route>
           <Route path="/" element={<SupplierLayout />}>
             <Route path='suppliers' element={<Supplier />}/>
             <Route path='add-supplier' element={<AddSupplier />} />

@@ -26,7 +26,7 @@ const MaterialLayout: React.FC = () => {
           </Navbar.Link>
           <Navbar.Link
             className={`hover:!text-green-500 ${location.pathname === "/add-material" && `!text-green-500`}`}
-            as={NavLink}
+            as={Link}
             active={location.pathname === "/add-material" && true}
             to="add-material"
           >
