@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const Material = require('./material')
 
 const supplierSchema = mongoose.Schema({
     name: {
@@ -37,6 +38,16 @@ const supplierSchema = mongoose.Schema({
     timestamps:{
         createdAt: 'start_date',
         updatedAt: true
+    }
+})
+
+supplierSchema.pre('remove', async function(){
+    try{
+
+        await Material.deleteMany({supplier_id: this._id})
+
+    }catch(error){
+        console.log(error)
     }
 })
 

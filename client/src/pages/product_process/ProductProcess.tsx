@@ -7,14 +7,14 @@ import { Alert, Button, Card, ToggleSwitch } from 'flowbite-react'
 const ProductProcess:  React.FC = () => {
 
   const dispatch = useAppDispatch()
-  const {processes, status, message} = useSelector(process)
+  
 
+  const {processes, status, message} = useSelector(process)
+  
   useEffect(() =>{
     dispatch(getProcesses())
-  }, [dispatch, processes])
-
-
-
+  }, [dispatch])
+  
 
   const makeActive = (id: string) =>{
     dispatch(makeProcessActive(id))

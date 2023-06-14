@@ -3,8 +3,7 @@ const mongoose = require("mongoose")
 const productProcessSchema = mongoose.Schema({
     name: {
         type: String,
-        required: true,
-        minlength: 3
+        required: true
     },
     start_date: {
         type: Date,

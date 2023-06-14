@@ -6,6 +6,13 @@ const getProcesses = async () =>{
     return response.data;
 }
 
+const addProcess = async (processName: {name: string}) => {
+    const response = await axios.post("/add-product-process", processName)
+
+    return response.data;
+}
+
+
 const makeProcessActive = async (id: string) => {
     const response = await axios.put(`/make-active-process/${id}`)
 
@@ -15,6 +22,7 @@ const makeProcessActive = async (id: string) => {
 
 const processServices = {
     getProcesses,
+    addProcess,
     makeProcessActive
 }
 

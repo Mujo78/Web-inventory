@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler")
 const { validationResult } = require("express-validator")
 const Product_Process = require("../models/product-process")
+const Product_Process_Item = require("../models/product-process-item");
 
 
 const addProductProcess = asyncHandler( async(req, res) =>{
@@ -23,7 +24,7 @@ const addProductProcess = asyncHandler( async(req, res) =>{
         end_date: null
     })
 
-    res.status(200).json(newProductProcess)
+    res.status(200).json("Successfully added new process!")
 })
 
 const editProcess = asyncHandler( async (req, res) => {
@@ -64,7 +65,14 @@ const getProcesses = asyncHandler( async(req, res) =>{
 const getProcessById = asyncHandler( async(req, res) =>{
 
     const process = await Product_Process.findById(req.params.id)
-    if(process) return res.status(200).json(process)
+    if(process) {
+        const processItems = await Product_Process_Item.find({product_process_id: process._id}).populate("material_id")
+        const processById = {
+            process: process,
+            processItems: processItems
+        }
+        return res.status(200).json(processById)
+    }
     res.status(400).json("There was an error, please try again later!")
 })
 

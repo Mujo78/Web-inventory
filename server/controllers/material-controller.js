@@ -2,6 +2,8 @@ const asyncHandler = require("express-async-handler")
 const { validationResult } = require("express-validator")
 const Supplier = require("../models/supplier")
 const Material = require("../models/material")
+const Product_Process_Item = require("../models/product-process-item")
+
 
 const addMaterial = asyncHandler( async(req, res) => {
     const errors = validationResult(req)
@@ -107,6 +109,7 @@ const deleteMaterial = asyncHandler (async (req, res) => {
     const material = await Material.findByIdAndDelete(req.params.id)
     if(!material) return res.status(400).json("There was an error, please try again later!")
     
+    await Product_Process_Item.deleteMany({material_id: req.params.id})
     res.status(200).json(material._id)
 })
 
