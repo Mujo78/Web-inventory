@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { makeProcess, process } from '../../features/processes/processSlice'
 import { useAppDispatch } from '../../app/hooks'
+import PPItems from '../../components/PPItems'
 
 export interface processNameIn {
   name: string
@@ -14,6 +15,7 @@ const AddProductProcess = () => {
     name: ""
   })
   const [errorMessage, setErrorMessage] = useState<string>("")
+  const [processToModify, setProcessToModify] = useState<string>("")
 
   const {message, status} = useSelector(process)
   const dispatch = useAppDispatch()
@@ -25,11 +27,15 @@ const AddProductProcess = () => {
       setErrorMessage("Process name is required!")
     }else{
         setErrorMessage("")
-        dispatch(makeProcess(processName))
+        dispatch(makeProcess(processName)).then(({payload}) => {
+          console.log(payload)
+          if(!payload.endsWith("exists!")){
+            setProcessToModify(payload)
+            setStep((n) => n + 1)
+          }
+        })
     }
   }
-
-
     
     const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
       const {value, name} = e.currentTarget; 
@@ -58,26 +64,34 @@ const AddProductProcess = () => {
           </div>
         </div>
           <div className=' h-3/4'>
-            <h1 className='text-24 font-Rubik text-4xl mt-12 pb-9 ml-5 font-bold'>
-              Step {step} : Add new product process
-            </h1>
-              <form onSubmit={nextOne} className='flex flex-col justify-between h-5/6'>
-                <div>
-                  <TextInput 
-                    name='name'
-                    value={processName.name}
-                    onChange={handleChange}
-                    className='mx-5 mt-12'  />
-                  <div className='flex flex-col'>
-                    {status === "failed" && <Label className='text-sm mx-5 mt-1 font-normal !text-red-600'>{message}</Label>}
-                    {errorMessage && status !== "failed" && <Label className='text-sm mx-5 mt-1 font-normal !text-red-600'>{errorMessage}</Label>}
-                    <Label className='text-sm mx-5 mt-1 font-normal !text-gray-400'>(Type in unique product process name)</Label>
+            { step === 1 ?
+            <>
+              <h1 className='text-24 font-Rubik text-4xl mt-12 pb-9 ml-5 font-bold'>
+                Step {step} : Add new product process
+              </h1>
+                <form onSubmit={nextOne} className='flex flex-col justify-between h-5/6'>
+                  <div>
+                    <TextInput 
+                      name='name'
+                      value={processName.name}
+                      onChange={handleChange}
+                      className='mx-5 mt-12'  />
+                    <div className='flex flex-col'>
+                      {status === "failed" && <Label className='text-sm mx-5 mt-1 font-normal !text-red-600'>{message}</Label>}
+                      {errorMessage && status !== "failed" && <Label className='text-sm mx-5 mt-1 font-normal !text-red-600'>{errorMessage}</Label>}
+                      <Label className='text-sm mx-5 mt-1 mb-24 font-normal !text-gray-400'>(Type in unique product process name)</Label>
+                    </div>
                   </div>
-                </div>
-                <div className='flex justify-end'>
-                  <Button type='submit' color="success">Next</Button>
-                </div>
-            </form>
+                  <hr/>
+                  <div className='flex justify-end'>
+                    <Button type='submit' color="success" className='mb-1'>Next</Button>
+                  </div>
+              </form>
+              </> :
+              <>
+                <PPItems id={processToModify} />
+              </>
+            }
           </div>
       </div>
     </div>

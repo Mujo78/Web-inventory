@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
 import processServices from "./processService";
+import { selectedMaterials } from "../../components/PPItems";
 
 
 export interface Process {
@@ -55,6 +56,17 @@ export const makeProcessActive = createAsyncThunk("process/active", async (id: s
     }
 })
 
+export const addManyProcessItems = createAsyncThunk("process/post-items", async (materialsToAdd : selectedMaterials[], thunkAPI) => {
+    try{
+        return await processServices.addProcessItems(materialsToAdd)
+    }catch(error: any){
+        console.log(error)
+        const message = error.response.data;
+
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
 
 export const processSlice = createSlice({
     name: "process",
@@ -100,6 +112,17 @@ export const processSlice = createSlice({
         .addCase(makeProcessActive.fulfilled, (state, action) =>{
             state.status = "idle"
             state.message = action.payload as string
+        })
+        .addCase(addManyProcessItems.pending, (state) => {
+            state.status = "loading"
+        })
+        .addCase(addManyProcessItems.rejected, (state) => {
+            state.status = "failed"
+            state.message = "There was some error, please try again later!"
+        })
+        .addCase(addManyProcessItems.fulfilled, (state) => {
+            state.status = "idle"
+            state.message = "Successfully added items!"
         })
     }
 })

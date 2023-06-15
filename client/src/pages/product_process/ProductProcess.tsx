@@ -27,7 +27,7 @@ const ProductProcess:  React.FC = () => {
         <Card className='mt-2 w-full' key={n._id}>
           <div className='flex items-center'>
             <p className='p-0'>{n.name}</p>
-            <p className='mx-auto font-bold text-green-500'>{n.start_date !== null ? `${n.start_date.toString().slice(0, 10)}` : ``} </p>
+            {n.start_date && <p className='mx-auto font-bold text-green-500'>{n.start_date.toString().slice(0, 10)}</p>}
             <ToggleSwitch label='' checked={n.start_date !== null ? true : false} onChange={() => makeActive(n._id)} className='!ml-auto first:group-focus:!bg-green-500 first:group-focus:!ring-green-500 ' />
           </div>
         </Card>

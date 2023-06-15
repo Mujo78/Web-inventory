@@ -4,32 +4,20 @@ const Product_Process_Item = require("../models/product-process-item");
 const Material = require("../models/material");
 const Product_Process = require("../models/product-process");
 
-
 const addProcessItem = asyncHandler( async(req, res) => {
-    const errors = validationResult(req);
+    
+    const materialsToAdd = req.body;
 
-    if(!errors.isEmpty()){
-        res.status(400).json(errors)
-    }
+        const Items = []
 
-    const {
-        material_id,
-        product_process_id,
-        quantity
-    } = req.body;
-
-    const oldOne = await Product_Process_Item.findOne({product_process_id : product_process_id, material_id: material_id})
-    if(oldOne){
-        res.status(400)
-        throw new Error("You already added this item!")
-    }
-
+    for (const i of materialsToAdd){
+        const {
+            material_id,
+            product_process_id,
+            quantity
+        } = i;
+        
     const material = await Material.findById(material_id)
-   
-    if(material.quantity < quantity) {
-        res.status(400)
-        throw new Error(`In our stock there is only: ${material.quantity} ${material.name}!`)
-    }
 
     material.quantity = material.quantity - quantity;
     if(material.quantity < material.min_quantity) material.quantity += 20;
@@ -42,8 +30,11 @@ const addProcessItem = asyncHandler( async(req, res) => {
         product_process_id: product_process_id,
         quantity: quantity
     })
-
-    return res.status(200).json(newItem)
+    
+    Items.push(newItem)
+}
+    return res.status(200).json(Items)
+    
 })
 
 const editItem = asyncHandler( async(req, res) =>{

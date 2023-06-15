@@ -1,4 +1,5 @@
 import axios from "axios";
+import { selectedMaterials } from "../../components/PPItems";
 
 const getProcesses = async () =>{
     const response =await axios.get("/product-processes")
@@ -12,6 +13,11 @@ const addProcess = async (processName: {name: string}) => {
     return response.data;
 }
 
+const addProcessItems = async (materialsToAdd : selectedMaterials[]) =>{
+    const response = await axios.post("/add-process-item", materialsToAdd)
+
+    return response.data;
+}
 
 const makeProcessActive = async (id: string) => {
     const response = await axios.put(`/make-active-process/${id}`)
@@ -23,7 +29,8 @@ const makeProcessActive = async (id: string) => {
 const processServices = {
     getProcesses,
     addProcess,
-    makeProcessActive
+    makeProcessActive,
+    addProcessItems
 }
 
 export default processServices

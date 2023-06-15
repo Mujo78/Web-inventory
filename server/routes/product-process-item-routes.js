@@ -6,7 +6,7 @@ const router = express.Router()
 
 router.get("/items",getItems)
 router.get("/items/:id",getItemsForProcess)
-router.post("/add-process-item",createNewProcessItem, validate, addProcessItem)
+router.post("/add-process-item", addProcessItem)
 router.put("/edit-process-item/:id",editItem)
 
 module.exports = router;

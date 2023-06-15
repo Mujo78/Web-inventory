@@ -24,7 +24,7 @@ const addProductProcess = asyncHandler( async(req, res) =>{
         end_date: null
     })
 
-    res.status(200).json("Successfully added new process!")
+    res.status(200).json(newProductProcess._id)
 })
 
 const editProcess = asyncHandler( async (req, res) => {
