@@ -16,7 +16,6 @@ import AddSupplier from './pages/supplier/AddSupplier';
 import EditSupplier from './pages/supplier/EditSupplier';
 import Authorized from './helpers/Authorized';
 import UserRequired from './helpers/UserRequired';
-import RequiredUser from './helpers/RequiredUser';
 import SupplierDetails from './pages/supplier/SupplierDetails';
 import MaterialLayout from './pages/materials/MaterialLayout';
 import AddMaterial from './pages/materials/AddMaterial';
@@ -25,6 +24,7 @@ import EditMaterial from './pages/materials/EditMaterial';
 import ProductProcessLayout from './pages/product_process/ProductProcessLayout';
 import AddProductProcess from './pages/product_process/AddPP';
 import EditProductProcess from './pages/product_process/EditPP';
+import PPDetailPage from './pages/product_process/PPDetailPage';
 
 
 const router = createBrowserRouter(createRoutesFromElements(
@@ -43,6 +43,7 @@ const router = createBrowserRouter(createRoutesFromElements(
           <Route path='/' element={<ProductProcessLayout />} >
             <Route path='processes' element={<ProductProcess />} />
             <Route path='add-process' element={<AddProductProcess />} />
+            <Route path='process/:id' element={<PPDetailPage />} />
             <Route path='edit-process/:id' element={<EditProductProcess />} />
           </Route>
           <Route path="/" element={<SupplierLayout />}>

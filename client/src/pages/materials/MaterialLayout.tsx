@@ -1,6 +1,6 @@
 import React from 'react'
 import { Navbar } from 'flowbite-react'
-import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
+import { Link, Outlet, useLocation } from 'react-router-dom'
 
 
 const MaterialLayout: React.FC = () => {

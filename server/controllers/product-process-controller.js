@@ -80,8 +80,9 @@ const makeProcessActive = asyncHandler( async (req, res) => {
 
     await Product_Process.findOneAndUpdate({start_date: {$not: {$eq : null || ""} }}, {start_date: null}, {new: true})
     await Product_Process.findByIdAndUpdate(req.params.id, {start_date: Date.now()}, {new:true})
+    const all = await Product_Process.find();
 
-    res.status(200).json("Process is activated")
+    res.status(200).json(all)
 })
 
 module.exports = {

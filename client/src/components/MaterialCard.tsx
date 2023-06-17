@@ -1,4 +1,4 @@
-import { Button, Card } from 'flowbite-react'
+import { Card } from 'flowbite-react'
 import React from 'react'
 import { AiOutlineDelete } from 'react-icons/ai'
 import { FiEdit } from 'react-icons/fi'
@@ -6,14 +6,19 @@ import { GrOverview } from 'react-icons/gr'
 import { useAppDispatch } from '../app/hooks'
 import { useNavigate } from 'react-router-dom'
 import { deleteMaterialById } from '../features/material/materialSlice'
+import CustomButton from './CustomButton'
 
 export interface Props {
     _id: string,
     name: string,
     quantity: number
+
 }
 
-const classNameButton = "ml-auto px-0 py-0 hover:!bg-white focus:ring-green-500 hover:transform hover:scale-125 transition-all ease-out border-x-2 bg-white"
+const style = {
+  height: "20px",
+  color: "black"
+}
 
 const MaterialCard: React.FC<Props> = ({_id, name, quantity}) => {
 
@@ -40,15 +45,15 @@ const MaterialCard: React.FC<Props> = ({_id, name, quantity}) => {
                     <h1 className='mx-auto'>{quantity}x</h1>
                   </div>
                   <div className='flex'>
-                  <Button onClick={() => editMaterial(_id)} size="sm" className={classNameButton}>
-                      <FiEdit style={{color: "black", height: "20px"}} />
-                  </Button>
-                  <Button onClick={() => viewMaterial(_id)} size="sm" className={classNameButton}>
-                      <GrOverview style={{color: "black", height: "20px"}} />
-                  </Button>
-                  <Button onClick={() => deleteMaterial(_id)} size="sm" className={classNameButton}>
+                  <CustomButton onClick={() => editMaterial(_id)}>
+                      <FiEdit style={style} />
+                  </CustomButton>
+                  <CustomButton onClick={() => viewMaterial(_id)}>
+                      <GrOverview style={style} />
+                  </CustomButton>
+                  <CustomButton onClick={() => deleteMaterial(_id)}>
                       <AiOutlineDelete style={{color: "red", height: "20px"}} />
-                  </Button>
+                  </CustomButton>
                   </div>
                 </div>
               </Card>

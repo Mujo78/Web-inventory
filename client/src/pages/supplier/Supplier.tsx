@@ -2,10 +2,16 @@ import React, {useEffect} from 'react'
 import { useSelector } from 'react-redux'
 import { getSuppliers, supplier } from '../../features/supplier/suppSlice'
 import { useAppDispatch } from '../../app/hooks'
-import { Alert, Button, Card } from 'flowbite-react'
+import { Alert, Card } from 'flowbite-react'
 import {FiEdit} from "react-icons/fi"
 import { useNavigate } from 'react-router-dom'
 import {GrOverview} from "react-icons/gr"
+import CustomButton from '../../components/CustomButton'
+
+const styles = {
+  height: "20px",
+  color: "black"
+}
 
 const Supplier: React.FC = () => {
 
@@ -43,12 +49,12 @@ const Supplier: React.FC = () => {
                 {n.pdv} %
                 </h5>
                 <div className="flex ml-auto ">
-                  <Button onClick={() => editById(n._id)} size="sm" className='ml-auto px-0 mr-3 py-0 hover:!bg-white focus:ring-green-500 hover:transform hover:scale-125 transition-all ease-out border-x-2 bg-white'>
-                      <FiEdit style={{color: "black", height: "20px"}} />
-                  </Button>
-                  <Button onClick={() => supplierDetail(n._id)} size="sm" className='ml-auto px-0 py-0 hover:!bg-white focus:ring-green-500 hover:transform hover:scale-125 transition-all ease-out border-x-2 bg-white'>
-                      <GrOverview style={{color: "black", height: "20px"}} />
-                  </Button>
+                  <CustomButton onClick={() => editById(n._id)}>
+                      <FiEdit style={styles} />
+                  </CustomButton>
+                  <CustomButton onClick={() => supplierDetail(n._id)}>
+                      <GrOverview style={styles} />
+                  </CustomButton>
                 </div>
                 </div>
                 <div className="font-normal flex text-gray-700 dark:text-gray-400">

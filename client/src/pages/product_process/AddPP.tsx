@@ -1,5 +1,5 @@
 import { Button, Label, Progress, TextInput } from 'flowbite-react'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { makeProcess, process } from '../../features/processes/processSlice'
 import { useAppDispatch } from '../../app/hooks'
