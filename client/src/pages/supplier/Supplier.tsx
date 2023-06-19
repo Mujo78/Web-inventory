@@ -31,7 +31,7 @@ const Supplier: React.FC = () => {
   const supplierDetail = (id: string) => {
     navigate(`/supplier/${id}`)
   }
-  	console.log(suppliers)
+
   return (
     <div className='h-4/5 scroll-smooths overflow-y-auto '>
       {status !== "failed" && suppliers.length > 0 ? (

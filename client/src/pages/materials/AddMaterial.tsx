@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux'
 import { MaterialInterface, createMaterial, material } from '../../features/material/materialSlice'
 import { useAppDispatch } from '../../app/hooks'
 import { getSuppliers, supplier } from '../../features/supplier/suppSlice'
+import { useNavigate } from 'react-router-dom'
 
 const AddMaterial : React.FC = () => {
   
@@ -20,6 +21,7 @@ const AddMaterial : React.FC = () => {
   }
 
   const dispatch = useAppDispatch()
+  const navigate = useNavigate()
 
   useEffect(() => {
     dispatch(getSuppliers())
@@ -31,6 +33,7 @@ const AddMaterial : React.FC = () => {
   const handleSubmit = (values : MaterialInterface) => {
 
     dispatch(createMaterial(values))
+    navigate("/materials")
   }
   
   return (

@@ -30,7 +30,7 @@ const addSupplier = asyncHandler( async(req,res) => {
         end_date: null
     })
     
-    return res.status(200).json(`Successfully added new supplier: ${newOne.name}`)
+    return res.status(200).json(newOne)
 
 })
 
@@ -77,7 +77,7 @@ const editSupplier = asyncHandler( async(req, res) => {
         throw new Error("There was some error, try again later or report problem!")
     }
 
-    return res.status(200).json(`${supplier.name} successfully updated!`)
+    return res.status(200).json(supplier)
 })
 
 const supplierMaterials = asyncHandler( async (req, res) =>{
@@ -118,7 +118,6 @@ const suppliersMaterials = asyncHandler( async (req, res) =>{
 
     return res.status(200).json(suppWithMatt)
 })
-
 module.exports = {
     addSupplier,
     allSuppliers,

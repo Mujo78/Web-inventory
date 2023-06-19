@@ -19,13 +19,12 @@ const ProductProcess:  React.FC = () => {
   const navigate = useNavigate()
   
 
-  const {processes, status, message} = useSelector(process)
-  
   useEffect(() =>{
     dispatch(getProcesses())
-  }, [dispatch, processes])
+  }, [dispatch])
   
-
+  
+  const {processes, status, message} = useSelector(process)
   const makeActive = (id: string) =>{
     dispatch(makeProcessActive(id))
   }
@@ -41,7 +40,7 @@ const ProductProcess:  React.FC = () => {
     <div className='h-4/5 scroll-smooths pr-2 overflow-y-auto overflow-x-hidden '>
     {status !== "failed" && processes.length > 0 ? (
       processes.map(n => (
-        <Card className='mt-4 w-full p-0 cursor-pointer' key={n._id}>
+        <Card className='mt-4 w-full first:!p-0 hover:!bg-gray-100 p-0 cursor-pointer' key={n._id}>
           <div className='flex relative'>
             <div onClick={() => seeMore(n._id)} className='flex items-center justify-between w-11/12'>
               <p className='p-0'>{n.name}</p>

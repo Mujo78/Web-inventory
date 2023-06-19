@@ -93,8 +93,8 @@ export const materialSlice = createSlice({
                 state.status = "loading"
             })
             .addCase(createMaterial.fulfilled, (state, action) => {
-                state.status = "idle"
                 state.materials.push(action.payload)
+                state.status = "idle"
             })
             .addCase(createMaterial.rejected, (state, action) =>{
                 state.status = "failed"
@@ -130,8 +130,9 @@ export const materialSlice = createSlice({
                 state.status = "loading"
             })
             .addCase(editMaterial.fulfilled, (state, action) => {
+                const i = state.materials.findIndex(el => el._id === action.payload._id)
+                if(i !== -1) state.materials[i] = action.payload
                 state.status = "idle"
-                state.materials.push(action.payload)
             })
     }
     

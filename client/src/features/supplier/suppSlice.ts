@@ -86,8 +86,8 @@ export const suppSlice = createSlice({
             state.status = "loading"
         })
         .addCase(addNewSupplier.fulfilled, (state, action) => {
-            state.status = "idle"
             state.suppliers.push(action.payload)
+            state.status = "idle"
         })
         .addCase(addNewSupplier.rejected, (state, action) =>{
             state.status = "failed"
@@ -98,7 +98,8 @@ export const suppSlice = createSlice({
         })
         .addCase(editSupplier.fulfilled, (state, action) => {
             state.status = "idle"
-            state.suppliers.push(action.payload)
+            const i = state.suppliers.findIndex(el => el._id === action.payload._id)
+            if(i !== -1) state.suppliers[i] = action.payload
         })
         .addCase(editSupplier.rejected, (state, action) =>{
             state.status = "failed"

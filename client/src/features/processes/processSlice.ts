@@ -9,7 +9,7 @@ export interface Process {
     name: string,
     price: number,
     end_date: Date,
-    start_date: Date
+    start_date: Date | null
 }
 
 export interface initialStateInterface {
@@ -91,16 +91,14 @@ export const processSlice = createSlice({
         })
         .addCase(makeProcess.rejected, (state, action) =>{
             state.status = "failed"
-            console.log(action.payload)
             state.message = action.payload as string
         })
         .addCase(makeProcess.pending, (state) =>{
             state.status = "loading"
         })
         .addCase(makeProcess.fulfilled, (state, action) =>{
-            state.status = "idle"
-            console.log(action.payload)
             state.processes.push(action.payload)
+            state.status = "idle"
         })
         .addCase(makeProcessActive.rejected, (state, action) => {
             state.status = "failed"
@@ -111,7 +109,14 @@ export const processSlice = createSlice({
         })
         .addCase(makeProcessActive.fulfilled, (state, action) =>{
             state.status = "idle"
-            state.message = action.payload as string
+            
+            state.processes.forEach((n) => {
+                if(n._id !== action.payload._id){ 
+                    n.start_date = null;
+                }
+            })
+            const i = state.processes.findIndex(el => el._id === action.payload._id)
+            if(i !== -1) state.processes[i] = action.payload
         })
         .addCase(addManyProcessItems.pending, (state) => {
             state.status = "loading"

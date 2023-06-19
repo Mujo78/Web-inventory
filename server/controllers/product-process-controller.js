@@ -24,7 +24,7 @@ const addProductProcess = asyncHandler( async(req, res) =>{
         end_date: null
     })
 
-    res.status(200).json(newProductProcess._id)
+    return res.status(200).json(newProductProcess)
 })
 
 const editProcess = asyncHandler( async (req, res) => {
@@ -79,10 +79,9 @@ const getProcessById = asyncHandler( async(req, res) =>{
 const makeProcessActive = asyncHandler( async (req, res) => {
 
     await Product_Process.findOneAndUpdate({start_date: {$not: {$eq : null || ""} }}, {start_date: null}, {new: true})
-    await Product_Process.findByIdAndUpdate(req.params.id, {start_date: Date.now()}, {new:true})
-    const all = await Product_Process.find();
+    const updated = await Product_Process.findByIdAndUpdate(req.params.id, {start_date: Date.now()}, {new:true})
 
-    res.status(200).json(all)
+    res.status(200).json(updated)
 })
 
 module.exports = {

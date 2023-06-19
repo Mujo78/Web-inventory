@@ -36,6 +36,7 @@ const EditMaterial = () => {
   const handleEdit = (materialData: MaterialInterface) => {
     if(id){
       dispatch(editMaterial({id, materialData}))
+      navigate("/materials")
     }
   }
 

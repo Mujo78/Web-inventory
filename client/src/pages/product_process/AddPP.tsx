@@ -29,7 +29,7 @@ const AddProductProcess = () => {
         setErrorMessage("")
         dispatch(makeProcess(processName)).then(({payload}) => {
           console.log(payload)
-          if(!payload.endsWith("exists!")){
+          if(typeof payload !== 'string'){
             setProcessToModify(payload)
             setStep((n) => n + 1)
           }
