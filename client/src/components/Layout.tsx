@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react'
-import { Outlet, useNavigate } from 'react-router-dom'
-import DashSidebar from './DashSidebar'
+import React from 'react'
+import { Outlet } from 'react-router-dom'
+
 
 const Layout: React.FC = () => {
 

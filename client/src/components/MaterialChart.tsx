@@ -1,39 +1,35 @@
-import React, { useEffect, useState } from 'react'
-import { PieChart, Pie, Legend, Tooltip, ResponsiveContainer } from 'recharts';
+import { PieChart, Pie, Legend, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 
-import axios from 'axios';
+import { Alert } from 'flowbite-react';
+import { SupplierWithMaterial } from '../pages/materials/Materials';
 
-export interface SupplierWithMaterial {
-  supplier: string,
-  materials: number
+interface Props {
+  suppMatt: SupplierWithMaterial[]
 }
 
 
 
+const MaterialChart: React.FC<Props> = ({suppMatt}) => {
 
-const MaterialChart: React.FC = () => {
-  const [suppMatt, setSuppMatt] = useState<SupplierWithMaterial[]>([]);
-
-  useEffect(() => {
-    axios
-      .get("/supplier-materials")
-      .then((res) => setSuppMatt(res.data))
-      .catch((err) => console.log(err));
-  }, []);
-
-  const materialsandsuppliers = suppMatt
-    .filter((n) => n.materials >= 1)
-    .slice(0, 5);
-
-  const chartData = materialsandsuppliers.map((item) => ({
+  const chartData = suppMatt
+  .filter((n) => n.materials >= 1)
+  .slice(0, 5)
+  .map((item) => ({
     name: item.supplier,
     value: item.materials,
   }));
 
-  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+  const COLORS = ["#15607A", "#09BB9F", "#39F3BB", "#18A1CD", "#1D81A2"];
 
   return (
     <div className='flex flex-col justify-center text-start w-full'>
+      {chartData.length <= 0 ?
+      <div className='flex mt-48 justify-center items-center'>
+        <Alert color="info">
+            <h1>There are no suppliers or materials available!</h1>
+        </Alert>
+      </div> : 
+      <>
       <h1 className='font-Rubik text-xl mt-2 mb-5 font-bold'>
         Top suppliers by material count
       </h1>
@@ -47,13 +43,19 @@ const MaterialChart: React.FC = () => {
               cx='50%'
               cy='50%'
               outerRadius={80}
-              fill="#8884d8"
               label
-            />
+            >
+              {chartData.map((e, i) => (
+                <Cell key={`cell-${i}`} fill={COLORS[i % COLORS.length]} />
+              ))}
+            </Pie>
             <Tooltip />
+            <Legend layout='vertical'  />
           </PieChart>
         </ResponsiveContainer>
       </div>
+      </>
+    }
     </div>
   );
 };

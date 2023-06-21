@@ -2,13 +2,22 @@ import React, { useEffect, useState } from 'react'
 import { useAppDispatch } from '../../app/hooks'
 import { useSelector } from 'react-redux'
 import { Material, getMaterials, material } from '../../features/material/materialSlice'
-import { Alert, Button, TextInput } from 'flowbite-react'
+import { Alert, Button, Spinner, TextInput } from 'flowbite-react'
 import MaterialChart from '../../components/MaterialChart'
 import { useNavigate } from 'react-router-dom'
 import MaterialCard from '../../components/MaterialCard'
+import axios from 'axios'
+
+
+export interface SupplierWithMaterial {
+  supplier: string,
+  materials: number
+}
 
 const Materials: React.FC = () => {
 
+  const [suppMatt, setSuppMatt] = useState<SupplierWithMaterial[]>([]);
+  
   const dispatch = useAppDispatch()
   useEffect(() =>{
     
@@ -32,6 +41,13 @@ const Materials: React.FC = () => {
     setSearched(materials.filter(n => n.name === searchInput || n.name.startsWith(searchInput.slice(0,3))))
   }
 
+  useEffect(() => {
+    axios
+    .get("/supplier-materials")
+    .then((res) => setSuppMatt(res.data))
+    .catch((err) => console.log(err));
+  }, [])
+
   return (
     <div className='flex mt-8 max-w-full h-5/6'>
       <div className='w-2/3  h-full p-6 mb-8 border-2 rounded-md'>
@@ -54,7 +70,12 @@ const Materials: React.FC = () => {
 
         <div className='pt-4 pb-12 h-full'>
           <div className= 'h-full mb-5 overflow-y-auto'>
-          {materials.length > 0 ?
+          {status === "loading" ? (
+            <div className='flex items-center justify-center mt-12'>
+              <Spinner />
+            </div>
+          ) :
+          materials.length > 0 ?
             searchInput ?
               searched.length > 0 ? 
                 searched.map( n => (
@@ -80,7 +101,7 @@ const Materials: React.FC = () => {
         </div>
         </div>   
         <div className='p-4 ml-4 border-2 rounded-md w-1/3'>
-          <MaterialChart />
+          <MaterialChart suppMatt={suppMatt} />
         </div>
     </div>
   )

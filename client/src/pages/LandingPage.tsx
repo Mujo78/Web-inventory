@@ -6,15 +6,6 @@ import ForgetPasswordForm from '../components/ForgetPasswordForm'
 import InfoForgot from '../components/InfoForgot'
 import { useNavigate } from 'react-router-dom'
 
-type User = {
-    username: string,
-    password: string
-}
-
-type Props = {
-    forgotPass : boolean, 
-    setForgotPass: React.Dispatch<React.SetStateAction<boolean>>
-}
 
 export const classNm = 'w-full border-0 border-b focus:ring-0 focus:border-green-500'
 export const animationLeftClass = "transition-transform duration-300 ease-out transform translate-x-0 sm:translate-x-full"
