@@ -54,10 +54,10 @@ const Supplier: React.FC = () => {
                 {n.pdv} %
                 </h5>
                 <div className="flex ml-auto ">
-                  <CustomButton onClick={() => editById(n._id)}>
+                  <CustomButton onClick={() => editById(n._id)} v={1}>
                       <FiEdit style={styles} />
                   </CustomButton>
-                  <CustomButton onClick={() => supplierDetail(n._id)}>
+                  <CustomButton onClick={() => supplierDetail(n._id)} v={1}>
                       <GrOverview style={styles} />
                   </CustomButton>
                 </div>

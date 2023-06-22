@@ -56,6 +56,16 @@ export const makeProcessActive = createAsyncThunk("process/active", async (id: s
     }
 })
 
+export const deactivateProcess = createAsyncThunk("process/deactivate", async (id: string, thunkAPI) => {
+    try{
+        return await processServices.deactivateProcess(id)
+    }catch(error: any){
+        const message = error.response.data;
+
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
 export const addManyProcessItems = createAsyncThunk("process/post-items", async (materialsToAdd : selectedMaterials[], thunkAPI) => {
     try{
         return await processServices.addProcessItems(materialsToAdd)
@@ -104,19 +114,25 @@ export const processSlice = createSlice({
             state.status = "failed"
             state.message = action.payload as string
         })
-        .addCase(makeProcessActive.pending, (state) =>{
-            state.status = "loading"
-        })
         .addCase(makeProcessActive.fulfilled, (state, action) =>{
-            state.status = "idle"
-            
             state.processes.forEach((n) => {
-                if(n._id !== action.payload._id){ 
+                if(n._id !== action.payload._id && n.end_date === null){ 
                     n.start_date = null;
                 }
             })
             const i = state.processes.findIndex(el => el._id === action.payload._id)
             if(i !== -1) state.processes[i] = action.payload
+            state.status = "idle"
+            
+        })
+        .addCase(deactivateProcess.rejected, (state, action) =>{
+            state.status = "failed"
+            state.message = action.payload as string
+        })
+        .addCase(deactivateProcess.fulfilled, (state, action) => {
+            const i = state.processes.findIndex(el => el._id === action.payload._id)
+            if(i !== -1) state.processes[i] = action.payload
+            state.status = "idle"
         })
         .addCase(addManyProcessItems.pending, (state) => {
             state.status = "loading"

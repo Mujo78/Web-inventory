@@ -45,13 +45,13 @@ const MaterialCard: React.FC<Props> = ({_id, name, quantity}) => {
                     <h1 className='mx-auto'>{quantity}x</h1>
                   </div>
                   <div className='flex'>
-                  <CustomButton onClick={() => viewMaterial(_id)}>
+                  <CustomButton onClick={() => viewMaterial(_id)} v={1}>
                       <GrOverview style={style} />
                   </CustomButton>
-                  <CustomButton onClick={() => editMaterial(_id)}>
+                  <CustomButton onClick={() => editMaterial(_id)} v={1}>
                       <FiEdit style={style} />
                   </CustomButton>
-                  <CustomButton onClick={() => deleteMaterial(_id)}>
+                  <CustomButton onClick={() => deleteMaterial(_id)} v={1}>
                       <AiOutlineDelete style={{color: "red", height: "20px"}} />
                   </CustomButton>
                   </div>

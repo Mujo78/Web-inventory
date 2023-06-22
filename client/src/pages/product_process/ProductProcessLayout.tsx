@@ -18,7 +18,7 @@ const ProductProcessLayout: React.FC = () => {
             onDismiss={dismissIt}
             color="success"
         >
-            <h1 className="font-bold">Info: Only one product proccess can be active!</h1>
+            <h1 className="font-semibold">Info: Only one product proccess can be active <i>(activate/deactivate process by clicking green/red)</i> </h1>
         </Alert>}
         <Navbar
           className='!bg-gray-200 my-3 py-4 !border-gray-400'

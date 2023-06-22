@@ -20,7 +20,13 @@ const addProcessItems = async (materialsToAdd : selectedMaterials[]) =>{
 }
 
 const makeProcessActive = async (id: string) => {
-    const response = await axios.put(`/make-active-process/${id}`)
+    const response = await axios.patch(`/make-active-process/${id}`)
+
+    return response.data;
+}
+
+const deactivateProcess = async (id: string) => {
+    const response = await axios.patch(`/deactivate-process/${id}`)
 
     return response.data;
 }
@@ -30,7 +36,8 @@ const processServices = {
     getProcesses,
     addProcess,
     makeProcessActive,
-    addProcessItems
+    addProcessItems,
+    deactivateProcess
 }
 
 export default processServices

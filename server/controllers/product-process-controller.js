@@ -78,10 +78,17 @@ const getProcessById = asyncHandler( async(req, res) =>{
 
 const makeProcessActive = asyncHandler( async (req, res) => {
 
-    await Product_Process.findOneAndUpdate({start_date: {$not: {$eq : null || ""} }}, {start_date: null}, {new: true})
-    const updated = await Product_Process.findByIdAndUpdate(req.params.id, {start_date: Date.now()}, {new:true})
+    await Product_Process.findOneAndUpdate({start_date: {$not: {$eq : null || ""} }, end_date: {$eq : null}}, {start_date: null}, {new: true})
+    const updated = await Product_Process.findByIdAndUpdate(req.params.id, {end_date: null, start_date: Date.now()}, {new:true})
 
-    res.status(200).json(updated)
+    return res.status(200).json(updated)
+})
+
+const deactivateProcess = asyncHandler( async (req, res) => {
+
+    const updated = await Product_Process.findOneAndUpdate({_id: req.params.id }, {start_date:  Date.now(), end_date: Date.now()}, {new: true})
+    if(!updated) return res.status(404).json("Something went wrong, please try again later!")
+    return res.status(200).json(updated)
 })
 
 module.exports = {
@@ -89,5 +96,6 @@ module.exports = {
     getProcessById,
     getProcesses,
     editProcess,
-    makeProcessActive
+    makeProcessActive,
+    deactivateProcess
 }
