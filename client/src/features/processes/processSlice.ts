@@ -8,7 +8,7 @@ export interface Process {
     _id: string,
     name: string,
     price: number,
-    end_date: Date,
+    end_date: Date | null,
     start_date: Date | null
 }
 
@@ -76,7 +76,6 @@ export const addManyProcessItems = createAsyncThunk("process/post-items", async 
         return thunkAPI.rejectWithValue(message)
     }
 })
-
 
 export const processSlice = createSlice({
     name: "process",

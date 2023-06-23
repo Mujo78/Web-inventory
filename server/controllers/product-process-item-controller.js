@@ -54,7 +54,7 @@ const editItem = asyncHandler( async(req, res) =>{
     
     if(item) return res.status(200).json(item)
 
-    res.status(400).json("There was an error, please try again later!")
+    return res.status(400).json("There was an error, please try again later!")
 })
 
 const getItems = asyncHandler( async (req, res) =>{
@@ -63,7 +63,7 @@ const getItems = asyncHandler( async (req, res) =>{
     if(items) return res.status(200).json(items)
 
 
-    res.status(400).json("There is no items available!")
+    return res.status(400).json("There are no items available!")
 })
 
 const getItemsForProcess = asyncHandler( async (req, res) =>{
@@ -71,7 +71,7 @@ const getItemsForProcess = asyncHandler( async (req, res) =>{
     const items = await Product_Process_Item.find({product_process_id: req.params.id}).populate("material_id")
     if(items) return res.status(200).json(items)
 
-    res.status(400).json("There is no items for this process!")
+    return res.status(400).json("There is no items for this process!")
 })
 
 module.exports = {

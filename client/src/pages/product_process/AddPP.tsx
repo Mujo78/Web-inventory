@@ -30,12 +30,14 @@ const AddProductProcess = () => {
         dispatch(makeProcess(processName)).then(({payload}) => {
           console.log(payload)
           if(typeof payload !== 'string'){
-            setProcessToModify(payload)
+            setProcessToModify(payload._id)
             setStep((n) => n + 1)
           }
         })
     }
   }
+
+  console.log(processToModify)
     
     const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
       const {value, name} = e.currentTarget; 
