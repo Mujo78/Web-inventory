@@ -95,29 +95,32 @@ const supplierMaterials = asyncHandler( async (req, res) =>{
 })
 
 const suppliersMaterials = asyncHandler( async (req, res) =>{
-    const suppliers = await Supplier.find()
     
-    const suppWithMatt = []
-
-    if(!suppliers) {
-        res.status(400)
-        throw new Error("There was no suppliers in database!")
-    }
-
-    for (const i of suppliers){
-
-        const materials = await Material.countDocuments({supplier_id: i._id})
-
-        const suppData = {
-            supplier: i.name,
-            materials
+    const supplierMaterialCounts = await Supplier.aggregate([
+        {
+          $lookup: {
+            from: "materials",
+            localField: "_id",
+            foreignField: "supplier_id",
+            as: "materials"
+          }
+        },
+        {
+          $project: {
+            supplier: "$name",
+            materialsCount: { $size: "$materials" }
+          }
+        },
+        {
+          $match: {
+            materialsCount: { $gte: 1 }
+          }
         }
+      ]);
+    
+      return res.status(200).json(supplierMaterialCounts);
+    });
 
-        suppWithMatt.push(suppData)
-    }
-
-    return res.status(200).json(suppWithMatt)
-})
 module.exports = {
     addSupplier,
     allSuppliers,

@@ -11,24 +11,38 @@ import axios from 'axios'
 
 export interface SupplierWithMaterial {
   supplier: string,
-  materials: number
+  materialsCount: number
 }
 
 const Materials: React.FC = () => {
-
+  
   const [suppMatt, setSuppMatt] = useState<SupplierWithMaterial[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true)
+  
+  const getSupplierMaterials = async () => {
+    const res = await axios.get("/supplier-materials")
+    const data = res.data
+
+    setSuppMatt(data)
+    setIsLoading(false)
+  }
+
   
   const dispatch = useAppDispatch()
+  
   useEffect(() =>{
-    
     dispatch(getMaterials())
-    
   }, [dispatch])
+
+  const {materials, status, message} = useSelector(material)
+  
+  useEffect(() => {
+    getSupplierMaterials()
+  }, [materials])
 
   const navigate = useNavigate()
   const [searchInput, setSearchInput] = useState<string>("")
   const [searched, setSearched] = useState<Material[]>([])
-  const {materials, status, message} = useSelector(material)
 
 
   const onChange = (event : React.FormEvent<HTMLInputElement>) => {
@@ -41,12 +55,6 @@ const Materials: React.FC = () => {
     setSearched(materials.filter(n => n.name === searchInput || n.name.startsWith(searchInput.slice(0,3))))
   }
 
-  useEffect(() => {
-    axios
-    .get("/supplier-materials")
-    .then((res) => setSuppMatt(res.data))
-    .catch((err) => console.log(err));
-  }, [])
 
   return (
     <div className='flex mt-8 max-w-full h-5/6'>
@@ -100,9 +108,9 @@ const Materials: React.FC = () => {
         </div>
         </div>
         </div>   
-        <div className='p-4 ml-4 border-2 rounded-md w-1/3'>
-          <MaterialChart suppMatt={suppMatt} />
-        </div>
+        {suppMatt.length > 0 && <div className='p-4 ml-4 border-2 rounded-md w-1/3'>
+          <MaterialChart suppMatt={suppMatt} loadingState={isLoading} />
+        </div>}
     </div>
   )
 }

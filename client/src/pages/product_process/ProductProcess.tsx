@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom'
 import { FiEdit } from 'react-icons/fi'
 import CustomButton from '../../components/CustomButton'
 import { MdDisabledByDefault } from 'react-icons/md'
+import { getMaterials } from '../../features/material/materialSlice'
 
 
 
@@ -28,8 +29,7 @@ const ProductProcess:  React.FC = () => {
 
   useEffect(() =>{
     dispatch(getProcesses())
-  }, [dispatch])
-  
+  }, [dispatch])  
   
   const {processes, status, message} = useSelector(process)
   const makeActive = (id: string) =>{

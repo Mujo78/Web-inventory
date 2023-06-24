@@ -1,8 +1,14 @@
 import axios from "axios";
-import { Material, MaterialInterface } from "./materialSlice";
+import { MaterialInterface } from "./materialSlice";
 
 const getMaterials = async () => {
     const response = await axios.get("/materials")
+
+    return response.data
+}
+
+const getMaterialById = async (id: string) => {
+    const response = await axios.get(`/material/${id}`)
 
     return response.data
 }
@@ -29,7 +35,8 @@ const materialServices = {
     getMaterials,
     deleteMaterial,
     addMaterial,
-    editMaterial
+    editMaterial,
+    getMaterialById
 }
 
 export default materialServices

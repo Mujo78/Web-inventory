@@ -4,41 +4,46 @@ import React, { useEffect } from 'react'
 import { classNm } from '../LandingPage'
 import { materialValidationSchema } from '../../validations/materialValidation'
 import { useSelector } from 'react-redux'
-import { Material, MaterialInterface, editMaterial, material } from '../../features/material/materialSlice'
+import { MaterialInterface, editMaterial, getMaterial, material } from '../../features/material/materialSlice'
 import { useAppDispatch } from '../../app/hooks'
 import { getSuppliers, supplier } from '../../features/supplier/suppSlice'
 import { useNavigate, useParams } from 'react-router-dom'
 
 
-const EditMaterial = () => {
+const EditMaterial: React.FC = () => {
   
-  let {id} = useParams()
-  const {suppliers} = useSelector(supplier)
-  const {status, message, materials} = useSelector(material)
-  const dispatch = useAppDispatch()
-  const navigate = useNavigate()
+    let {id} = useParams()
+    const {suppliers} = useSelector(supplier)
+    const dispatch = useAppDispatch()
+    const navigate = useNavigate()
+  
+    useEffect(() =>{
+        if(id){
+            dispatch(getMaterial(id))
+        }
+    }, [dispatch, id])
 
-  const matt: Material | undefined = materials.find(n => n._id === id)
-
-  const initialState : MaterialInterface = {
-    name: matt?.name || '',
-    supplier_id: matt?.supplier_id || '',
-    min_quantity: matt?.min_quantity || 0,
-    quantity: matt?.quantity || 0,
-    price: matt?.price || 0,
-    unit_of_measure: matt?.unit_of_measure || ''
-  }
-
-  useEffect(() =>{
-    dispatch(getSuppliers())
-  }, [dispatch])
-
-  const handleEdit = (materialData: MaterialInterface) => {
-    if(id){
-      dispatch(editMaterial({id, materialData}))
-      navigate("/materials")
+    const {status, message, specificMaterial} = useSelector(material)
+    
+    const initialState : MaterialInterface = {
+        name: specificMaterial?.name || '',
+        supplier_id: specificMaterial?.supplier_id || '',
+        min_quantity: specificMaterial?.min_quantity || 0,
+        quantity: specificMaterial?.quantity || 0,
+        price: specificMaterial?.price || 0,
+        unit_of_measure: specificMaterial?.unit_of_measure || ''
     }
-  }
+
+    useEffect(() =>{
+        dispatch(getSuppliers())
+    }, [dispatch])
+
+    const handleEdit = (materialData: MaterialInterface) => {
+        if(id){
+            dispatch(editMaterial({id, materialData}))
+            navigate("/materials")
+        }
+    }
 
   const goBack = () => {
     navigate("/materials")

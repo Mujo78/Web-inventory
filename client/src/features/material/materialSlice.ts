@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { RootState } from "../../app/store"
-import { Supplier } from "../supplier/suppSlice"
 import materialServices from "./materialService"
 
 export interface Material {
@@ -25,12 +24,14 @@ export interface MaterialInterface {
 
 export interface materialState {
     materials: Material[],
+    specificMaterial: Material | null,
     status: 'idle' | 'loading' | 'failed',
     message: string
 }
 
 const initialState: materialState = {
     materials: [],
+    specificMaterial: null,
     status: "idle",
     message: ""
 }
@@ -38,6 +39,16 @@ const initialState: materialState = {
 export const getMaterials = createAsyncThunk("materials/get", async (_, thunkAPI) => {
     try {
         return await materialServices.getMaterials()
+    } catch (error: any) {
+        const message = error.response
+
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
+export const getMaterial = createAsyncThunk("material/get", async (id: string, thunkAPI) => {
+    try {
+        return await materialServices.getMaterialById(id)
     } catch (error: any) {
         const message = error.response
 
@@ -121,6 +132,17 @@ export const materialSlice = createSlice({
             .addCase(deleteMaterialById.fulfilled, (state, action) => {
                 state.status = "idle"
                 state.materials = state.materials.filter((n) => n._id !== action.payload)
+            })
+            .addCase(getMaterial.rejected, (state, action) =>{
+                state.status = "failed"
+                state.message = action.payload as string
+            })
+            .addCase(getMaterial.pending, (state) =>{
+                state.status = "loading"
+            })
+            .addCase(getMaterial.fulfilled, (state, action) =>{
+                state.status = "idle"
+                state.specificMaterial = action.payload
             })
             .addCase(editMaterial.rejected, (state, action) => {
                 state.status = "failed"

@@ -1,6 +1,7 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import { Material } from '../features/material/materialSlice'
+import { Material, getMaterials } from '../features/material/materialSlice'
+import { useAppDispatch } from '../app/hooks'
 
 interface ProductItem {
     _id: string,
@@ -11,6 +12,7 @@ interface ProductItem {
 
 const EditPPItems : React.FC<{pp_id: string | ''}> = ({pp_id}) => {
 
+    const dispatch = useAppDispatch()
     const [items, setItems] = useState<ProductItem[]>([])
     const [messageError, setMessageError] = useState<string>("")
 
@@ -28,6 +30,10 @@ const EditPPItems : React.FC<{pp_id: string | ''}> = ({pp_id}) => {
     useEffect(() => {
         getItems()
     }, [])
+
+    useEffect(() =>{
+        dispatch(getMaterials())
+      }, [dispatch])
 
   return (
     <div>
