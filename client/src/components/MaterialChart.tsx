@@ -6,8 +6,7 @@ import { SupplierWithMaterial } from '../pages/materials/Materials';
 import { useEffect, useState } from 'react';
 
 interface Props {
-  suppMatt: SupplierWithMaterial[],
-  loadingState: boolean
+  suppMatt: SupplierWithMaterial[]
 }
 
 interface ChartData {
@@ -15,7 +14,7 @@ interface ChartData {
   value: number;
 }
 
-const MaterialChart: React.FC<Props> = ({suppMatt, loadingState}) => {
+const MaterialChart: React.FC<Props> = ({suppMatt}) => {
 
   const [chartData, setChartData] = useState<ChartData[]>([]);
 
@@ -35,13 +34,8 @@ const MaterialChart: React.FC<Props> = ({suppMatt, loadingState}) => {
 
   return (
     <div className='flex flex-col justify-center text-start w-full'>
-      {loadingState ? (
-        <div className='flex items-center justify-center mt-12'>
-          <Spinner />
-        </div>
-      ):
       
-      chartData.length <= 0 ?
+      {chartData.length <= 0 ?
       <div className='flex mt-48 justify-center items-center'>
         <Alert color="info">
             <h1>There are no suppliers or materials available!</h1>

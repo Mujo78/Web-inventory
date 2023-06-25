@@ -24,14 +24,13 @@ export interface MaterialInterface {
 
 export interface materialState {
     materials: Material[],
-    specificMaterial: Material | null,
+    specificMaterial?: Material,
     status: 'idle' | 'loading' | 'failed',
     message: string
 }
 
 const initialState: materialState = {
     materials: [],
-    specificMaterial: null,
     status: "idle",
     message: ""
 }
@@ -46,7 +45,7 @@ export const getMaterials = createAsyncThunk("materials/get", async (_, thunkAPI
     }
 })
 
-export const getMaterial = createAsyncThunk("material/get", async (id: string, thunkAPI) => {
+export const getMaterial = createAsyncThunk("material-one/get", async (id: string, thunkAPI) => {
     try {
         return await materialServices.getMaterialById(id)
     } catch (error: any) {
@@ -94,8 +93,8 @@ export const materialSlice = createSlice({
         reset: (state) => {
             state.status = "idle"
         },
-        resetmessage: (state) => {
-            state.message = ""
+        resetMaterial: (state) => {
+            state.specificMaterial = undefined
         }
     },
     extraReducers(builder){
@@ -142,6 +141,7 @@ export const materialSlice = createSlice({
             })
             .addCase(getMaterial.fulfilled, (state, action) =>{
                 state.status = "idle"
+                console.log(action.payload)
                 state.specificMaterial = action.payload
             })
             .addCase(editMaterial.rejected, (state, action) => {
@@ -161,5 +161,5 @@ export const materialSlice = createSlice({
 })
 
 export const material = (state: RootState) => state.matt
-export const {reset} = materialSlice.actions
+export const {reset, resetMaterial} = materialSlice.actions
 export default materialSlice.reducer

@@ -1,10 +1,10 @@
-import { Button, Label, Select } from 'flowbite-react'
+import { Button, Label, Select, Spinner } from 'flowbite-react'
 import { ErrorMessage, Field, Form, Formik } from 'formik'
 import React, { useEffect } from 'react'
 import { classNm } from '../LandingPage'
 import { materialValidationSchema } from '../../validations/materialValidation'
 import { useSelector } from 'react-redux'
-import { MaterialInterface, editMaterial, getMaterial, material } from '../../features/material/materialSlice'
+import { MaterialInterface, editMaterial, getMaterial, material, resetMaterial } from '../../features/material/materialSlice'
 import { useAppDispatch } from '../../app/hooks'
 import { getSuppliers, supplier } from '../../features/supplier/suppSlice'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -12,18 +12,23 @@ import { useNavigate, useParams } from 'react-router-dom'
 
 const EditMaterial: React.FC = () => {
   
-    let {id} = useParams()
-    const {suppliers} = useSelector(supplier)
+    const {id} = useParams()
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
-  
+    
     useEffect(() =>{
         if(id){
             dispatch(getMaterial(id))
         }
-    }, [dispatch, id])
 
+        return () =>{
+            dispatch(resetMaterial())
+        }
+    }, [dispatch, id])
+    
+    const {suppliers} = useSelector(supplier)
     const {status, message, specificMaterial} = useSelector(material)
+    
     
     const initialState : MaterialInterface = {
         name: specificMaterial?.name || '',
@@ -55,7 +60,8 @@ const EditMaterial: React.FC = () => {
             Edit Material
         </h1>
         <hr/>
-        <Formik
+        {specificMaterial ? <Formik
+            enableReinitialize={true}
             initialValues={initialState}
             validationSchema={materialValidationSchema}
             onSubmit={handleEdit}
@@ -191,7 +197,11 @@ const EditMaterial: React.FC = () => {
                     </div>
                 </div>
             </Form>
-        </Formik>
+        </Formik> : (
+            <div className='flex items-center justify-center mt-12'>
+            <Spinner />
+          </div>
+        )}
     </>
   )
 }

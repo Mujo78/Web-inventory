@@ -17,14 +17,12 @@ export interface SupplierWithMaterial {
 const Materials: React.FC = () => {
   
   const [suppMatt, setSuppMatt] = useState<SupplierWithMaterial[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true)
   
   const getSupplierMaterials = async () => {
     const res = await axios.get("/supplier-materials")
     const data = res.data
 
     setSuppMatt(data)
-    setIsLoading(false)
   }
 
   
@@ -109,7 +107,7 @@ const Materials: React.FC = () => {
         </div>
         </div>   
         {suppMatt.length > 0 && <div className='p-4 ml-4 border-2 rounded-md w-1/3'>
-          <MaterialChart suppMatt={suppMatt} loadingState={isLoading} />
+          <MaterialChart suppMatt={suppMatt} />
         </div>}
     </div>
   )

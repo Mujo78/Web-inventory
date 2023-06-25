@@ -44,10 +44,10 @@ const allSuppliers =  asyncHandler( async(req, res) => {
 
 const supplierById =  asyncHandler( async(req, res) => {
     
-    const supplier = await Supplier.findOne({_id: req.params.id})
+    const supplier = await Supplier.findById(req.params.id)
     if(supplier) return res.status(200).json(supplier)
 
-    res.status(400).json("There are no suppliers available!")
+    return res.status(400).json("There are no suppliers available!")
 })
 
 const editSupplier = asyncHandler( async(req, res) => {

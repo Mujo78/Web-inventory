@@ -17,6 +17,7 @@ export interface Supplier {
 
 export interface suppState {
     suppliers: Supplier[],
+    specificSupplier?: Supplier
     status: 'idle' | 'loading' | 'failed',
     message: string
 }
@@ -27,7 +28,7 @@ const initialState: suppState = {
     message: ''
 }
 
-export const getSuppliers = createAsyncThunk("supplier/get", async (_, thunkAPI) => {
+export const getSuppliers = createAsyncThunk("suppliers/get", async (_, thunkAPI) => {
     try{
         return await suppServices.getSuppliers()
     }catch(error: any){
@@ -37,7 +38,7 @@ export const getSuppliers = createAsyncThunk("supplier/get", async (_, thunkAPI)
     }
 })
 
-export const getSupplierById = createAsyncThunk("supplierById/get", async (id:string, thunkAPI) => {
+export const getSupplier = createAsyncThunk("supplier/get", async (id:string, thunkAPI) => {
     try{
         return await suppServices.getSupplierById(id)
     }catch(error: any){
@@ -47,7 +48,7 @@ export const getSupplierById = createAsyncThunk("supplierById/get", async (id:st
     }
 })
 
-export const addNewSupplier = createAsyncThunk("supp/add", async(supplierData: NewSupplier, thunkAPI) => {
+export const addNewSupplier = createAsyncThunk("supplier/post", async(supplierData: NewSupplier, thunkAPI) => {
     try{
         return await suppServices.addSupplier(supplierData)
     }catch(error: any){
@@ -58,7 +59,7 @@ export const addNewSupplier = createAsyncThunk("supp/add", async(supplierData: N
     }
 })
 
-export const editSupplier = createAsyncThunk("supplier/edit", async({ id, supplierData }: { id: string, supplierData: Supp },  thunkAPI) =>{
+export const editSupplier = createAsyncThunk("supplier/put", async({ id, supplierData }: { id: string, supplierData: Supp },  thunkAPI) =>{
     try{
         return await suppServices.editSupplier(id, supplierData);
     }catch(error: any){
@@ -76,8 +77,8 @@ export const suppSlice = createSlice({
         reset: (state) => {
             state.status = "idle"
         },
-        resetmessage: (state) => {
-            state.message = ""
+        resetSupplier: (state) => {
+            state.specificSupplier = undefined
         }
     },
     extraReducers(builder){
@@ -116,9 +117,21 @@ export const suppSlice = createSlice({
             state.status = "failed"
             state.message = action.payload as string
         })
+        .addCase(getSupplier.rejected, (state, action) => {
+            state.status = "failed"
+            state.message = action.payload as string
+        })
+        .addCase(getSupplier.pending, (state) => {
+            state.status = "loading"
+        })
+        .addCase(getSupplier.fulfilled, (state, action) =>{
+            state.status = "idle"
+            state.specificSupplier = action.payload
+        })
+        
     }
 })
 
 export const supplier = (state: RootState) => state.supp;
-export const {reset, resetmessage} = suppSlice.actions
+export const {reset, resetSupplier} = suppSlice.actions
 export default suppSlice.reducer
