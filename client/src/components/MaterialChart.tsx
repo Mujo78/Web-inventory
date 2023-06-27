@@ -1,7 +1,7 @@
 import { PieChart, Pie, Legend, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 
 
-import { Alert, Spinner } from 'flowbite-react';
+import { Alert } from 'flowbite-react';
 import { SupplierWithMaterial } from '../pages/materials/Materials';
 import { useEffect, useState } from 'react';
 

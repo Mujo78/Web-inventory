@@ -2,11 +2,12 @@ import React, {useEffect} from 'react'
 import { useSelector } from 'react-redux'
 import { getSuppliers, supplier } from '../../features/supplier/suppSlice'
 import { useAppDispatch } from '../../app/hooks'
-import { Alert, Card, Spinner } from 'flowbite-react'
+import { Alert, Card } from 'flowbite-react'
 import {FiEdit} from "react-icons/fi"
 import { useNavigate } from 'react-router-dom'
 import {GrOverview} from "react-icons/gr"
 import CustomButton from '../../components/CustomButton'
+import CustomSpinner from '../../components/CustomSpinner'
 
 const styles = {
   height: "20px",
@@ -35,9 +36,7 @@ const Supplier: React.FC = () => {
   return (
     <div className='h-4/5 scroll-smooths overflow-y-auto '>
       { status === "loading" ? (
-        <div  className='flex justify-center items-center mt-12'>
-          <Spinner />
-        </div>
+        <CustomSpinner />
       ) :
       status !== "failed" && suppliers.length > 0 ? (
         <div className='flex flex-wrap'>

@@ -68,12 +68,12 @@ const getProcessById = asyncHandler( async(req, res) =>{
     if(process) {
         const processItems = await Product_Process_Item.find({product_process_id: process._id}).populate("material_id")
         const processById = {
-            process: process,
+            processData: process,
             processItems: processItems
         }
         return res.status(200).json(processById)
     }
-    res.status(400).json("There was an error, please try again later!")
+    return res.status(400).json("There was an error, please try again later!")
 })
 
 const makeProcessActive = asyncHandler( async (req, res) => {

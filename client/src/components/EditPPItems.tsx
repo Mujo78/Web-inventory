@@ -2,42 +2,40 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { Material, getMaterials } from '../features/material/materialSlice'
 import { useAppDispatch } from '../app/hooks'
+import { ProductItem } from '../features/processes/processSlice'
+import { Alert, Button, Tooltip } from 'flowbite-react'
 
-interface ProductItem {
-    _id: string,
-    material_id: Material,
-    product_process_id : string,
-    quantity: number
-}
+const EditPPItems : React.FC<{items: ProductItem[]}> = ({items}) => {
 
-const EditPPItems : React.FC<{pp_id: string | ''}> = ({pp_id}) => {
+  const dispatch = useAppDispatch()
+  const [messageError, setMessageError] = useState<string>("")
 
-    const dispatch = useAppDispatch()
-    const [items, setItems] = useState<ProductItem[]>([])
-    const [messageError, setMessageError] = useState<string>("")
-
-    const getItems = async () =>{
-        try{
-            const res = await axios.get("/items")
-            const data = res.data
-
-            setItems(data)
-        }catch(error: any) {
-            setMessageError(error.data)
-        }
-    }
-
-    useEffect(() => {
-        getItems()
-    }, [])
-
-    useEffect(() =>{
-        dispatch(getMaterials())
-      }, [dispatch])
+   console.log(items)
 
   return (
     <div>
-        
+        {items ? (
+          <div>
+            <h1 className='text-24 font-Rubik text-xl mt-9 ml-3 font-bold'>Items</h1>
+            <p className='text-xs text-gray-500 font-normal pb-5 ml-3'>Hover material name to see quantity! Click on it to change quantity!</p>
+            <div>
+              {items.map(n => (
+                <Tooltip key={n._id} content={n.quantity}>
+                <Button 
+                  color="gray" 
+                  className='m-2 hover:!text-green-500'
+                >
+                  {n.material_id.name}
+                </Button>
+              </Tooltip>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div>
+
+          </div>
+        )}
     </div>
   )
 }

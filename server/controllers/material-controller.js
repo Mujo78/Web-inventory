@@ -35,7 +35,7 @@ const addMaterial = asyncHandler( async(req, res) => {
         unit_of_measure: unit_of_measure,
         is_it_used: false
     })
-    res.status(200).json(newMaterial)
+    return res.status(200).json(newMaterial)
 
 })
 
@@ -44,7 +44,7 @@ const getMaterials = asyncHandler (async (req, res) => {
     const allMaterials = await Material.find()
     if(!allMaterials) return res.status(400).json("There are no materials available at this moment!")
 
-    res.status(200).json(allMaterials)
+    return res.status(200).json(allMaterials)
 })
 
 const getMaterialById = asyncHandler (async (req, res) => {
@@ -102,7 +102,7 @@ const editMaterial = asyncHandler( async (req, res) => {
     const newOne = await Material.findByIdAndUpdate(req.params.id, updates, {new: true})
     if(newOne) return res.status(200).json(newOne)
 
-    res.status(400).json("There was an error, please try again later!")
+    return res.status(400).json("There was an error, please try again later!")
 })
 
 const deleteMaterial = asyncHandler (async (req, res) => {
@@ -111,7 +111,7 @@ const deleteMaterial = asyncHandler (async (req, res) => {
     if(!material) return res.status(400).json("There was an error, please try again later!")
     
     await Product_Process_Item.deleteMany({material_id: req.params.id})
-    res.status(200).json(material._id)
+    return res.status(200).json(material._id)
 })
 
 

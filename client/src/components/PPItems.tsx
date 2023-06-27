@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { getMaterials, material } from '../features/material/materialSlice'
 import { useAppDispatch } from '../app/hooks'
-import { Alert, Button, Label, Spinner, TextInput, Tooltip } from 'flowbite-react'
+import { Alert, Button, Label, TextInput, Tooltip } from 'flowbite-react'
 import { useNavigate } from 'react-router-dom'
 import { addManyProcessItems } from '../features/processes/processSlice'
 import { AiOutlineCloseCircle } from 'react-icons/ai'
+import CustomSpinner from './CustomSpinner'
 
 
 export interface selectedMaterials {
@@ -99,9 +100,7 @@ const PPItems : React.FC<{id: string}> = ({id}) => {
         <div className='overflow-y-auto w-4/6 h-full flex flex-col flex-wrap justify-start'>
           {status === "loading" ? 
             (
-              <div className='flex justify-center items-center mt-12'>
-                <Spinner />
-              </div>
+              <CustomSpinner />
             )
           : materials.length > 0 ? (
               materials.map((n) => (

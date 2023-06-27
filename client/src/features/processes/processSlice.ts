@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
 import processServices from "./processService";
 import { selectedMaterials } from "../../components/PPItems";
-
+import { Material } from "../material/materialSlice";
 
 export interface Process {
     _id: string,
@@ -12,8 +12,22 @@ export interface Process {
     start_date: Date | null
 }
 
+export interface ProductItem {
+    _id: string,
+    material_id: Material,
+    product_process_id : string,
+    quantity: number
+}
+
+
+interface specificProcess {
+    processData: Process,
+    processItems: ProductItem[]
+}
+
 export interface initialStateInterface {
     processes: Process[],
+    specificProcess? : specificProcess
     status: 'idle' | 'loading' | 'failed',
     message: string
 }
@@ -26,9 +40,19 @@ const initialState : initialStateInterface = {
 }
 
 
-export const getProcesses = createAsyncThunk("process/get", async (_, thunkAPI) => {
+export const getProcesses = createAsyncThunk("processes/get", async (_, thunkAPI) => {
     try{
         return await processServices.getProcesses() 
+    }catch(error: any){
+        const message = error.response.data
+
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
+export const getProcessById = createAsyncThunk("process/get", async (id: string, thunkAPI) => {
+    try{
+        return await processServices.getProcess(id)
     }catch(error: any){
         const message = error.response.data
 
@@ -46,7 +70,7 @@ export const makeProcess = createAsyncThunk("process/post", async (processName:{
     }
 })
 
-export const makeProcessActive = createAsyncThunk("process/active", async (id: string, thunkAPI) => {
+export const makeProcessActive = createAsyncThunk("process/activate", async (id: string, thunkAPI) => {
     try{
         return await processServices.makeProcessActive(id)
     }catch(error: any){
@@ -83,6 +107,9 @@ export const processSlice = createSlice({
     reducers:{
         reset: (state) => {
             state.status = "idle"
+        },
+        resetSpecificProcess: (state) => {
+            state.specificProcess = undefined
         }
     },
     extraReducers: (builder) => {
@@ -97,6 +124,17 @@ export const processSlice = createSlice({
         .addCase(getProcesses.fulfilled, (state, action) =>{
             state.status = "idle"
             state.processes = action.payload
+        })
+        .addCase(getProcessById.rejected, (state, action) => {
+            state.status = "failed"
+            state.message = action.payload as string
+        })
+        .addCase(getProcessById.pending, (state) =>{
+            state.status = "loading"
+        })
+        .addCase(getProcessById.fulfilled, (state, action) =>{
+            state.status = "idle"
+            state.specificProcess = action.payload
         })
         .addCase(makeProcess.rejected, (state, action) =>{
             state.status = "failed"
@@ -148,5 +186,5 @@ export const processSlice = createSlice({
 })
 
 export const process = (state: RootState) => state.process
-export const {reset} = processSlice.actions
+export const {reset, resetSpecificProcess} = processSlice.actions
 export default processSlice.reducer

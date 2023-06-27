@@ -7,6 +7,12 @@ const getProcesses = async () =>{
     return response.data;
 }
 
+const getProcess = async (id: string) =>{
+    const response = await axios.get(`/product-process/${id}`)
+
+    return response.data;
+}
+
 const addProcess = async (processName: {name: string}) => {
     const response = await axios.post("/add-product-process", processName)
 
@@ -37,7 +43,8 @@ const processServices = {
     addProcess,
     makeProcessActive,
     addProcessItems,
-    deactivateProcess
+    deactivateProcess,
+    getProcess
 }
 
 export default processServices

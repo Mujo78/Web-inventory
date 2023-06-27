@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react'
 import { useAppDispatch } from '../../app/hooks'
 import { useSelector } from 'react-redux'
 import { Material, getMaterials, material } from '../../features/material/materialSlice'
-import { Alert, Button, Spinner, TextInput } from 'flowbite-react'
+import { Alert, Button, TextInput } from 'flowbite-react'
 import MaterialChart from '../../components/MaterialChart'
 import { useNavigate } from 'react-router-dom'
 import MaterialCard from '../../components/MaterialCard'
 import axios from 'axios'
+import CustomSpinner from '../../components/CustomSpinner'
 
 
 export interface SupplierWithMaterial {
@@ -77,9 +78,7 @@ const Materials: React.FC = () => {
         <div className='pt-4 pb-12 h-full'>
           <div className= 'h-full mb-5 overflow-y-auto'>
           {status === "loading" ? (
-            <div className='flex items-center justify-center mt-12'>
-              <Spinner />
-            </div>
+            <CustomSpinner />
           ) :
           materials.length > 0 ?
             searchInput ?

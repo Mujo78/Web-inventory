@@ -8,6 +8,7 @@ import { MaterialInterface, editMaterial, getMaterial, material, resetMaterial }
 import { useAppDispatch } from '../../app/hooks'
 import { getSuppliers, supplier } from '../../features/supplier/suppSlice'
 import { useNavigate, useParams } from 'react-router-dom'
+import CustomSpinner from '../../components/CustomSpinner'
 
 
 const EditMaterial: React.FC = () => {
@@ -198,9 +199,7 @@ const EditMaterial: React.FC = () => {
                 </div>
             </Form>
         </Formik> : (
-            <div className='flex items-center justify-center mt-12'>
-            <Spinner />
-          </div>
+            <CustomSpinner />
         )}
     </>
   )

@@ -2,12 +2,13 @@ import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { deactivateProcess, getProcesses, makeProcessActive, process } from '../../features/processes/processSlice'
 import { useAppDispatch } from '../../app/hooks'
-import { Alert, Button, Card, Spinner } from 'flowbite-react'
+import { Alert, Button, Card} from 'flowbite-react'
 import { useNavigate } from 'react-router-dom'
 import { FiEdit } from 'react-icons/fi'
 import CustomButton from '../../components/CustomButton'
 import { MdDisabledByDefault } from 'react-icons/md'
 import { getMaterials } from '../../features/material/materialSlice'
+import CustomSpinner from '../../components/CustomSpinner'
 
 
 
@@ -50,9 +51,7 @@ const ProductProcess:  React.FC = () => {
   return (
     <div className='h-4/5 scroll-smooths pr-2 overflow-y-auto overflow-x-hidden '>
     {status === "loading" ? (
-      <div className='flex justify-center items-center mt-12'>
-        <Spinner />
-      </div>
+      <CustomSpinner />
     ) :
     status !== "failed" && processes.length > 0 ? (
       processes.map(n => (

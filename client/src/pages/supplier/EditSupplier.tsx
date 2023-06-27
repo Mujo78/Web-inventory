@@ -6,8 +6,9 @@ import { useSelector } from 'react-redux'
 import { editSupplier, getSupplier, resetSupplier, supplier } from '../../features/supplier/suppSlice'
 import { ErrorMessage, Field, Form, Formik } from 'formik'
 import { supplierValidationSchema } from '../../validations/supplierValidation'
-import { Button, Label, Spinner, ToggleSwitch } from 'flowbite-react'
+import { Button, Label, ToggleSwitch } from 'flowbite-react'
 import { classNm } from '../LandingPage'
+import CustomSpinner from '../../components/CustomSpinner'
 
 const EditSupplier: React.FC = () => {
     
@@ -68,9 +69,7 @@ const EditSupplier: React.FC = () => {
         </h1>
         <hr/>
         {status === "loading" ? 
-            <div className='flex items-center justify-center mt-12'>
-            <Spinner />
-          </div>
+            <CustomSpinner />
             :  (
             <Formik
                 enableReinitialize={true}
