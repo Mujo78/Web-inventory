@@ -1,19 +1,19 @@
-import { Button, Label, TextInput, Toast } from 'flowbite-react'
-import React, { useEffect, useState } from 'react'
+import { Button, Label, Toast } from 'flowbite-react'
+import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Process, getProcessById, process, resetSpecificProcess } from '../../features/processes/processSlice'
+import { deactivateProcess, editSpecificProcess, getProcessById, makeProcessActive, makeProcessUsable, process, resetSpecificProcess } from '../../features/processes/processSlice'
 import { ErrorMessage, Field, Form, Formik } from 'formik'
 import { validationProcessSchema } from '../../validations/processValidation'
 import {MdRecommend} from "react-icons/md"
 import EditPPItems from '../../components/EditPPItems'
 import { useAppDispatch } from '../../app/hooks'
 import CustomSpinner from '../../components/CustomSpinner'
-
+import { ProcessToEdit } from '../../features/processes/processService'
 
 const EditProductProcess: React.FC = () => {
   
-  const {id} = useParams()
+ const {id} = useParams()
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const {status, message, specificProcess} = useSelector(process)
@@ -28,21 +28,39 @@ const EditProductProcess: React.FC = () => {
     }
   }, [dispatch, id])
 
-  const initialState : Process = {
-    _id:specificProcess?.processData?._id || '',
+  const initialState : ProcessToEdit = {
     name: specificProcess?.processData?.name || '',
-    price: specificProcess?.processData?.price || 0,
-    end_date: specificProcess?.processData?.end_date || null,
-    start_date: specificProcess?.processData?.start_date ||null
+    price: specificProcess?.processData?.price || 0
   }
 
-  const handleSubmit = () =>{
-    console.log("New submit")
+
+  const handleSubmit = (processData: ProcessToEdit) =>{
+    if(id){
+      dispatch(editSpecificProcess({id, processData} ))
+      if(status === "idle") navigate("/processes")
+    }
   }
   
   const handleCancel = () =>{
     navigate("/processes")
   }
+
+  const makeActive = (id: string) =>{
+    dispatch(makeProcessActive(id))
+    navigate("/processes")
+  }
+
+  const makeProcessUsableAgain = (id: string) => {
+    dispatch(makeProcessUsable(id))
+    navigate("/processes")
+  }
+
+  const makeDeactive = (id: string) => {
+    dispatch(deactivateProcess(id))
+    navigate("/processes")
+  }
+
+  console.log(specificProcess)
   
   return (
     <div>
@@ -60,57 +78,73 @@ const EditProductProcess: React.FC = () => {
         </div>
         <hr/>
       
-          {!specificProcess ? (
-              <CustomSpinner />
-          )
-          : 
-          <div>
+        {!specificProcess ? (
+          <CustomSpinner />
+        )
+        :
+        <div>
+        <div className='flex justify-between max-h-full'>
+          <div className='w-2/3 max-h-full mt-4 p-8 border border-gray-300 rounded-lg'>
             <Formik
               enableReinitialize={true}
               validationSchema={validationProcessSchema}
               onSubmit={handleSubmit}
               initialValues={initialState}>
-                <Form>
-                  <div className='flex justify-between'>
-                    <div className='w-2/3 mt-4 p-8 border border-gray-300 rounded-lg'>
-                      <h1 className='text-24 font-Rubik ml-3 text-xl font-bold'>Item data</h1>
-                      <div className='flex mt-4 mb-5 mx-3 justify-between'>
-                        <div className='flex flex-col w-3/4'>
-                          <Label>Name</Label>
-                          <Field
-                            type="text"
-                            id="name"
-                            className='mt-2 mb-2 border-0 border-b'
-                            name='name'
-                          />
-                          <ErrorMessage name='name' component="span"  className='text-red-600 text-xs' />
-                        </div>
-                        <div className='flex flex-col w-1/5'>
-                          <Label>Price</Label>
-                          <Field
-                            type="number"
-                            id="price"
-                            className='mt-2 mb-2 border-0 border-b'
-                            name='price'
-                          />
-                          <ErrorMessage name='price' component="span"  className='text-red-600 text-xs' />
-                        </div>
+              <Form>
+                  <h1 className='text-24 font-Rubik ml-3 text-xl font-bold'>Process data</h1>
+                  <div className='flex mt-4 mx-3 justify-between'>
+                      <div className='flex flex-col w-3/4'>
+                        <Label htmlFor='name'>Name</Label>
+                        <Field
+                          autoComplete="off"
+                          type="text"
+                          id="name"
+                          className='mt-2 mb-2 border-0 border-b'
+                          name='name'
+                        />
+                        <ErrorMessage name='name' component="span"  className='text-red-600 text-xs' />
                       </div>
-                      <hr/>
-                      <div>
-                        <EditPPItems items={specificProcess?.processItems || []} />
+                      <div className='flex flex-col w-1/5'>
+                        <Label htmlFor='price'>Price</Label>
+                        <Field
+                          type="number"
+                          id="price"
+                          className='mt-2 border-0 border-b'
+                          name='price'
+                        />
+                        <ErrorMessage name='price' component="span"  className='text-red-600 text-xs' />
                       </div>
-                    </div>
-                    <div className='w-1/3 ml-4 mt-4 p-8 border border-gray-300 rounded-lg'>
-                      something
-                    </div>
                   </div>
-                  <div className='flex justify-end items-end mt-6'>
-                    <Button onClick={handleCancel} className='mr-4' color="light"  >Cancel</Button>
-                    <Button type='submit' color="success" >Save changes</Button>
-                  </div>
-                </Form>
+                  <Button size="xs" type='submit' className='ml-auto mt-4 mb-4' color="success" >Save changes</Button>
+              </Form>
             </Formik>
+            <hr/>
+            <div>
+              <EditPPItems items={specificProcess?.processItems || []} />
+            </div>
+          </div>
+            <div className='w-1/3 ml-4 mt-4 p-8 border border-gray-300 rounded-lg'>
+              something
+            </div>
+          </div>
+          <div className='flex justify-between items-end'>
+            <div className='flex justify-end align-bottom items-end mt-6'>
+              <Button onClick={handleCancel} className='mr-4' color="light"  >Cancel</Button>
+            </div>
+            <div className='flex justify-end align-bottom items-end mt-6'>
+              { specificProcess?.processData.end_date !== null && 
+                specificProcess?.processData.start_date !== null && 
+                <Button color="gray" className='mr-4' onClick={() => makeProcessUsableAgain(specificProcess.processData._id)} >Use process again</Button>}
+              
+              {((specificProcess?.processData.start_date !== null && specificProcess?.processData.end_date === null) || 
+               (specificProcess?.processData.start_date === null && specificProcess?.processData.end_date === null)) &&
+                <Button className='mr-4' onClick={() => makeDeactive(specificProcess.processData._id)} color="failure">Deactivate process</Button>}
+              
+              {specificProcess?.processData.end_date === null && 
+                specificProcess?.processData.start_date === null && 
+                <Button color="success" onClick={() => makeActive(specificProcess.processData._id)} >Activate process</Button>}
+            </div>
+          </div>
         </div>}
     </div>
   )

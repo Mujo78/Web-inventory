@@ -1,6 +1,11 @@
 import axios from "axios";
 import { selectedMaterials } from "../../components/PPItems";
 
+export interface ProcessToEdit {
+    name: string,
+    price: number
+}
+
 const getProcesses = async () =>{
     const response =await axios.get("/product-processes")
 
@@ -37,6 +42,17 @@ const deactivateProcess = async (id: string) => {
     return response.data;
 }
 
+const makeProcessUsable = async (id: string) => {
+    const response = await axios.patch(`/make-usable-process/${id}`)
+
+    return response.data;
+}
+
+const editProcess = async(id: string, processData: ProcessToEdit) =>{
+    const response = await axios.put(`/edit-product-process/${id}`, processData)
+
+    return response.data;
+}
 
 const processServices = {
     getProcesses,
@@ -44,7 +60,9 @@ const processServices = {
     makeProcessActive,
     addProcessItems,
     deactivateProcess,
-    getProcess
+    getProcess,
+    makeProcessUsable,
+    editProcess
 }
 
 export default processServices

@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
-import processServices from "./processService";
+import processServices, { ProcessToEdit } from "./processService";
 import { selectedMaterials } from "../../components/PPItems";
 import { Material } from "../material/materialSlice";
 
@@ -38,6 +38,8 @@ const initialState : initialStateInterface = {
     status: "idle",
     message: ""
 }
+
+
 
 
 export const getProcesses = createAsyncThunk("processes/get", async (_, thunkAPI) => {
@@ -90,6 +92,16 @@ export const deactivateProcess = createAsyncThunk("process/deactivate", async (i
     }
 })
 
+export const makeProcessUsable = createAsyncThunk("process/restore", async (id: string, thunkAPI) => {
+    try{
+        return await processServices.makeProcessUsable(id)
+    }catch(error: any){
+        const message = error.response.data;
+
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
 export const addManyProcessItems = createAsyncThunk("process/post-items", async (materialsToAdd : selectedMaterials[], thunkAPI) => {
     try{
         return await processServices.addProcessItems(materialsToAdd)
@@ -98,6 +110,17 @@ export const addManyProcessItems = createAsyncThunk("process/post-items", async 
         const message = error.response.data;
 
         return thunkAPI.rejectWithValue(message)
+    }
+})
+
+export const editSpecificProcess = createAsyncThunk("process/edit", async({id, processData} : {id: string, processData: ProcessToEdit}, thunkAPI) => {
+    try{
+        return await processServices.editProcess(id, processData);
+    }catch(error: any){
+        const message = error.response.data.errors[0];
+        
+        return thunkAPI.rejectWithValue(message)
+   
     }
 })
 
@@ -171,6 +194,30 @@ export const processSlice = createSlice({
             if(i !== -1) state.processes[i] = action.payload
             state.status = "idle"
         })
+        .addCase(makeProcessUsable.rejected, (state, action) =>{
+            state.status = "failed"
+            state.message = action.payload as string
+        })
+        .addCase(makeProcessUsable.fulfilled, (state, action) => {
+            const i = state.processes.findIndex(el => el._id === action.payload._id)
+            if(i !== -1) state.processes[i] = action.payload
+            state.status = "idle"
+        })
+        .addCase(editSpecificProcess.pending, (state) => {
+            state.status = "loading"
+        })
+        .addCase(editSpecificProcess.rejected, (state, action) => {
+            state.status = "failed"
+            state.message = action.payload as string
+        })
+        .addCase(editSpecificProcess.fulfilled, (state, action) => {
+            state.status = "idle"
+            const i = state.processes.findIndex(el => el._id === action.payload._id)
+            if(i !== -1) state.processes[i] = action.payload
+        })
+        
+
+
         .addCase(addManyProcessItems.pending, (state) => {
             state.status = "loading"
         })

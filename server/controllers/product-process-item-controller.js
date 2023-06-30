@@ -40,17 +40,10 @@ const addProcessItem = asyncHandler( async(req, res) => {
 const editItem = asyncHandler( async(req, res) =>{
 
     const {
-        material_id,
-        product_process_id,
         quantity
     } = req.body
 
-    const updates = {}
-    if(material_id) updates.material_id = material_id
-    if(product_process_id) updates.product_process_id = product_process_id
-    if(quantity) updates.quantity = quantity
-
-    const item = await Product_Process_Item.findByIdAndUpdate(req.params.id, updates, {new: true})
+    const item = await Product_Process_Item.findByIdAndUpdate(req.params.id, {$set: {quantity: quantity}}, {new: true})
     
     if(item) return res.status(200).json(item)
 

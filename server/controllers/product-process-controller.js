@@ -29,29 +29,17 @@ const addProductProcess = asyncHandler( async(req, res) =>{
 
 const editProcess = asyncHandler( async (req, res) => {
 
-    const {name, price,start_date, end_date} = req.body;
-
-    const oldProcess = await Product_Process.findOne({name: name})
-
-    if(oldProcess?.id.toString() !== req.params.id.toString()){
-        res.status(400)
-        throw new Error("Name is already in use!")
-    }
+    const {name, price} = req.body;
 
     const updates = {}
     if(name) updates.name = name
     if(price) updates.price = price
-    if(end_date !== "" || null) updates.end_date = end_date
-    if(start_date !== "" || null) updates.start_date = start_date
-
 
     const process = await Product_Process.findByIdAndUpdate(req.params.id, updates, {new: true})
     
     if(process) return res.status(200).json(process)
 
-    res.status(400).json("There was an error, please try again later!")
-
-
+    return res.status(400).json("There was an error, please try again later!")
 })
 
 const getProcesses = asyncHandler( async(req, res) =>{
@@ -91,11 +79,19 @@ const deactivateProcess = asyncHandler( async (req, res) => {
     return res.status(200).json(updated)
 })
 
+const makeProcessUsable = asyncHandler( async (req, res) =>{
+
+    const updated = await Product_Process.findByIdAndUpdate(req.params.id,{start_date:  null, end_date: null}, {new: true})
+    if(!updated) return res.status(404).json("Something went wrong, please try again later!")
+    return res.status(200).json(updated)
+})
+
 module.exports = {
     addProductProcess,
     getProcessById,
     getProcesses,
     editProcess,
     makeProcessActive,
-    deactivateProcess
+    deactivateProcess,
+    makeProcessUsable
 }
