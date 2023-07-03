@@ -2,6 +2,7 @@ const asyncHandler = require("express-async-handler")
 const { validationResult } = require("express-validator")
 const Product_Process = require("../models/product-process")
 const Product_Process_Item = require("../models/product-process-item");
+const Material = require("../models/material");
 
 
 const addProductProcess = asyncHandler( async(req, res) =>{
@@ -75,15 +76,24 @@ const makeProcessActive = asyncHandler( async (req, res) => {
 const deactivateProcess = asyncHandler( async (req, res) => {
 
     const updated = await Product_Process.findOneAndUpdate({_id: req.params.id }, {start_date:  Date.now(), end_date: Date.now()}, {new: true})
-    if(!updated) return res.status(404).json("Something went wrong, please try again later!")
+    if(!updated) return res.status(400).json("Something went wrong, please try again later!")
     return res.status(200).json(updated)
 })
 
 const makeProcessUsable = asyncHandler( async (req, res) =>{
 
     const updated = await Product_Process.findByIdAndUpdate(req.params.id,{start_date:  null, end_date: null}, {new: true})
-    if(!updated) return res.status(404).json("Something went wrong, please try again later!")
+    if(!updated) return res.status(400).json("Something went wrong, please try again later!")
     return res.status(200).json(updated)
+})
+
+const getMaterialsForProcessToAdd = asyncHandler( async (req, res) => {
+
+    const all =  await Product_Process_Item.find({product_process_id: req.params.id}).distinct('material_id');
+    const materials = await Material.find({_id: { $nin : all}, quantity: { $gte : 1}})
+
+    if(materials) return res.status(200).json(materials)
+    return res.status(304).json("There are no materials available to add!")
 })
 
 module.exports = {
@@ -93,5 +103,6 @@ module.exports = {
     editProcess,
     makeProcessActive,
     deactivateProcess,
-    makeProcessUsable
+    makeProcessUsable,
+    getMaterialsForProcessToAdd
 }

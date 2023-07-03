@@ -117,7 +117,7 @@ export const editSpecificProcess = createAsyncThunk("process/edit", async({id, p
     try{
         return await processServices.editProcess(id, processData);
     }catch(error: any){
-        const message = error.response.data.errors[0];
+        const message = error.response.data.errors.name;
         
         return thunkAPI.rejectWithValue(message)
    
@@ -133,6 +133,9 @@ export const processSlice = createSlice({
         },
         resetSpecificProcess: (state) => {
             state.specificProcess = undefined
+        },
+        resetMessage : (state) =>{
+            state.message = ""
         }
     },
     extraReducers: (builder) => {
@@ -202,9 +205,6 @@ export const processSlice = createSlice({
             const i = state.processes.findIndex(el => el._id === action.payload._id)
             if(i !== -1) state.processes[i] = action.payload
             state.status = "idle"
-        })
-        .addCase(editSpecificProcess.pending, (state) => {
-            state.status = "loading"
         })
         .addCase(editSpecificProcess.rejected, (state, action) => {
             state.status = "failed"

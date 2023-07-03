@@ -17,10 +17,9 @@ export interface selectedMaterials {
 
 
 const PPItems : React.FC<{id: string}> = ({id}) => {
-  const [materialsToAdd, setMaterialsToAdd] = useState<selectedMaterials[]>([])
-  
-  const [showForm, setShowForm] = useState<boolean>(false)
 
+  const [materialsToAdd, setMaterialsToAdd] = useState<selectedMaterials[]>([])  
+  const [showForm, setShowForm] = useState<boolean>(false)
   const [formData, setFormData] = useState({
     name: "",
     material_quantity: 0,
@@ -54,11 +53,9 @@ const PPItems : React.FC<{id: string}> = ({id}) => {
         material_id: material_id
       }))
     }
-   
   }
 
   const addMany = () => {
-
     if(materialsToAdd.length > 0 ){
       dispatch(addManyProcessItems(materialsToAdd))
     }
@@ -101,8 +98,7 @@ const PPItems : React.FC<{id: string}> = ({id}) => {
           {status === "loading" ? 
             (
               <CustomSpinner />
-            )
-          : materials.length > 0 ? (
+            ): materials.length > 0 ? (
               materials.map((n) => (
                 n.quantity > 0 && (
                 <Tooltip key={n._id} content={n.quantity}>

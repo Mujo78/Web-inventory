@@ -1,5 +1,5 @@
-import { Button, Label, Toast } from 'flowbite-react'
-import React, { useEffect } from 'react'
+import { Alert, Button, Label, Toast } from 'flowbite-react'
+import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 import { deactivateProcess, editSpecificProcess, getProcessById, makeProcessActive, makeProcessUsable, process, resetSpecificProcess } from '../../features/processes/processSlice'
@@ -10,22 +10,40 @@ import EditPPItems from '../../components/EditPPItems'
 import { useAppDispatch } from '../../app/hooks'
 import CustomSpinner from '../../components/CustomSpinner'
 import { ProcessToEdit } from '../../features/processes/processService'
+import axios from 'axios'
+import { Material } from '../../features/material/materialSlice'
 
 const EditProductProcess: React.FC = () => {
   
- const {id} = useParams()
+  const {id} = useParams()
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const {status, message, specificProcess} = useSelector(process)
+  const [materialsToAdd , setMaterialsToAdd] = useState<Material[]>([])
+  const [error, setError] = useState<string>("")
+
+  const getMaterialsToAdd = async () => {
+    try{
+      const res = await axios.get(`/process/${id}`)
+      const data = res.data
+
+      setMaterialsToAdd(data)
+    }catch(err: any){
+      setError(err.response.data.errors)
+    }
+
+  }
 
   useEffect(() => {
     if(id){
       dispatch(getProcessById(id))
+      getMaterialsToAdd()
     }
 
     return () => {
       dispatch(resetSpecificProcess())
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, id])
 
   const initialState : ProcessToEdit = {
@@ -33,11 +51,10 @@ const EditProductProcess: React.FC = () => {
     price: specificProcess?.processData?.price || 0
   }
 
-
   const handleSubmit = (processData: ProcessToEdit) =>{
     if(id){
-      dispatch(editSpecificProcess({id, processData} ))
-      if(status === "idle") navigate("/processes")
+      dispatch(editSpecificProcess({id, processData}))
+      if(message === "") navigate("/processes")
     }
   }
   
@@ -59,9 +76,7 @@ const EditProductProcess: React.FC = () => {
     dispatch(deactivateProcess(id))
     navigate("/processes")
   }
-
-  console.log(specificProcess)
-  
+  console.log(materialsToAdd)
   return (
     <div>
         <div className='flex justify-between items-center'>
@@ -80,8 +95,7 @@ const EditProductProcess: React.FC = () => {
       
         {!specificProcess ? (
           <CustomSpinner />
-        )
-        :
+        ) :
         <div>
         <div className='flex justify-between max-h-full'>
           <div className='w-2/3 max-h-full mt-4 p-8 border border-gray-300 rounded-lg'>
@@ -102,6 +116,7 @@ const EditProductProcess: React.FC = () => {
                           className='mt-2 mb-2 border-0 border-b'
                           name='name'
                         />
+                        {status === "failed" && <span className='text-red-600 text-xs'>{message}</span>}
                         <ErrorMessage name='name' component="span"  className='text-red-600 text-xs' />
                       </div>
                       <div className='flex flex-col w-1/5'>
@@ -124,7 +139,10 @@ const EditProductProcess: React.FC = () => {
             </div>
           </div>
             <div className='w-1/3 ml-4 mt-4 p-8 border border-gray-300 rounded-lg'>
-              something
+              {materialsToAdd.length > 0 ? materialsToAdd.map((n) => <div key={n._id}>{n.name}</div>)
+              : <Alert><h1>Alert all</h1></Alert>  
+            }
+            
             </div>
           </div>
           <div className='flex justify-between items-end'>

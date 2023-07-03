@@ -14,7 +14,7 @@ exports.createProductProcess = [
         .custom(async (n) =>{
             const pp = await Product_Process.findOne({name: n})
             if(pp){
-                return Promise.reject(PP_ALREADY_EXISTS(n)) 
+                return Promise.reject(PP_ALREADY_EXISTS) 
             }
         })
         .bail()
@@ -27,7 +27,7 @@ exports.editProductProcess = [
         .custom(async (n) =>{
             const pp = await Product_Process.findOne({name: n})
             if(pp){
-                return Promise.reject(PP_ALREADY_EXISTS(n)) 
+                return Promise.reject(PP_ALREADY_EXISTS) 
             }
         })
         .bail(),

@@ -1,6 +1,6 @@
 const POST_NAME_PP = "Name is required!"
 const POST_NAME_LENGTH = "Name length error! (min 3)"
-const PP_ALREADY_EXISTS = n => `${n} already exists!`
+const PP_ALREADY_EXISTS = "Name is already used!"
 const POST_PRICE_PP = "Price is required!"
 const POST_PRICE_NUMERIC = "Price must be numeric!"
 
