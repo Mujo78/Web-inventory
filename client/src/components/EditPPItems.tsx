@@ -11,11 +11,10 @@ const EditPPItems : React.FC<{items: ProductItem[]}> = ({items}) => {
   const dispatch = useAppDispatch()
   const [messageError, setMessageError] = useState<string>("")
 
-   console.log(items)
 
   return (
     <div>
-      <h1 className='text-24 font-Rubik text-xl mt-9 ml-3 font-bold'>Items</h1>
+      <h1 className='font-Rubik text-xl mt-9 ml-3 font-bold'>Items</h1>
         {items.length > 0 ? (
           <div>
             <p className='text-xs text-gray-500 font-normal pb-5 ml-3'>Hover material name to change quantity of process item!</p>

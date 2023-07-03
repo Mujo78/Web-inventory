@@ -90,7 +90,7 @@ const makeProcessUsable = asyncHandler( async (req, res) =>{
 const getMaterialsForProcessToAdd = asyncHandler( async (req, res) => {
 
     const all =  await Product_Process_Item.find({product_process_id: req.params.id}).distinct('material_id');
-    const materials = await Material.find({_id: { $nin : all}, quantity: { $gte : 1}})
+    const materials = await Material.find({_id: { $nin : all}, quantity: { $gte : 1}}).select("name quantity")
 
     if(materials) return res.status(200).json(materials)
     return res.status(304).json("There are no materials available to add!")

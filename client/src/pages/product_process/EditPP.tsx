@@ -12,6 +12,15 @@ import CustomSpinner from '../../components/CustomSpinner'
 import { ProcessToEdit } from '../../features/processes/processService'
 import axios from 'axios'
 import { Material } from '../../features/material/materialSlice'
+import ProcessItemsToAdd from '../../components/ProcessItemsToAdd'
+import { selectedMaterials } from '../../components/PPItems'
+
+
+export interface MaterialToAdd {
+  _id: string,
+  name: string, 
+  quantity: number
+}
 
 const EditProductProcess: React.FC = () => {
   
@@ -19,8 +28,8 @@ const EditProductProcess: React.FC = () => {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const {status, message, specificProcess} = useSelector(process)
-  const [materialsToAdd , setMaterialsToAdd] = useState<Material[]>([])
-  const [error, setError] = useState<string>("")
+  const [materialsToAdd , setMaterialsToAdd] = useState<MaterialToAdd[]>([])
+  const [materialsItems, setMaterialsItems] = useState<selectedMaterials[]>([])
 
   const getMaterialsToAdd = async () => {
     try{
@@ -29,7 +38,7 @@ const EditProductProcess: React.FC = () => {
 
       setMaterialsToAdd(data)
     }catch(err: any){
-      setError(err.response.data.errors)
+      console.log(err)
     }
 
   }
@@ -76,7 +85,7 @@ const EditProductProcess: React.FC = () => {
     dispatch(deactivateProcess(id))
     navigate("/processes")
   }
-  console.log(materialsToAdd)
+
   return (
     <div>
         <div className='flex justify-between items-center'>
@@ -97,72 +106,83 @@ const EditProductProcess: React.FC = () => {
           <CustomSpinner />
         ) :
         <div>
-        <div className='flex justify-between max-h-full'>
-          <div className='w-2/3 max-h-full mt-4 p-8 border border-gray-300 rounded-lg'>
-            <Formik
-              enableReinitialize={true}
-              validationSchema={validationProcessSchema}
-              onSubmit={handleSubmit}
-              initialValues={initialState}>
-              <Form>
-                  <h1 className='text-24 font-Rubik ml-3 text-xl font-bold'>Process data</h1>
-                  <div className='flex mt-4 mx-3 justify-between'>
-                      <div className='flex flex-col w-3/4'>
-                        <Label htmlFor='name'>Name</Label>
-                        <Field
-                          autoComplete="off"
-                          type="text"
-                          id="name"
-                          className='mt-2 mb-2 border-0 border-b'
-                          name='name'
-                        />
-                        {status === "failed" && <span className='text-red-600 text-xs'>{message}</span>}
-                        <ErrorMessage name='name' component="span"  className='text-red-600 text-xs' />
-                      </div>
-                      <div className='flex flex-col w-1/5'>
-                        <Label htmlFor='price'>Price</Label>
-                        <Field
-                          type="number"
-                          id="price"
-                          className='mt-2 border-0 border-b'
-                          name='price'
-                        />
-                        <ErrorMessage name='price' component="span"  className='text-red-600 text-xs' />
-                      </div>
+          <div className='flex h-3/4 justify-between'>
+            <div className='w-2/3 mt-4 p-8 border border-gray-300 rounded-lg'>
+              <Formik
+                enableReinitialize={true}
+                validationSchema={validationProcessSchema}
+                onSubmit={handleSubmit}
+                initialValues={initialState}>
+                <Form>
+                    <h1 className='text-24 font-Rubik ml-3 text-xl font-bold'>Process data</h1>
+                    <div className='flex mt-4 mx-3 justify-between'>
+                        <div className='flex flex-col w-3/4'>
+                          <Label htmlFor='name'>Name</Label>
+                          <Field
+                            autoComplete="off"
+                            type="text"
+                            id="name"
+                            className='mt-2 mb-2 border-0 border-b'
+                            name='name'
+                          />
+                          {status === "failed" && <span className='text-red-600 text-xs'>{message}</span>}
+                          <ErrorMessage name='name' component="span"  className='text-red-600 text-xs' />
+                        </div>
+                        <div className='flex flex-col w-1/5'>
+                          <Label htmlFor='price'>Price</Label>
+                          <Field
+                            type="number"
+                            id="price"
+                            className='mt-2 border-0 border-b'
+                            name='price'
+                          />
+                          <ErrorMessage name='price' component="span"  className='text-red-600 text-xs' />
+                        </div>
+                    </div>
+                    <Button size="xs" type='submit' className='ml-auto mt-4 mb-4' color="success" >Save changes</Button>
+                </Form>
+              </Formik>
+              <hr/>
+              <div>
+                <EditPPItems items={specificProcess?.processItems || []} />
+              </div>
+            </div>
+              <div className='w-1/3 h-2/4 ml-4 mt-4 p-4 border border-gray-300 rounded-lg'>
+                {materialsToAdd.length > 0 ?
+                  <div className='h-3/4'>
+                    <h1 className='font-Rubik text-xl mt-2 font-bold'>Add new Items</h1>
+                    <p className='text-xs text-gray-500 font-normal pb-5'>Name - quantity </p>
+                      <ul className="divide-y overflow-y-auto h-full p-0 divide-gray-300">
+                        {materialsToAdd.map((n) =>
+                          <ProcessItemsToAdd item={n} process_id={id ? id : ""} key={n._id} setMaterialsItems={setMaterialsItems} materialsItems={materialsItems}/> 
+                          )}
+                      </ul>
                   </div>
-                  <Button size="xs" type='submit' className='ml-auto mt-4 mb-4' color="success" >Save changes</Button>
-              </Form>
-            </Formik>
-            <hr/>
-            <div>
-              <EditPPItems items={specificProcess?.processItems || []} />
-            </div>
-          </div>
-            <div className='w-1/3 ml-4 mt-4 p-8 border border-gray-300 rounded-lg'>
-              {materialsToAdd.length > 0 ? materialsToAdd.map((n) => <div key={n._id}>{n.name}</div>)
-              : <Alert><h1>Alert all</h1></Alert>  
-            }
-            
-            </div>
-          </div>
-          <div className='flex justify-between items-end'>
-            <div className='flex justify-end align-bottom items-end mt-6'>
-              <Button onClick={handleCancel} className='mr-4' color="light"  >Cancel</Button>
-            </div>
-            <div className='flex justify-end align-bottom items-end mt-6'>
-              { specificProcess?.processData.end_date !== null && 
-                specificProcess?.processData.start_date !== null && 
-                <Button color="gray" className='mr-4' onClick={() => makeProcessUsableAgain(specificProcess.processData._id)} >Use process again</Button>}
+                  : <Alert><h1>Alert all</h1></Alert>  
+                }
               
-              {((specificProcess?.processData.start_date !== null && specificProcess?.processData.end_date === null) || 
-               (specificProcess?.processData.start_date === null && specificProcess?.processData.end_date === null)) &&
-                <Button className='mr-4' onClick={() => makeDeactive(specificProcess.processData._id)} color="failure">Deactivate process</Button>}
-              
-              {specificProcess?.processData.end_date === null && 
-                specificProcess?.processData.start_date === null && 
-                <Button color="success" onClick={() => makeActive(specificProcess.processData._id)} >Activate process</Button>}
+              </div>
             </div>
-          </div>
+            <div className='flex h-1/4 justify-between items-end'>
+              <div className='flex justify-end align-bottom items-end mt-6'>
+                <Button onClick={handleCancel} className='mr-4' color="light"  >Cancel</Button>
+              </div>
+              <div className='flex justify-end align-bottom items-end mt-6'>
+                { specificProcess?.processData.end_date !== null && 
+                  specificProcess?.processData.start_date !== null && 
+                  <Button color="gray" className='mr-4' onClick={() => makeProcessUsableAgain(specificProcess.processData._id)} >Use process again</Button>}
+                
+                {((specificProcess?.processData.start_date !== null && specificProcess?.processData.end_date === null) || 
+                (specificProcess?.processData.start_date === null && specificProcess?.processData.end_date === null)) &&
+                  <Button className='mr-4' onClick={() => makeDeactive(specificProcess.processData._id)} color="failure">Deactivate process</Button>}
+                
+                {specificProcess?.processData.end_date === null && 
+                  specificProcess?.processData.start_date === null && 
+                  <Button color="success" className='mr-4' onClick={() => makeActive(specificProcess.processData._id)} >Activate process</Button>}
+
+                  <Button color="success" outline onClick={() => makeActive(specificProcess.processData._id)} >Save changes</Button>
+              </div>
+            </div>
         </div>}
     </div>
   )

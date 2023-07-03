@@ -15,7 +15,6 @@ export interface selectedMaterials {
   material_id: string
 }
 
-
 const PPItems : React.FC<{id: string}> = ({id}) => {
 
   const [materialsToAdd, setMaterialsToAdd] = useState<selectedMaterials[]>([])  
@@ -41,10 +40,10 @@ const PPItems : React.FC<{id: string}> = ({id}) => {
 
   const addMaterialAsItem = (material_id: string) =>{
     
-    setShowForm(true)
-    const material = materials.find((m) => m._id === material_id)
+  setShowForm(true)
+  const material = materials.find((m) => m._id === material_id)
 
-    if(material) {
+  if(material) {
       setFormData((n) => ({
         ...n,
         name: material.name,
@@ -69,7 +68,6 @@ const PPItems : React.FC<{id: string}> = ({id}) => {
       ...n,
       [name]: value
     }))
-
   }
 
   const addMaterial = (e : React.FormEvent) => {
