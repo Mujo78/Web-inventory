@@ -1,8 +1,8 @@
-import { Alert, Button, Label, Toast } from 'flowbite-react'
+import { Accordion, Alert, Button, Label, Toast } from 'flowbite-react'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
-import { deactivateProcess, editSpecificProcess, getProcessById, makeProcessActive, makeProcessUsable, process, resetSpecificProcess } from '../../features/processes/processSlice'
+import { addManyProcessItems, deactivateProcess, editSpecificProcess, getProcessById, makeProcessActive, makeProcessUsable, process, resetSpecificProcess } from '../../features/processes/processSlice'
 import { ErrorMessage, Field, Form, Formik } from 'formik'
 import { validationProcessSchema } from '../../validations/processValidation'
 import {MdRecommend} from "react-icons/md"
@@ -11,10 +11,8 @@ import { useAppDispatch } from '../../app/hooks'
 import CustomSpinner from '../../components/CustomSpinner'
 import { ProcessToEdit } from '../../features/processes/processService'
 import axios from 'axios'
-import { Material } from '../../features/material/materialSlice'
 import ProcessItemsToAdd from '../../components/ProcessItemsToAdd'
 import { selectedMaterials } from '../../components/PPItems'
-
 
 export interface MaterialToAdd {
   _id: string,
@@ -40,7 +38,6 @@ const EditProductProcess: React.FC = () => {
     }catch(err: any){
       console.log(err)
     }
-
   }
 
   useEffect(() => {
@@ -48,7 +45,6 @@ const EditProductProcess: React.FC = () => {
       dispatch(getProcessById(id))
       getMaterialsToAdd()
     }
-
     return () => {
       dispatch(resetSpecificProcess())
     }
@@ -83,6 +79,13 @@ const EditProductProcess: React.FC = () => {
 
   const makeDeactive = (id: string) => {
     dispatch(deactivateProcess(id))
+    navigate("/processes")
+  }
+
+  const saveChanges = () => {
+    if(materialsItems.length > 0) {
+      dispatch(addManyProcessItems(materialsItems))
+    }
     navigate("/processes")
   }
 
@@ -147,21 +150,27 @@ const EditProductProcess: React.FC = () => {
                 <EditPPItems items={specificProcess?.processItems || []} />
               </div>
             </div>
-              <div className='w-1/3 h-2/4 ml-4 mt-4 p-4 border border-gray-300 rounded-lg'>
-                {materialsToAdd.length > 0 ?
-                  <div className='h-3/4'>
+              <Accordion className='w-1/3 h-2/4 ml-4 mt-4 p-4 border border-gray-300 rounded-lg'>
+                <Accordion.Panel>
+                  <Accordion.Title>
                     <h1 className='font-Rubik text-xl mt-2 font-bold'>Add new Items</h1>
-                    <p className='text-xs text-gray-500 font-normal pb-5'>Name - quantity </p>
-                      <ul className="divide-y overflow-y-auto h-full p-0 divide-gray-300">
-                        {materialsToAdd.map((n) =>
-                          <ProcessItemsToAdd item={n} process_id={id ? id : ""} key={n._id} setMaterialsItems={setMaterialsItems} materialsItems={materialsItems}/> 
-                          )}
-                      </ul>
-                  </div>
-                  : <Alert><h1>Alert all</h1></Alert>  
-                }
+                  </Accordion.Title>
+                  <Accordion.Content>
+                    {materialsToAdd.length > 0 ?
+                      <div className='h-3/4'>
+                        <p className='text-xs text-gray-500 font-normal pb-5'>Name (quantity) - quantity to add </p>
+                          <ul className="divide-y overflow-y-auto h-full p-0 divide-gray-300">
+                            {materialsToAdd.map((n) =>
+                              <ProcessItemsToAdd item={n} process_id={id ? id : ""} key={n._id} setMaterialsItems={setMaterialsItems} materialsItems={materialsItems}/> 
+                              )}
+                          </ul>
+                      </div>
+                      : <Alert><h1>There are no materials to add to this process!</h1></Alert>  
+                    }
+                  </Accordion.Content>
               
-              </div>
+                </Accordion.Panel>
+              </Accordion>
             </div>
             <div className='flex h-1/4 justify-between items-end'>
               <div className='flex justify-end align-bottom items-end mt-6'>
@@ -180,7 +189,7 @@ const EditProductProcess: React.FC = () => {
                   specificProcess?.processData.start_date === null && 
                   <Button color="success" className='mr-4' onClick={() => makeActive(specificProcess.processData._id)} >Activate process</Button>}
 
-                  <Button color="success" outline onClick={() => makeActive(specificProcess.processData._id)} >Save changes</Button>
+                  <Button color="success" outline onClick={() => saveChanges()} >Save changes</Button>
               </div>
             </div>
         </div>}

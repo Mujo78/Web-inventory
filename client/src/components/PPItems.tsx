@@ -40,18 +40,18 @@ const PPItems : React.FC<{id: string}> = ({id}) => {
 
   const addMaterialAsItem = (material_id: string) =>{
     
-  setShowForm(true)
-  const material = materials.find((m) => m._id === material_id)
+    setShowForm(true)
+    const material = materials.find((m) => m._id === material_id)
 
-  if(material) {
-      setFormData((n) => ({
-        ...n,
-        name: material.name,
-        material_quantity: material.quantity,
-        quantity: material.min_quantity,
-        material_id: material_id
-      }))
-    }
+    if(material) {
+        setFormData((n) => ({
+          ...n,
+          name: material.name,
+          material_quantity: material.quantity,
+          quantity: material.min_quantity,
+          material_id: material_id
+        }))
+      }
   }
 
   const addMany = () => {

@@ -36,8 +36,6 @@ const AddProductProcess = () => {
         })
     }
   }
-
-  console.log(processToModify)
     
     const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
       const {value, name} = e.currentTarget; 

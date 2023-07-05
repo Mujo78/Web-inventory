@@ -1,4 +1,4 @@
-import { Button, TextInput } from 'flowbite-react'
+import { Button } from 'flowbite-react'
 import React, { useState } from 'react'
 import { MaterialToAdd } from '../pages/product_process/EditPP'
 import { selectedMaterials } from './PPItems'
@@ -10,13 +10,19 @@ interface Props {
     process_id: string,
 }
 
+interface FormData {
+    product_process_id: string,
+    quantity: string,
+    material_id: string
+}
 
 
-const ProcessItemsToAdd: React.FC<Props> = ({item,process_id, materialsItems, setMaterialsItems}) => {
 
-    const [formData, setFormData] = useState<selectedMaterials>({
+const ProcessItemsToAdd: React.FC<Props> = ({item, process_id, materialsItems, setMaterialsItems}) => {
+
+    const [formData, setFormData] = useState<FormData>({
         product_process_id: process_id,
-        quantity: 1,
+        quantity: "",
         material_id: item._id
     })
 
@@ -32,26 +38,45 @@ const ProcessItemsToAdd: React.FC<Props> = ({item,process_id, materialsItems, se
     const addItem = (e: React.FormEvent) => {
         e.preventDefault();
 
+        if(Number(formData.quantity) !== 0){
+            
+            const newItem = {
+                product_process_id: formData.product_process_id,
+                quantity: Number(formData.quantity),
+                material_id: formData.material_id
+            }
+
+            const updatedItems = [...materialsItems, newItem]
+    
+            setMaterialsItems(updatedItems)
+        }
     }
 
     return (
         <>
             <li key={item._id} className="flex items-center justify-between py-3">
                 <div className="flex-auto">
-                    <p className="text-sm font-semibold text-gray-900">{item.name}</p>
+                    <p className="text-sm font-semibold text-gray-900">{item.name} ({item.quantity})</p>
                 </div>
                 <div className="mr-4 flex justify-end">
-                    <form className='flex' onSubmit={addItem}>
-                        <TextInput 
+                    <form className='flex items-center justify-center' onSubmit={addItem}>
+                        <input 
                             min={1}
                             max={item.quantity}
                             type='number'
                             name='quantity'
-                            value={formData.quantity > item.quantity ? item.quantity : formData.quantity}
+                            disabled={materialsItems.some(el => el.material_id === item._id)}
+                            value={Number(formData.quantity) > item.quantity ? item.quantity : formData.quantity}
                             onChange={handleChange}
                             className='w-3/4 mr-3 border-0 border-b focus:!ring-0' 
                         />
-                        <Button size="xs" onClick={addItem} color="success">Add</Button>
+                        <Button
+                            disabled={materialsItems.some(el => el.material_id === item._id)}
+                            size="xs" 
+                            onClick={addItem} 
+                            color="success">
+                            Add
+                        </Button>
                     </form>
                 </div>
             </li>
