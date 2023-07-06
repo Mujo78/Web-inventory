@@ -67,9 +67,17 @@ const getItemsForProcess = asyncHandler( async (req, res) =>{
     return res.status(400).json("There is no items for this process!")
 })
 
+const deleteItem = asyncHandler (async (req, res) => {
+    const deleted = await Product_Process_Item.findByIdAndDelete({_id: req.params.id}, {new: true})
+    if(deleted) return res.status(200).json(deleted._id)
+
+    return res.status(400).json("There was an error, try again later!")
+})
+
 module.exports = {
     addProcessItem,
     getItems,
     getItemsForProcess,
-    editItem
+    editItem,
+    deleteItem
 }

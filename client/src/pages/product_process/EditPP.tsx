@@ -153,7 +153,7 @@ const EditProductProcess: React.FC = () => {
               <Accordion className='w-1/3 h-2/4 ml-4 mt-4 p-4 border border-gray-300 rounded-lg'>
                 <Accordion.Panel>
                   <Accordion.Title>
-                    <h1 className='font-Rubik text-xl mt-2 font-bold'>Add new Items</h1>
+                    Add new Items
                   </Accordion.Title>
                   <Accordion.Content>
                     {materialsToAdd.length > 0 ?

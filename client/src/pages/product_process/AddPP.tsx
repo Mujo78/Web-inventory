@@ -28,7 +28,6 @@ const AddProductProcess = () => {
     }else{
         setErrorMessage("")
         dispatch(makeProcess(processName)).then(({payload}) => {
-          console.log(payload)
           if(typeof payload !== 'string'){
             setProcessToModify(payload._id)
             setStep((n) => n + 1)
@@ -71,15 +70,17 @@ const AddProductProcess = () => {
               </h1>
                 <form onSubmit={nextOne} className='flex flex-col justify-between h-5/6'>
                   <div>
-                    <TextInput 
+                    <TextInput
+                      autoComplete='off'
                       name='name'
+                      id='name'
                       value={processName.name}
                       onChange={handleChange}
                       className='mx-5 mt-12'  />
                     <div className='flex flex-col'>
-                      {status === "failed" && <Label className='text-sm mx-5 mt-1 font-normal !text-red-600'>{message}</Label>}
-                      {errorMessage && status !== "failed" && <Label className='text-sm mx-5 mt-1 font-normal !text-red-600'>{errorMessage}</Label>}
-                      <Label className='text-sm mx-5 mt-1 mb-24 font-normal !text-gray-400'>(Type in unique product process name)</Label>
+                      {status === "failed" && <Label htmlFor='name' className='text-sm mx-5 mt-1 font-normal !text-red-600'>{message}</Label>}
+                      {errorMessage && status !== "failed" && <Label htmlFor='name' className='text-sm mx-5 mt-1 font-normal !text-red-600'>{errorMessage}</Label>}
+                      <Label htmlFor='name' className='text-sm mx-5 mt-1 mb-24 font-normal !text-gray-400'>(Type in unique product process name)</Label>
                     </div>
                   </div>
                   <hr/>

@@ -54,6 +54,12 @@ const editProcess = async(id: string, processData: ProcessToEdit) =>{
     return response.data;
 }
 
+const deleteProcessItem = async (id: string) => {
+    const response = await axios.delete(`/item/${id}`)
+
+    return response.data;
+}
+
 const processServices = {
     getProcesses,
     addProcess,
@@ -62,7 +68,8 @@ const processServices = {
     deactivateProcess,
     getProcess,
     makeProcessUsable,
-    editProcess
+    editProcess,
+    deleteProcessItem
 }
 
 export default processServices

@@ -10,7 +10,7 @@ const EditPPItems : React.FC<{items: ProductItem[]}> = ({items}) => {
 
   const dispatch = useAppDispatch()
   const [messageError, setMessageError] = useState<string>("")
-
+  const [toggleShow, setToggleShow] = useState<boolean>(false)
 
   return (
     <div>
@@ -20,7 +20,9 @@ const EditPPItems : React.FC<{items: ProductItem[]}> = ({items}) => {
             <p className='text-xs text-gray-500 font-normal pb-5 ml-3'>Hover material name to change quantity of process item!</p>
             <div className='flex w-full'>
               {items.map(n => (
-                <Tooltip key={n._id} className='!bg-green-100'  content={<LayoutForm quantity={n.quantity} _id={n._id} name={n.material_id.name} materialQuantity={n.material_id.quantity} />} animation="duration-1000">
+                <Tooltip key={n._id} className={!toggleShow ? '!bg-green-100' : '!bg-red-100'}  
+                  content={<LayoutForm quantity={n.quantity} toggleShow={toggleShow} setToggleShow={setToggleShow}  _id={n._id} name={n.material_id.name} materialQuantity={n.material_id.quantity} />} 
+                  animation="duration-1000">
                 <Button 
                   color="gray" 
                   className='m-2 hover:!text-green-500'

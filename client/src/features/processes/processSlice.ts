@@ -39,9 +39,6 @@ const initialState : initialStateInterface = {
     message: ""
 }
 
-
-
-
 export const getProcesses = createAsyncThunk("processes/get", async (_, thunkAPI) => {
     try{
         return await processServices.getProcesses() 
@@ -106,7 +103,6 @@ export const addManyProcessItems = createAsyncThunk("process/post-items", async 
     try{
         return await processServices.addProcessItems(materialsToAdd)
     }catch(error: any){
-        console.log(error)
         const message = error.response.data;
 
         return thunkAPI.rejectWithValue(message)
@@ -121,6 +117,16 @@ export const editSpecificProcess = createAsyncThunk("process/edit", async({id, p
         
         return thunkAPI.rejectWithValue(message)
    
+    }
+})
+
+export const deleteSpecificProcessItem = createAsyncThunk("process/item-delete", async(id: string, thunkAPI) => {
+    try{
+        return await processServices.deleteProcessItem(id);
+    }catch(error: any){
+        const message = error.response.data.errors[0];
+        
+        return thunkAPI.rejectWithValue(message)
     }
 })
 
@@ -228,6 +234,18 @@ export const processSlice = createSlice({
         .addCase(addManyProcessItems.fulfilled, (state) => {
             state.status = "idle"
             state.message = "Successfully added items!"
+        })
+
+        .addCase(deleteSpecificProcessItem.rejected, (state, action) => {
+            state.status = "failed"
+            state.message = action.payload as string
+        })
+
+        .addCase(deleteSpecificProcessItem.fulfilled, (state, action) => {
+            if(state.specificProcess){
+                state.specificProcess.processItems = state.specificProcess.processItems.filter(i => i._id !== action.payload)
+            }
+            state.status = "idle"
         })
     }
 })

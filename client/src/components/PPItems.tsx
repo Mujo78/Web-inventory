@@ -22,7 +22,7 @@ const PPItems : React.FC<{id: string}> = ({id}) => {
   const [formData, setFormData] = useState({
     name: "",
     material_quantity: 0,
-    quantity: 1,
+    quantity: "",
     material_id: ""
   })
   const navigate = useNavigate()
@@ -48,7 +48,7 @@ const PPItems : React.FC<{id: string}> = ({id}) => {
           ...n,
           name: material.name,
           material_quantity: material.quantity,
-          quantity: material.min_quantity,
+          quantity: "1",
           material_id: material_id
         }))
       }
@@ -76,10 +76,12 @@ const PPItems : React.FC<{id: string}> = ({id}) => {
     const newItem = {
       material_id : formData.material_id,
       product_process_id : id,
-      quantity: formData.quantity
+      quantity: Number(formData.quantity) > formData.material_quantity ? formData.material_quantity : Number(formData.quantity)
     }
-    setMaterialsToAdd((n) => [...n, newItem])
-    setShowForm(false)
+    if(Number(newItem.quantity) !== 0){
+      setMaterialsToAdd((n) => [...n, newItem])
+      setShowForm(false)
+    } 
   }
 
   return (
@@ -118,23 +120,27 @@ const PPItems : React.FC<{id: string}> = ({id}) => {
         <div className='border-l flex items-center justify-center border-gray-300 w-2/6 h-5/6'>
            {showForm && <form className='p-4 flex flex-col items-Start justify-center'>
               <AiOutlineCloseCircle className='ml-auto text-gray-400 transition-all cursor-pointer hover:scale-125 ease-out' onClick={() => setShowForm(false)}  />
-              <Label>Name</Label>
+              <Label htmlFor='name'>Name</Label>
               <TextInput
+                autoComplete='off'
+                id='name'
                 className='mt-2 mb-2'
                 disabled
                 name='name'
                 value={formData.name}
                 onChange={handleChange}
               />
-              <Label className=''>Quantity</Label>
+              <Label htmlFor='quantity'>Quantity</Label>
               <div className='flex justify-between'>
               <TextInput
+                autoComplete='off'
+                id='quantity'
                 className='mt-2 w-3/5'
                 type='number'
                 name='quantity'
                 min={1}
                 max={formData.material_quantity}
-                value={formData.quantity > formData.material_quantity ?  formData.material_quantity : formData.quantity}
+                value={Number(formData.quantity) > formData.material_quantity ?  formData.material_quantity : formData.quantity}
                 onChange={handleChange}
                 
               />
