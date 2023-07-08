@@ -192,7 +192,6 @@ export const processSlice = createSlice({
             const i = state.processes.findIndex(el => el._id === action.payload._id)
             if(i !== -1) state.processes[i] = action.payload
             state.status = "idle"
-            
         })
         .addCase(deactivateProcess.rejected, (state, action) =>{
             state.status = "failed"
@@ -221,9 +220,6 @@ export const processSlice = createSlice({
             const i = state.processes.findIndex(el => el._id === action.payload._id)
             if(i !== -1) state.processes[i] = action.payload
         })
-        
-
-
         .addCase(addManyProcessItems.pending, (state) => {
             state.status = "loading"
         })

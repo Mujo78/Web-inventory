@@ -16,8 +16,6 @@ interface FormData {
     material_id: string
 }
 
-
-
 const ProcessItemsToAdd: React.FC<Props> = ({item, process_id, materialsItems, setMaterialsItems}) => {
 
     const [formData, setFormData] = useState<FormData>({
@@ -47,7 +45,6 @@ const ProcessItemsToAdd: React.FC<Props> = ({item, process_id, materialsItems, s
             }
 
             const updatedItems = [...materialsItems, newItem]
-    
             setMaterialsItems(updatedItems)
         }
     }

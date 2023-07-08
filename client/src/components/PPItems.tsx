@@ -4,7 +4,7 @@ import { getMaterials, material } from '../features/material/materialSlice'
 import { useAppDispatch } from '../app/hooks'
 import { Alert, Button, Label, TextInput, Tooltip } from 'flowbite-react'
 import { useNavigate } from 'react-router-dom'
-import { addManyProcessItems } from '../features/processes/processSlice'
+import { addManyProcessItems } from '../features/process/processSlice'
 import { AiOutlineCloseCircle } from 'react-icons/ai'
 import CustomSpinner from './CustomSpinner'
 

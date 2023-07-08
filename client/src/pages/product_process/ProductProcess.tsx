@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { deactivateProcess, getProcesses, makeProcessActive, process } from '../../features/processes/processSlice'
+import { deactivateProcess, getProcesses, makeProcessActive, process } from '../../features/process/processSlice'
 import { useAppDispatch } from '../../app/hooks'
 import { Alert, Button, Card} from 'flowbite-react'
 import { useNavigate } from 'react-router-dom'

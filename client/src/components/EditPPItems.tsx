@@ -2,7 +2,7 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { Material, getMaterials } from '../features/material/materialSlice'
 import { useAppDispatch } from '../app/hooks'
-import { ProductItem } from '../features/processes/processSlice'
+import { ProductItem } from '../features/process/processSlice'
 import { Alert, Button, Tooltip } from 'flowbite-react'
 import LayoutForm from './LayoutForm'
 

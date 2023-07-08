@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import CustomButton from './CustomButton'
 import { AiOutlineMinus} from 'react-icons/ai'
 import { useAppDispatch } from '../app/hooks'
-import { deleteSpecificProcessItem } from '../features/processes/processSlice'
+import { deleteSpecificProcessItem } from '../features/process/processSlice'
 
 interface Props {
     _id: string,
