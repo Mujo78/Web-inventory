@@ -4,6 +4,7 @@ import authReducer from "../features/auth/authSlice";
 import suppReducer from "../features/supplier/suppSlice";
 import materialReducer from "../features/material/materialSlice";
 import processReducer from "../features/process/processSlice"
+import productReducer from "../features/product/productSlice"
 
 export const store = configureStore({
   reducer: {
@@ -11,7 +12,8 @@ export const store = configureStore({
     auth: authReducer,
     supp:suppReducer,
     matt: materialReducer,
-    process: processReducer
+    process: processReducer,
+    product: productReducer
   },
 });
 

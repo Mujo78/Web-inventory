@@ -41,7 +41,7 @@ const getProducts = asyncHandler( async (req, res) => {
     const products = await Product.find();
     if(products) return res.status(200).json(products)
 
-    res.status(400).json("There are no products available!")
+    return res.status(400).json("There are no products available!")
 })
 
 const getProductById = asyncHandler( async (req, res) => {
@@ -49,7 +49,7 @@ const getProductById = asyncHandler( async (req, res) => {
     const product = await Product.findById(req.params.id);
     if(product) return res.status(200).json(product)
 
-    res.status(400).json("There was an error, please try again later!")
+    return res.status(400).json("There was an error, please try again later!")
 })
 
 const editProduct = asyncHandler( async(req, res) => {
@@ -83,7 +83,7 @@ const editProduct = asyncHandler( async(req, res) => {
     const newOne =  await Product.findByIdAndUpdate(req.params.id, updates, {new: true})
     if(newOne) return res.status(200).json(`Product: ${newOne.name} successfully updateed!`)
 
-    res.status(400).json("There was an error, please try again later!")
+    return res.status(400).json("There was an error, please try again later!")
 })
 
 
