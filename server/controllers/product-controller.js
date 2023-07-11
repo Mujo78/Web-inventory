@@ -16,11 +16,6 @@ const addProduct = asyncHandler( async(req, res) =>{
         mark_up,
     } = req.body;
 
-    const ProductByProcess = await Product.findOne({product_process_id: product_process_id})
-    if(ProductByProcess) {
-        res.status(400)
-        throw new Error("Product process already in use!")
-    }
     const process = await Product_Process.findById(product_process_id);
 
     const mark_up_modify = 1 + (mark_up / 100);

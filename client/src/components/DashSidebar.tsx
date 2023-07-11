@@ -91,7 +91,7 @@ const DashSidebar = () => {
           <Sidebar.ItemGroup className='flex flex-col justify-between h-full'>
           <Sidebar.Item
               as={NavLink}
-              to="settings"
+              to="change-password"
               icon={IoMdSettings}
             >
               Settings

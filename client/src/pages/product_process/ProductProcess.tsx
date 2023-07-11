@@ -7,7 +7,6 @@ import { useNavigate } from 'react-router-dom'
 import { FiEdit } from 'react-icons/fi'
 import CustomButton from '../../components/CustomButton'
 import { MdDisabledByDefault } from 'react-icons/md'
-import { getMaterials } from '../../features/material/materialSlice'
 import CustomSpinner from '../../components/CustomSpinner'
 
 

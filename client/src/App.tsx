@@ -10,7 +10,6 @@ import Materials from './pages/materials/Materials';
 import ProductProcess from './pages/product_process/ProductProcess';
 import SupplierLayout from './pages/supplier/SupplierLayout';
 import Employee from './pages/Employee';
-import Settings from './pages/Settings';
 import Supplier from './pages/supplier/Supplier';
 import AddSupplier from './pages/supplier/AddSupplier';
 import EditSupplier from './pages/supplier/EditSupplier';
@@ -29,6 +28,10 @@ import ProductLayout from './pages/products/ProductLayout';
 import ProductDetail from './pages/products/ProductDetail';
 import EditProduct from './pages/products/EditProduct';
 import AddProduct from './pages/products/AddProduct';
+import SettingsLayout from './pages/settings/SettingsLayout';
+import ChangePassword from './pages/settings/ChangePassword';
+import About from './pages/settings/About';
+import Contact from './pages/settings/Contact';
 
 
 const router = createBrowserRouter(createRoutesFromElements(
@@ -62,7 +65,11 @@ const router = createBrowserRouter(createRoutesFromElements(
             <Route path='supplier/:id' element={<SupplierDetails />} />
             <Route path='edit-supplier/:id' element={<EditSupplier />} />
           </Route>
-          <Route path='settings' element={<Settings />} />
+          <Route path='/' element={<SettingsLayout />}>
+            <Route path='change-password' element={<ChangePassword />}/>
+            <Route path='about' element={<About />}/>
+            <Route path='contact' element={<Contact />}/>
+          </Route>
           <Route path='employee' element={<Employee />} />
       </Route>
     <Route path='*' element={<ErrorPage />} />

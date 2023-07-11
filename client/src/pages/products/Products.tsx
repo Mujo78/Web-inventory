@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useAppDispatch } from '../../app/hooks'
 import { useSelector } from 'react-redux';
 import { getProducts, product } from '../../features/product/productSlice';
-import { Alert, Card } from 'flowbite-react';
+import { Alert } from 'flowbite-react';
 import ProductCard from '../../components/ProductCard';
 
 const Products: React.FC = () => {
