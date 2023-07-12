@@ -7,7 +7,7 @@ const addProduct = asyncHandler( async(req, res) =>{
     const errors = validationResult(req);
 
     if(!errors.isEmpty()){
-        res.status(400).json(errors)
+        return res.status(400).json(errors)
     }
     const {
         name,
@@ -16,16 +16,19 @@ const addProduct = asyncHandler( async(req, res) =>{
         mark_up,
     } = req.body;
 
+    if(await Product.findOne({name: name})) return res.status(400).json("Product with that name already exist!")
+
     const process = await Product_Process.findById(product_process_id);
 
     const mark_up_modify = 1 + (mark_up / 100);
+    const price = (process.price * mark_up_modify).toFixed(2)
 
     const newOne = await Product.create({
         name: name,
         product_process_id: product_process_id,
         photo_url: photo_url,
         mark_up: mark_up,
-        price: process.price * mark_up_modify
+        price
     })
 
     return res.status(200).json(newOne)

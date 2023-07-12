@@ -3,7 +3,7 @@ const { validationResult } = require("express-validator")
 const Product_Process = require("../models/product-process")
 const Product_Process_Item = require("../models/product-process-item");
 const Material = require("../models/material");
-
+const Product = require("../models/product");
 
 const addProductProcess = asyncHandler( async(req, res) =>{
     const errors = validationResult(req);
@@ -65,6 +65,38 @@ const getProcessById = asyncHandler( async(req, res) =>{
     return res.status(400).json("There was an error, please try again later!")
 })
 
+const getFreeProcesses = asyncHandler( async (req, res) => {
+    const TakenProcesses = await Product.find().distinct("product_process_id")
+    
+    //const freeProcesses = await Product_Process.find({_id: {$nin : TakenProcesses}}).select("name _id")
+    const freeProcesses = await Product_Process.aggregate([
+        {
+          $lookup: {
+            from: "products",
+            localField: "_id",
+            foreignField: "product_process_id",
+            as: "products",
+          },
+        },
+        {
+          $match: {
+            "products": { $size: 0 },
+            start_date: null,
+            end_date: null
+          },
+        },
+        {
+          $project: {
+            name: 1,
+            _id: 1,
+          },
+        },
+      ]);
+    
+    res.status(200).json(freeProcesses)
+
+})
+
 const makeProcessActive = asyncHandler( async (req, res) => {
 
     await Product_Process.findOneAndUpdate({start_date: {$not: {$eq : null || ""} }, end_date: {$eq : null}}, {start_date: null}, {new: true})
@@ -104,5 +136,6 @@ module.exports = {
     makeProcessActive,
     deactivateProcess,
     makeProcessUsable,
-    getMaterialsForProcessToAdd
+    getMaterialsForProcessToAdd,
+    getFreeProcesses
 }

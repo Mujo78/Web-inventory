@@ -11,6 +11,14 @@ export interface Product {
     price: number
 }
 
+export interface productToCreate {
+    name: string,
+    photo_url: string,
+    product_process_id : string,
+    mark_up: number,
+}
+
+
 interface initialStateInterface {
     products: Product[],
     status: "idle" | "loading" | "failed",
@@ -27,6 +35,16 @@ export const getProducts = createAsyncThunk("product/get",async (_,thunkAPI) => 
     try{
         return await productService.getProducts()
     }catch(error: any){
+        const message = error.response.data
+
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
+export const createNewProduct = createAsyncThunk("product/post", async (productData: productToCreate, thunkAPI) => {
+    try {
+        return await productService.createProduct(productData)
+    } catch (error: any) {
         const message = error.response.data
 
         return thunkAPI.rejectWithValue(message)
@@ -53,6 +71,14 @@ export const productSlice = createSlice({
             .addCase(getProducts.fulfilled, (state, action) =>{
                 state.products = action.payload
                 state.status = "idle"
+            })
+            .addCase(createNewProduct.fulfilled, (state, action) =>{
+                state.products.push(action.payload)
+                state.status = "idle"
+            })
+            .addCase(createNewProduct.rejected, (state, action) =>{
+                state.status = "failed"
+                state.message = action.payload as string
             })
     }
 })

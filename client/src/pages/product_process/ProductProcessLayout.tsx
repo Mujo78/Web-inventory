@@ -1,7 +1,7 @@
 import { Alert, Navbar } from 'flowbite-react'
 import React, { useState } from 'react'
 import { Link, Outlet, useLocation } from 'react-router-dom'
-
+import { AiOutlineInfoCircle } from 'react-icons/ai'
 
 const ProductProcessLayout: React.FC = () => {
     const [showAlert , setShowAlert] = useState<boolean>(true)
@@ -17,6 +17,7 @@ const ProductProcessLayout: React.FC = () => {
         {showAlert && <Alert
             onDismiss={dismissIt}
             color="success"
+            icon={AiOutlineInfoCircle}
         >
             <h1 className="font-semibold">Info: Only one product proccess can be active <i>(activate/deactivate process by clicking green/red)</i> </h1>
         </Alert>}

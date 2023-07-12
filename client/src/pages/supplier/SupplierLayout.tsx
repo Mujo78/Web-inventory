@@ -1,6 +1,7 @@
 import React, {useState } from 'react'
 import { Alert, Navbar } from 'flowbite-react'
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
+import { AiOutlineInfoCircle } from 'react-icons/ai'
 
 const SupplierLayout: React.FC = () => {
 
@@ -18,6 +19,7 @@ const SupplierLayout: React.FC = () => {
         color="success"
         className='w-full font-semibold'
         onDismiss={dismissIt}
+        icon={AiOutlineInfoCircle}
       >
         Important update: Check out our latest supplier information below!
       </Alert>}

@@ -1,7 +1,7 @@
 const express = require("express")
 const validate = require("../middleware/validate")
 const Product_Process = require("../models/product-process")
-const { addProductProcess, getProcesses, getProcessById, editProcess, makeProcessActive, deactivateProcess, makeProcessUsable, getMaterialsForProcessToAdd } = require("../controllers/product-process-controller")
+const { addProductProcess, getProcesses, getProcessById, editProcess, makeProcessActive, deactivateProcess, makeProcessUsable, getMaterialsForProcessToAdd, getFreeProcesses } = require("../controllers/product-process-controller")
 const { createProductProcess, editProductProcess } = require("../validators/product-process-validator")
 const { authMiddleware } = require("../middleware/auth-middleware")
 
@@ -15,6 +15,7 @@ router.patch("/make-active-process/:id", makeProcessActive)
 router.patch("/deactivate-process/:id", deactivateProcess)
 router.patch("/make-usable-process/:id", makeProcessUsable)
 router.get("/process/:id", getMaterialsForProcessToAdd)
+router.get("/free-processes", getFreeProcesses)
 
 
 module.exports = router;
