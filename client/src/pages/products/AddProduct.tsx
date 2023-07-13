@@ -33,10 +33,6 @@ const AddProduct = () => {
     dispatch(createNewProduct(values))
   }
 
-  const goBack = () =>{
-    navigate("/products")
-  }
-
   return (
     <div>
       <div className='flex justify-between items-center'>
@@ -152,10 +148,7 @@ const AddProduct = () => {
           <ErrorMessage name='photo_url' component="span" className='text-red-600 text-xs' />
         </div>
         <div className='flex mt-6 justify-end'>
-          <Button onClick={goBack} color="light" className='mr-4'>
-            Cancel
-          </Button>
-          <Button type="submit" color="success">
+          <Button type="submit" className='w-2/6' color="success">
             Submit
           </Button>
         </div>

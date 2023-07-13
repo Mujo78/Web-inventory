@@ -1,7 +1,6 @@
-import { Button, Label, Select, Spinner } from 'flowbite-react'
+import { Alert, Button, Label, Select, TextInput } from 'flowbite-react'
 import { ErrorMessage, Field, Form, Formik } from 'formik'
 import React, { useEffect } from 'react'
-import { classNm } from '../LandingPage'
 import { materialValidationSchema } from '../../validations/materialValidation'
 import { useSelector } from 'react-redux'
 import { MaterialInterface, editMaterial, getMaterial, material, resetMaterial } from '../../features/material/materialSlice'
@@ -46,8 +45,9 @@ const EditMaterial: React.FC = () => {
 
     const handleEdit = (materialData: MaterialInterface) => {
         if(id){
-            dispatch(editMaterial({id, materialData}))
-            navigate("/materials")
+            dispatch(editMaterial({id, materialData})).then(action =>  {
+                if(typeof action.payload === 'object') navigate("/materials")
+            })
         }
     }
 
@@ -57,150 +57,177 @@ const EditMaterial: React.FC = () => {
   
   return (
     <>
-        <h1 className='text-24 font-Rubik text-4xl mt-9 pb-5 ml-5 font-bold'>
-            Edit Material
-        </h1>
+        <div className='flex items-center justify-between'>
+            <h1 className='text-24 font-Rubik text-4xl mt-9 pb-5 ml-5 font-bold'>
+                Edit Material
+            </h1>
+            <h1 className='text-24 font-Rubik text-2xl mt-9 pb-5 ml-5 font-bold'>
+                {specificMaterial ? `#${specificMaterial._id}` : ''}
+            </h1>
+        </div>
         <hr/>
+        <div>
+            <div className='h-8 mt-1 mb-2'>
+                {status === "failed" &&
+                    <Alert color="failure">
+                        <span className='text-xs text-red-600'>{message}</span>
+                    </Alert>
+                }
+            </div>
+        
         {specificMaterial ? <Formik
             enableReinitialize={true}
             initialValues={initialState}
             validationSchema={materialValidationSchema}
             onSubmit={handleEdit}
             >
-            <Form className="flex flex-col justify-center items-center mt-24">
-                <div className='w-2/4'>
-                    <div className='flex mb-6'>
-                        <div className='w-6/12'>
-                            <div className="mb-2 block">
-                                <Label
-                                    htmlFor="name"
-                                    value="Name*"
-                                />
-                            </div>
-                                <Field
-                                id="name"
-                                name="name"
-                                placeholder="Name"
-                                type="text"
-                                className={classNm}
-                                />
-                            <ErrorMessage name='name' component="span" className='text-red-600 text-xs' />
-                        </div>
-                        <div className='ml-auto w-2/5'>
-                            <div className="mb-2 block">
-                                <Label
-                                    htmlFor="min_quantity"
-                                    value="Min Quantity*"
-                                />
-                            </div>
-                                <Field
-                                    id="min_quantity"
-                                    type="number"
-                                    name="min_quantity"
-                                    min={0}
-                                    max={100}
-                                    className={classNm}
-                                />
-                                <ErrorMessage name='min_quantity' component="span" className=' text-red-600 text-xs' />
-                        </div>
-                    </div>
-                    <div className='flex mb-6'>
-                        <div className='w-6/12'>
-                            <div className="mb-2 block">
-                                <Label
-                                    htmlFor="supplier_id"
-                                    value="Supplier*"
-                                />
-                            </div>
-                            <Field
-                                as={Select}
-                                id="supplier_id"
-                                name='supplier_id'
-                            >
-                                <option
-                                value=""
-                                >
-                                    Choose one option
-                                </option>
-                                {suppliers.length > 0 &&
-                                    suppliers.map(n =>(
-                                        <option
-                                            key={n._id}
-                                            value={n._id}>
-                                            {n.name}
-                                        </option>
-                                    ))
-                                }
-                            </Field>
-                                <ErrorMessage name='supplier_id' component="span" className='text-red-600 text-xs' />
-                        </div>
-                        <div className='ml-auto w-2/5'>
-                            <div className="mb-2 block">
-                                <Label
-                                    htmlFor="quantity"
-                                    value="Quantity*"
-                                />
-                            </div>
-                                <Field
-                                    id="quantity"
-                                    type="number"
-                                    name="quantity"
-                                    min={initialState.min_quantity}
-                                    max={100}
-                                    className={classNm}
-                                />
-                                <ErrorMessage name='quantity' component="span" className=' text-red-600 text-xs' />
-                        </div>
-                    </div>
-                    <div className='flex'>
-                        <div className='w-6/12'>
-                            <div className="mb-2 block">
-                                <Label
-                                    htmlFor="unit_of_measure"
-                                    value="Unit*"
-                                />
-                            </div>
-                                <Field
-                                    id="unit_of_measure"
-                                    placeholder="Kg"
+            {({errors, touched}) =>(
+                <Form className="flex flex-col justify-center items-center mt-6">
+                    <div className='w-2/4 border border-gray-300 rounded-lg p-10'>
+                        <div className='flex'>
+                            <div className='w-3/5'>
+                                <div className="mb-2 block">
+                                    <Label
+                                        htmlFor="name"
+                                        value="Name*"
+                                    />
+                                </div>
+                                    <Field as={TextInput}
+                                    color={errors.name && touched.name && "failure"}
+                                    id="name"
+                                    name="name"
+                                    autoComplete="off"
+                                    placeholder="Name"
                                     type="text"
-                                    name="unit_of_measure"
-                                    className={classNm}
-                                />
-                                <ErrorMessage name='unit_of_measure' component="span" className='text-red-600 text-xs' />
-                        </div>
-                        <div className='ml-auto w-2/5'>
-                            <div className="mb-2 block">
-                                <Label
-                                    htmlFor="price"
-                                    value="Price*"
-                                />
+                                    />
+                                    <div className='h-7'>
+                                        <ErrorMessage name='name' component="span" className='text-red-600 text-xs' />
+                                    </div>
                             </div>
-                                <Field
-                                    id="price"
-                                    type="number"
-                                    name="price"
-                                    min={0}
-                                    max={100}
-                                    className={classNm}
-                                />
-                                <ErrorMessage name='price' component="span" className=' text-red-600 text-xs' />
+                            <div className='ml-auto w-2/6'>
+                                <div className="mb-2 block">
+                                    <Label
+                                        htmlFor="min_quantity"
+                                        value="Min Quantity*"
+                                    />
+                                </div>
+                                    <Field as={TextInput}
+                                        color={errors.min_quantity && touched.min_quantity && "failure"}
+                                        id="min_quantity"
+                                        type="number"
+                                        name="min_quantity"
+                                        min={0}
+                                        max={100}
+                                    />
+                                    <div className='h-7'>
+                                        <ErrorMessage name='min_quantity' component="span" className=' text-red-600 text-xs' />
+                                    </div>
+                            </div>
                         </div>
-                        {status === "failed" && <span className='text-xs text-red-600'>{message}</span>}
+                        <div className='flex'>
+                            <div className='w-3/5'>
+                                <div className="mb-2 block">
+                                    <Label
+                                        htmlFor="supplier_id"
+                                        value="Supplier*"
+                                    />
+                                </div>
+                                <Field as={Select}
+                                    color={errors.supplier_id && touched.supplier_id && "failure"}
+                                    id="supplier_id"
+                                    name='supplier_id'
+                                >
+                                    <option
+                                    value=""
+                                    >
+                                        Choose one option
+                                    </option>
+                                    {suppliers.length > 0 &&
+                                        suppliers.map(n =>(
+                                            <option
+                                                key={n._id}
+                                                value={n._id}>
+                                                {n.name}
+                                            </option>
+                                        ))
+                                    }
+                                </Field>
+                                <div className='h-7'>
+                                    <ErrorMessage name='supplier_id' component="span" className='text-red-600 text-xs' />
+                                </div>
+                            </div>
+                            <div className='ml-auto w-2/6'>
+                                <div className="mb-2 block">
+                                    <Label
+                                        htmlFor="quantity"
+                                        value="Quantity*"
+                                    />
+                                </div>
+                                    <Field  as={TextInput}
+                                        color={errors.quantity && touched.quantity && "failure"}
+                                        id="quantity"
+                                        type="number"
+                                        name="quantity"
+                                        min={initialState.min_quantity}
+                                        max={100}
+                                    />
+                                    <ErrorMessage name='quantity' component="span" className=' text-red-600 text-xs' />
+                            </div>
+                        </div>
+                        <div className='flex justify-between'>
+                            <div className='w-3/5'>
+                                <div className="mb-2 block">
+                                    <Label
+                                        htmlFor="unit_of_measure"
+                                        value="Unit*"
+                                    />
+                                </div>
+                                    <Field  as={TextInput}
+                                        color={errors.unit_of_measure && touched.unit_of_measure && "failure"}
+                                        id="unit_of_measure"
+                                        placeholder="Kg"
+                                        type="text"
+                                        name="unit_of_measure"
+                                    />
+                                    <div className='h-4'>
+                                        <ErrorMessage name='unit_of_measure' component="span" className='text-red-600 text-xs' />
+                                    </div>
+                            </div>
+                            <div className='w-2/6'>
+                                <div className="mb-2 block">
+                                    <Label
+                                        htmlFor="price"
+                                        value="Price*"
+                                    />
+                                </div>
+                                    <Field  as={TextInput}
+                                        color={errors.price && touched.price && "failure"}
+                                        id="price"
+                                        type="number"
+                                        name="price"
+                                        min={0}
+                                        max={100}
+                                    />
+                                    <div className='h-4'>
+                                        <ErrorMessage name='price' component="span" className=' text-red-600 text-xs' />
+                                    </div>
+                            </div>
+                        </div>
+                            <div className='flex justify-end flex-wrap mt-7'>
+                                <Button type="button" onClick={goBack} className='mr-5' color="light" >
+                                    Cancel
+                                </Button>
+                                <Button type="submit" className=' px-6' color="success">
+                                    Save changes
+                                </Button>
+                        </div>
                     </div>
-                        <div className='flex justify-end flex-wrap mt-7'>
-                            <Button type="button" onClick={goBack} className='mr-5 border-green-500 ' color="light" >
-                                Cancel
-                            </Button>
-                            <Button type="submit" className=' px-6' color="success">
-                                Save changes
-                            </Button>
-                    </div>
-                </div>
-            </Form>
+                </Form>
+            )}
         </Formik> : (
             <CustomSpinner />
         )}
+        </div>
     </>
   )
 }

@@ -92,6 +92,7 @@ export const materialSlice = createSlice({
     reducers: {
         reset: (state) => {
             state.status = "idle"
+            state.message = ""
         },
         resetMaterial: (state) => {
             state.specificMaterial = undefined
@@ -99,12 +100,10 @@ export const materialSlice = createSlice({
     },
     extraReducers(builder){
         builder
-            .addCase(createMaterial.pending, (state) => {
-                state.status = "loading"
-            })
             .addCase(createMaterial.fulfilled, (state, action) => {
-                state.materials.push(action.payload)
                 state.status = "idle"
+                state.message = ""
+                state.materials.push(action.payload)
             })
             .addCase(createMaterial.rejected, (state, action) =>{
                 state.status = "failed"
