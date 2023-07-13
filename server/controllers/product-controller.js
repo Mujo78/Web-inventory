@@ -16,7 +16,7 @@ const addProduct = asyncHandler( async(req, res) =>{
         mark_up,
     } = req.body;
 
-    if(await Product.findOne({name: name})) return res.status(400).json("Product with that name already exist!")
+    if(await Product.findOne({name})) return res.status(400).json("Product with that name already exist!")
 
     const process = await Product_Process.findById(product_process_id);
 

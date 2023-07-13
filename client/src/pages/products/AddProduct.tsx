@@ -1,12 +1,15 @@
 import { Form, Formik, Field, ErrorMessage } from 'formik'
-import React, {useEffect, useState} from 'react'
-import { productToCreate } from '../../features/product/productSlice'
+import React from 'react'
+import { createNewProduct, product, productToCreate } from '../../features/product/productSlice'
 import { validationProductSchema } from '../../validations/productValidation'
-import { Button, Label, TextInput, Select } from 'flowbite-react'
-import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import { Button, Label, TextInput, Select, Alert, Toast } from 'flowbite-react'
+import { useLoaderData, useNavigate } from 'react-router-dom'
+import { getFreeProcesses } from '../../utilities/productHelpers'
+import { useAppDispatch } from '../../app/hooks'
+import { useSelector } from 'react-redux'
+import {HiX} from "react-icons/hi"
 
-interface stateProcessInterface {
+export interface stateProcessInterface {
   _id: string,
   name: string
 }
@@ -14,29 +17,20 @@ interface stateProcessInterface {
 const initialState = {
   name: "",
   product_process_id: "",
-  mark_up: "",
+  mark_up: 0,
   photo_url: ""
 }
 
-
 const AddProduct = () => {
 
-  const [freeProcesses, setFreeProcesses] = useState<stateProcessInterface[]>([])
   const navigate = useNavigate()
+  const dispatch = useAppDispatch()
 
-  useEffect(() => {
+  const {status, message} = useSelector(product) 
 
-    async function getFreeProcess() {
-        axios.get("/free-processes")
-        .then((res) => setFreeProcesses(res.data))
-        .catch(err => console.log(err))
-    }
-
-    getFreeProcess();
-  }, [])
-
-  const handleSubmit = () =>{
-    console.log("Submited")
+  const freeProcesses : stateProcessInterface[] = useLoaderData() as stateProcessInterface[]
+  const handleSubmit = (values: productToCreate) =>{
+    dispatch(createNewProduct(values))
   }
 
   const goBack = () =>{
@@ -45,15 +39,34 @@ const AddProduct = () => {
 
   return (
     <div>
+      <div className='flex justify-between items-center'>
       <h1 className='text-24 font-Rubik text-4xl mt-9 pb-5 ml-5 font-bold'>
         Add Product
       </h1>
+      {status === "failed" && message !== "" &&
+      <Toast className='h-2/3'>
+        <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-red-100 text-red-500 dark:bg-red-800 dark:text-red-200">
+          <HiX className="h-5 w-5" />
+        </div>
+        <div className="ml-3 text-sm font-normal">
+          <span className='text-xs'> {message}</span>
+        </div>
+        <Toast.Toggle />
+      </Toast>
+      }
+
+      </div>
       <hr/>
 
-      <Formik
+      {freeProcesses.length > 0 ? <Formik
         initialValues={initialState}
         validationSchema={validationProductSchema}
-        onSubmit={handleSubmit}
+        onSubmit={(values, {resetForm}) => {
+          handleSubmit(values)
+
+          if(status === "idle") resetForm()
+          if(message === "") navigate("/products")
+        }}
         >
           {({errors, touched}) =>(
 
@@ -149,9 +162,18 @@ const AddProduct = () => {
         </div>
           </Form>
           )}
-        </Formik>
+        </Formik> : 
+          <Alert className='flex mt-24 justify-center items-center'>
+            <h1>You have to add process before adding new product!</h1>
+          </Alert>}
     </div>
   )
+}
+
+export async function loader() {
+  const freeProcesses: stateProcessInterface[] = await getFreeProcesses();
+
+  return freeProcesses;
 }
 
 export default AddProduct

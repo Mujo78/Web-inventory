@@ -36,7 +36,6 @@ export const getProducts = createAsyncThunk("product/get",async (_,thunkAPI) => 
         return await productService.getProducts()
     }catch(error: any){
         const message = error.response.data
-
         return thunkAPI.rejectWithValue(message)
     }
 })
@@ -46,7 +45,8 @@ export const createNewProduct = createAsyncThunk("product/post", async (productD
         return await productService.createProduct(productData)
     } catch (error: any) {
         const message = error.response.data
-
+        console.log(error)
+        
         return thunkAPI.rejectWithValue(message)
     }
 })
@@ -75,6 +75,7 @@ export const productSlice = createSlice({
             .addCase(createNewProduct.fulfilled, (state, action) =>{
                 state.products.push(action.payload)
                 state.status = "idle"
+                state.message = ""
             })
             .addCase(createNewProduct.rejected, (state, action) =>{
                 state.status = "failed"

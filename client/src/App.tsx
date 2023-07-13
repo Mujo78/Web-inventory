@@ -27,7 +27,7 @@ import PPDetailPage from './pages/product_process/PPDetailPage';
 import ProductLayout from './pages/products/ProductLayout';
 import ProductDetail from './pages/products/ProductDetail';
 import EditProduct from './pages/products/EditProduct';
-import AddProduct from './pages/products/AddProduct';
+import AddProduct, {loader as productLoader} from './pages/products/AddProduct';
 import SettingsLayout from './pages/settings/SettingsLayout';
 import ChangePassword from './pages/settings/ChangePassword';
 import About from './pages/settings/About';
@@ -42,7 +42,7 @@ const router = createBrowserRouter(createRoutesFromElements(
           <Route path='dashboard' element={<Dashboard />} />
           <Route path='/' element={<ProductLayout />}>
             <Route path='products' element={<Products />} />
-            <Route path='add-product' element={<AddProduct />} />
+            <Route path='add-product' element={<AddProduct />} loader={productLoader} />
             <Route path='product/:id' element={<ProductDetail />} />
             <Route path='edit-product/:id' element={<EditProduct />} />
           </Route>
