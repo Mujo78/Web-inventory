@@ -1,11 +1,11 @@
-import { Accordion, Alert, Button, Label, Toast } from 'flowbite-react'
+import { Accordion, Alert, Button, Label, TextInput, Toast } from 'flowbite-react'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 import { addManyProcessItems, deactivateProcess, editSpecificProcess, getProcessById, makeProcessActive, makeProcessUsable, process, resetSpecificProcess } from '../../features/process/processSlice'
 import { ErrorMessage, Field, Form, Formik } from 'formik'
 import { validationProcessSchema } from '../../validations/processValidation'
-import {MdRecommend} from "react-icons/md"
+import {MdRecommend, MdSaveAlt} from "react-icons/md"
 import EditPPItems from '../../components/EditPPItems'
 import { useAppDispatch } from '../../app/hooks'
 import CustomSpinner from '../../components/CustomSpinner'
@@ -13,6 +13,7 @@ import { ProcessToEdit } from '../../features/process/processService'
 import axios from 'axios'
 import ProcessItemsToAdd from '../../components/ProcessItemsToAdd'
 import { selectedMaterials } from '../../components/PPItems'
+
 
 export interface MaterialToAdd {
   _id: string,
@@ -116,34 +117,42 @@ const EditProductProcess: React.FC = () => {
                 validationSchema={validationProcessSchema}
                 onSubmit={handleSubmit}
                 initialValues={initialState}>
+                {({errors, touched}) =>(
                 <Form>
                     <h1 className='text-24 font-Rubik ml-3 text-xl font-bold'>Process data</h1>
-                    <div className='flex mt-4 mx-3 justify-between'>
-                        <div className='flex flex-col w-3/4'>
-                          <Label htmlFor='name'>Name</Label>
-                          <Field
+                    <div className='flex mt-4 mx-3 justify-between items-center'>
+                        <div className='flex flex-col w-4/6'>
+                          <Label htmlFor='name' className='mb-2'>Name</Label>
+                          <Field as={TextInput}
+                            color={errors.name && touched.name && 'failure'}
                             autoComplete="off"
                             type="text"
                             id="name"
-                            className='mt-2 mb-2 border-0 border-b'
                             name='name'
                           />
-                          {status === "failed" && <span className='text-red-600 text-xs'>{message}</span>}
-                          <ErrorMessage name='name' component="span"  className='text-red-600 text-xs' />
+                          <div className='h-7'>
+                            <ErrorMessage name='name' component="span"  className='text-red-600 text-xs' />
+                            {status === "failed" && !errors.name && <span className='text-red-600 text-xs'>{message}</span>}
+                          </div>
                         </div>
-                        <div className='flex flex-col w-1/5'>
-                          <Label htmlFor='price'>Price</Label>
-                          <Field
+                        <div className='flex flex-col mx-auto w-1/5'>
+                          <Label htmlFor='price' className='mb-2'>Price</Label>
+                          <Field as={TextInput}
                             type="number"
                             id="price"
-                            className='mt-2 border-0 border-b'
+                            color={errors.price && touched.price && "failure"}
                             name='price'
                           />
-                          <ErrorMessage name='price' component="span"  className='text-red-600 text-xs' />
+                          <div className='h-7'>
+                            <ErrorMessage name='price' component="span"  className='text-red-600 text-xs' />
+                          </div>
                         </div>
+                        <Button size="sm" type='submit' className='mt-2' color="success" >
+                          <MdSaveAlt />
+                        </Button>
                     </div>
-                    <Button size="xs" type='submit' className='ml-auto mt-4 mb-4' color="success" >Save changes</Button>
                 </Form>
+                )}
               </Formik>
               <hr/>
               <div>

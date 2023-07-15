@@ -21,13 +21,13 @@ export interface productToCreate {
 
 interface initialStateInterface {
     products: Product[],
-    status: "idle" | "loading" | "failed",
+    status: "idle" | "loading" | "failed" | "start",
     message: string
 }
 
 const initialState: initialStateInterface = {
     products : [],
-    status: "idle",
+    status: "start",
     message: ""
 }
 
@@ -56,7 +56,8 @@ export const productSlice = createSlice({
     initialState,
     reducers: {
         reset: (state) =>{
-            state.status = "idle"
+            state.message = ""
+            state.status = "start"
         }
     },
     extraReducers: (builder) => {
@@ -73,9 +74,9 @@ export const productSlice = createSlice({
                 state.status = "idle"
             })
             .addCase(createNewProduct.fulfilled, (state, action) =>{
-                state.products.push(action.payload)
                 state.status = "idle"
-                state.message = ""
+                state.message = "Successfully added a new product!"
+                state.products.push(action.payload)
             })
             .addCase(createNewProduct.rejected, (state, action) =>{
                 state.status = "failed"

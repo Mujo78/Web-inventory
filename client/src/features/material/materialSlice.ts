@@ -25,13 +25,13 @@ export interface MaterialInterface {
 export interface materialState {
     materials: Material[],
     specificMaterial?: Material,
-    status: 'idle' | 'loading' | 'failed',
+    status: 'idle' | 'loading' | 'failed' | 'start',
     message: string
 }
 
 const initialState: materialState = {
     materials: [],
-    status: "idle",
+    status: "start",
     message: ""
 }
 
@@ -91,7 +91,7 @@ export const materialSlice = createSlice({
     initialState,
     reducers: {
         reset: (state) => {
-            state.status = "idle"
+            state.status = "start"
             state.message = ""
         },
         resetMaterial: (state) => {
@@ -102,7 +102,7 @@ export const materialSlice = createSlice({
         builder
             .addCase(createMaterial.fulfilled, (state, action) => {
                 state.status = "idle"
-                state.message = ""
+                state.message = "Material successfully created!"
                 state.materials.push(action.payload)
             })
             .addCase(createMaterial.rejected, (state, action) =>{

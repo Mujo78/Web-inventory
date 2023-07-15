@@ -8,6 +8,7 @@ import { useAppDispatch } from '../../app/hooks'
 import { getSuppliers, supplier } from '../../features/supplier/suppSlice'
 import { useNavigate, useParams } from 'react-router-dom'
 import CustomSpinner from '../../components/CustomSpinner'
+import Header from '../../components/Header'
 
 
 const EditMaterial: React.FC = () => {
@@ -57,15 +58,7 @@ const EditMaterial: React.FC = () => {
   
   return (
     <>
-        <div className='flex items-center justify-between'>
-            <h1 className='text-24 font-Rubik text-4xl mt-9 pb-5 ml-5 font-bold'>
-                Edit Material
-            </h1>
-            <h1 className='text-24 font-Rubik text-2xl mt-9 pb-5 ml-5 font-bold'>
-                {specificMaterial ? `#${specificMaterial._id}` : ''}
-            </h1>
-        </div>
-        <hr/>
+        <Header title='Edit Material' other={specificMaterial?._id} />
         <div>
             <div className='h-8 mt-1 mb-2'>
                 {status === "failed" &&

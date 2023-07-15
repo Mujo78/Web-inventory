@@ -1,7 +1,8 @@
-import { Button } from 'flowbite-react'
+import { Button, TextInput } from 'flowbite-react'
 import React, { useState } from 'react'
 import { MaterialToAdd } from '../pages/product_process/EditPP'
 import { selectedMaterials } from './PPItems'
+import { IoMdAdd } from 'react-icons/io'
 
 interface Props {
     item: MaterialToAdd,
@@ -57,7 +58,8 @@ const ProcessItemsToAdd: React.FC<Props> = ({item, process_id, materialsItems, s
                 </div>
                 <div className="mr-4 flex justify-end">
                     <form className='flex items-center justify-center' onSubmit={addItem}>
-                        <input 
+                        <TextInput
+                            sizing={"sm"}
                             min={1}
                             max={item.quantity}
                             type='number'
@@ -65,14 +67,14 @@ const ProcessItemsToAdd: React.FC<Props> = ({item, process_id, materialsItems, s
                             disabled={materialsItems.some(el => el.material_id === item._id)}
                             value={Number(formData.quantity) > item.quantity ? item.quantity : formData.quantity}
                             onChange={handleChange}
-                            className='w-3/4 mr-3 border-0 border-b focus:!ring-0' 
+                            className='mr-2'
                         />
                         <Button
                             disabled={materialsItems.some(el => el.material_id === item._id)}
-                            size="xs" 
+                            size="xs"
                             onClick={addItem} 
                             color="success">
-                            Add
+                            <IoMdAdd />
                         </Button>
                     </form>
                 </div>

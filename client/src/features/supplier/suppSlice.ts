@@ -18,13 +18,13 @@ export interface Supplier {
 export interface suppState {
     suppliers: Supplier[],
     specificSupplier?: Supplier
-    status: 'idle' | 'loading' | 'failed',
+    status: 'idle' | 'loading' | 'failed' | 'start',
     message: string
 }
 
 const initialState: suppState = {
     suppliers: [],
-    status: 'idle',
+    status: 'start',
     message: ''
 }
 
@@ -75,7 +75,8 @@ export const suppSlice = createSlice({
     initialState,
     reducers:{
         reset: (state) => {
-            state.status = "idle"
+            state.status = "start"
+            state.message = ""
         },
         resetSupplier: (state) => {
             state.specificSupplier = undefined
@@ -83,19 +84,14 @@ export const suppSlice = createSlice({
     },
     extraReducers(builder){
         builder
-        .addCase(addNewSupplier.pending, (state) => {
-            state.status = "loading"
-        })
         .addCase(addNewSupplier.fulfilled, (state, action) => {
-            state.suppliers.push(action.payload)
             state.status = "idle"
+            state.message = "Successfully added new supplier!"
+            state.suppliers.push(action.payload)
         })
         .addCase(addNewSupplier.rejected, (state, action) =>{
             state.status = "failed"
             state.message = action.payload as string
-        })
-        .addCase(editSupplier.pending, (state) => {
-            state.status = "loading"
         })
         .addCase(editSupplier.fulfilled, (state, action) => {
             state.status = "idle"

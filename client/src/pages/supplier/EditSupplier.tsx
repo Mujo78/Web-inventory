@@ -6,9 +6,9 @@ import { useSelector } from 'react-redux'
 import { editSupplier, getSupplier, resetSupplier, supplier } from '../../features/supplier/suppSlice'
 import { ErrorMessage, Field, Form, Formik } from 'formik'
 import { supplierValidationSchema } from '../../validations/supplierValidation'
-import { Button, Label, ToggleSwitch } from 'flowbite-react'
-import { classNm } from '../LandingPage'
+import { Button, Label, TextInput, ToggleSwitch } from 'flowbite-react'
 import CustomSpinner from '../../components/CustomSpinner'
+import Header from '../../components/Header'
 
 const EditSupplier: React.FC = () => {
     
@@ -30,7 +30,6 @@ const EditSupplier: React.FC = () => {
     
     const [checked, setChecked] = useState<boolean>(specificSupplier?.end_date ? true : false)
     
-    
     const initialState : Supp ={
         name: specificSupplier?.name || "",
         pdv: specificSupplier?.pdv || 0,
@@ -40,7 +39,6 @@ const EditSupplier: React.FC = () => {
         end_date: specificSupplier?.end_date || undefined,
     }
 
-
     const handleEdit = (supplierData: Supp) =>{
         if(checked) {
             const endDate = new Date()
@@ -48,10 +46,10 @@ const EditSupplier: React.FC = () => {
         }
 
         if(id) {
-            dispatch(editSupplier({id, supplierData}))
-            navigate("/suppliers")
+            dispatch(editSupplier({id, supplierData})).then((action) => {
+                if(typeof action.payload === 'object') navigate("/suppliers")
+            })
         }
-        console.log("Successfully updated Supplier:" + supplierData.name)
     }
 
     const handleChange = () => {
@@ -63,11 +61,8 @@ const EditSupplier: React.FC = () => {
     }
 
   return (
-    <div>
-        <h1 className='text-24 font-Rubik text-4xl mt-9 pb-5 ml-5 font-bold'>
-            Edit Supplier
-        </h1>
-        <hr/>
+    <>
+        <Header title={'Edit Supplier'} other={specificSupplier?._id} />
         {status === "loading" ? 
             <CustomSpinner />
             :  (
@@ -77,9 +72,10 @@ const EditSupplier: React.FC = () => {
                 validationSchema={supplierValidationSchema}
                 onSubmit={handleEdit}
             >
-                <Form className="flex flex-col justify-center items-center mt-12">
-                    <div className='w-3/5'>
-                        <div className='flex mb-6'>
+            {({errors, touched}) =>(
+                <Form className="flex flex-col justify-center items-center mt-8">
+                    <div className='w-3/5 border border-gray-300 rounded-lg p-10'>
+                        <div className='flex'>
                             <div className='w-4/6'>
                                 <div className="mb-2 block">
                                     <Label
@@ -87,15 +83,17 @@ const EditSupplier: React.FC = () => {
                                         value="Name*"
                                     />
                                 </div>
-                                    <Field
+                                    <Field as={TextInput}
                                     id="name"
                                     name="name"
                                     placeholder="Name"
                                     type="text"
                                     autoComplete="on"
-                                    className={classNm}
+                                    color={errors.name && touched.name && 'failure'}
                                     />
-                                <ErrorMessage name='name' component="span" className='text-red-600 text-xs' />
+                                <div className='h-7'>
+                                    <ErrorMessage name='name' component="span" className='text-red-600 text-xs' />
+                                </div>
                             </div>
                             <div className='ml-auto w-1/4'>
                                 <div className="mb-2 block">
@@ -104,19 +102,21 @@ const EditSupplier: React.FC = () => {
                                         value="PDV* (%)"
                                     />
                                 </div>
-                                    <Field
+                                    <Field as={TextInput}
                                         id="pdv"
                                         type="number"
                                         name="pdv"
                                         autoComplete="on"
                                         min={0}
                                         max={100}
-                                        className={classNm}
+                                        color={errors.pdv && touched.pdv && 'failure'}
                                     />
-                                    <ErrorMessage name='pdv' component="span" className=' text-red-600 text-xs' />
+                                    <div className='h-7'>
+                                        <ErrorMessage name='pdv' component="span" className=' text-red-600 text-xs' />
+                                    </div>
                             </div>
                         </div>
-                        <div className='flex mb-6'>
+                        <div className='flex'>
                             <div className='w-6/12'>
                                 <div className="mb-2 block">
                                     <Label
@@ -124,15 +124,17 @@ const EditSupplier: React.FC = () => {
                                         value="Phone number*"
                                     />
                                 </div>
-                                    <Field
+                                    <Field as={TextInput}
                                         id="phone_number"
                                         placeholder="+387xx xxx xxx"
                                         type="text"
                                         autoComplete="on"
                                         name="phone_number"
-                                        className={classNm}
+                                        color={errors.phone_number && touched.phone_number && 'failure'}
                                     />
-                                    <ErrorMessage name='phone_number' component="span" className='text-red-600 text-xs' />
+                                    <div className='h-7'>
+                                        <ErrorMessage name='phone_number' component="span" className='text-red-600 text-xs' />
+                                    </div>
                             </div>
                             <div className='ml-auto w-2/5'>
                                 <div className="mb-2">
@@ -141,18 +143,20 @@ const EditSupplier: React.FC = () => {
                                         value="Contact person*"
                                     />
                                 </div>
-                                    <Field
+                                    <Field as={TextInput}
                                         id="contact_person"
                                         name="contact_person"
                                         type="text"
                                         autoComplete="on"
                                         placeholder="First name"
-                                        className={classNm}
+                                        color={errors.contact_person && touched.contact_person && 'failure'}
                                     />
-                                    <ErrorMessage name='contact_person' component="span" className='text-red-600 text-xs' />
+                                    <div className='h-7'>
+                                        <ErrorMessage name='contact_person' component="span" className='text-red-600 text-xs' />
+                                    </div>
                             </div>
                         </div>
-                        <div className='mb-6'>
+                        <div>
                             <div className='flex'>
                                 <div className='w-3/5'>
                                     <div className="mb-2 block">
@@ -161,15 +165,17 @@ const EditSupplier: React.FC = () => {
                                             value="Email*"
                                         />
                                     </div>
-                                        <Field
+                                        <Field as={TextInput}
                                             id="email"
                                             type="email"
                                             name="email"
                                             autoComplete="on"
                                             placeholder="something@example.com"
-                                            className={classNm}
+                                            color={errors.email && touched.email && 'failure'}
                                         />
-                                        <ErrorMessage name='email' component="span" className='text-red-600 text-xs' />
+                                        <div className='h-7'>
+                                            <ErrorMessage name='email' component="span" className='text-red-600 text-xs' />
+                                        </div>
                                 </div>
                                 <div className='ml-auto w-2/5 items-center flex justify-center'>
                                     <ToggleSwitch
@@ -182,7 +188,7 @@ const EditSupplier: React.FC = () => {
                             {status === "failed" && <span className='text-xs text-red-600'>{message}</span>}
                         </div>
                         <div className='flex justify-end flex-wrap'>
-                                <Button type="button" onClick={goBack} className='mr-5 border-green-500 ' color="light" >
+                                <Button type="button" onClick={goBack} className='mr-4' color="light" >
                                     Cancel
                                 </Button>
                                 <Button type="submit" className=' px-6' color="success">
@@ -191,10 +197,10 @@ const EditSupplier: React.FC = () => {
                         </div>
                     </div>
                 </Form>
-
+            )}
             </Formik>
         )}
-    </div>
+    </>
   )
 }
 

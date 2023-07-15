@@ -1,28 +1,28 @@
-import { Button, Label, Select, TextInput, Toast } from 'flowbite-react'
+import { Button, Label, Select, TextInput } from 'flowbite-react'
 import { ErrorMessage, Field, Form, Formik } from 'formik'
 import React, { useEffect } from 'react'
 import { materialValidationSchema } from '../../validations/materialValidation'
 import { useSelector } from 'react-redux'
-import { MaterialInterface, createMaterial, material } from '../../features/material/materialSlice'
+import { MaterialInterface, createMaterial, material, reset } from '../../features/material/materialSlice'
 import { useAppDispatch } from '../../app/hooks'
 import { getSuppliers, supplier } from '../../features/supplier/suppSlice'
-import { HiX } from 'react-icons/hi'
+import Header from '../../components/Header'
 
+const initialState : MaterialInterface = {
+  name: "",
+  supplier_id: "",
+  min_quantity: 0,
+  quantity: 0,
+  price: 0,
+  unit_of_measure: ""
+}
 
 const AddMaterial : React.FC = () => {
   
-  const initialState : MaterialInterface = {
-    name: "",
-    supplier_id: "",
-    min_quantity: 0,
-    quantity: 0,
-    price: 0,
-    unit_of_measure: ""
-  }
-
   const dispatch = useAppDispatch()
 
   useEffect(() => {
+    dispatch(reset())
     dispatch(getSuppliers())
   }, [dispatch])
 
@@ -30,32 +30,17 @@ const AddMaterial : React.FC = () => {
   const {status, message} = useSelector(material)
   
   return (
-    <div>
-        <div className='flex justify-between items-center'>
-            <h1 className='text-24 font-Rubik text-4xl mt-9 pb-5 ml-5 font-bold'>
-                Add new Material
-            </h1>
-            {status === "failed" &&
-                <Toast className='border-red-500 border h-2/3'>
-                    <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-red-100 text-red-500 dark:bg-red-800 dark:text-red-200">
-                        <HiX className="h-5 w-5" />
-                    </div>
-                    <div className="ml-3 text-sm font-normal">
-                        {message}
-                    </div>
-                    <Toast.Toggle />
-                </Toast>
-            }
-        </div>
-        <hr/>
+    <>
+        <Header title='Add Material' status={status} message={message} />
         <Formik
             initialValues={initialState}
             validationSchema={materialValidationSchema}
             onSubmit={(values, {resetForm}) => {
                 
-                dispatch(createMaterial(values)).then(action => {
-                    if(typeof action.payload === 'object') resetForm()
+                dispatch(createMaterial(values)).then((action) =>{
+                    if(typeof action.payload === "object") resetForm()
                 })
+                
             }}
             >
             {({errors, touched}) =>(
@@ -201,7 +186,7 @@ const AddMaterial : React.FC = () => {
                 </Form>
             )}
         </Formik>
-    </div>
+    </>
   )
 }
 
