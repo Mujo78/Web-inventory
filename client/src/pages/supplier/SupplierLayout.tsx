@@ -1,37 +1,16 @@
-import React, {useState } from 'react'
-import { Alert, Navbar } from 'flowbite-react'
-import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
-import { AiOutlineInfoCircle } from 'react-icons/ai'
+import React from 'react'
+import { Navbar } from 'flowbite-react'
+import { Link, NavLink, useLocation } from 'react-router-dom'
+import PageLayout from '../../components/PageLayout'
 
 const SupplierLayout: React.FC = () => {
-
-  const [showAlert , setShowAlert] = useState<boolean>(true)
-
-  const dismissIt = () =>{
-    setShowAlert(n => !n)
-  }
 
   const location = useLocation()
 
   return (
-    <div className='w-full'>
-      {showAlert && <Alert
-        color="success"
-        className='w-full font-semibold'
-        onDismiss={dismissIt}
-        icon={AiOutlineInfoCircle}
-      >
-        Important update: Check out our latest supplier information below!
-      </Alert>}
-      <Navbar
-          className='!bg-gray-200 my-3 py-4 !border-gray-400'
-            fluid
-            rounded
-      >
-        <Navbar.Toggle />
-        <Navbar.Collapse>
+      <PageLayout title='Important update: Check out our latest supplier information below!' alert={true}>
           <Navbar.Link
-          className={`hover:!text-green-500 ${location.pathname === "/suppliers" && `!text-green-500`}`}
+          className={`hover:!text-green-500 ${location.pathname === "/suppliers" && `!text-green-500 underline underline-offset-8 decoration-2 decoration-green-500`}`}
             as={Link}
             active={location.pathname === "/suppliers" && true}
             to="suppliers"
@@ -39,18 +18,14 @@ const SupplierLayout: React.FC = () => {
             Overview
           </Navbar.Link>
           <Navbar.Link
-            className={`hover:!text-green-500 ${location.pathname === "/add-supplier" && `!text-green-500`}`}
+            className={`hover:!text-green-500 ${location.pathname === "/add-supplier" && `!text-green-500 underline underline-offset-8 decoration-2 decoration-green-500`}`}
             as={NavLink}
             active={location.pathname === "/add-supplier" && true}
             to="add-supplier"
           >
             Add supplier
           </Navbar.Link>
-        </Navbar.Collapse>
-      </Navbar>
-
-      <Outlet />
-    </div>
+      </PageLayout>
   )
 }
 

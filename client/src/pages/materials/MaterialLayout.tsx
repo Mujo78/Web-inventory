@@ -1,6 +1,7 @@
 import React from 'react'
+import { Link, useLocation } from 'react-router-dom'
+import PageLayout from '../../components/PageLayout'
 import { Navbar } from 'flowbite-react'
-import { Link, Outlet, useLocation } from 'react-router-dom'
 
 
 const MaterialLayout: React.FC = () => {
@@ -8,35 +9,24 @@ const MaterialLayout: React.FC = () => {
   const location = useLocation()
 
   return (
-    <div className='w-full'>
-       <Navbar
-          className='!bg-gray-200 my-3 py-4 !border-gray-400'
-            fluid
-            rounded
-      >
-        <Navbar.Toggle />
-        <Navbar.Collapse>
+      <PageLayout>
           <Navbar.Link
-            className={`hover:!text-green-500 ${location.pathname === "/materials" && `!text-green-500`}`}
+            className={`hover:!text-green-500 ${location.pathname === "/materials" && `!text-green-500 underline underline-offset-8 decoration-2 decoration-green-500`}`}
             as={Link}
             active={location.pathname === "/materials" && true}
             to="materials"
-          >
+            >
             Overview
           </Navbar.Link>
           <Navbar.Link
-            className={`hover:!text-green-500 ${location.pathname === "/add-material" && `!text-green-500`}`}
+            className={`hover:!text-green-500 ${location.pathname === "/add-material" && `!text-green-500 underline underline-offset-8 decoration-2 decoration-green-500`}`}
             as={Link}
             active={location.pathname === "/add-material" && true}
             to="add-material"
-          >
+            >
             Add material
           </Navbar.Link>
-        </Navbar.Collapse>
-      </Navbar>
-
-      <Outlet />
-    </div>
+      </PageLayout>
   )
 }
 

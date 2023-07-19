@@ -59,7 +59,7 @@ const EditMaterial: React.FC = () => {
   return (
     <>
         <Header title='Edit Material' other={specificMaterial?._id} />
-        <div>
+        <>
             <div className='h-8 mt-1 mb-2'>
                 {status === "failed" &&
                     <Alert color="failure">
@@ -220,7 +220,7 @@ const EditMaterial: React.FC = () => {
         </Formik> : (
             <CustomSpinner />
         )}
-        </div>
+        </>
     </>
   )
 }

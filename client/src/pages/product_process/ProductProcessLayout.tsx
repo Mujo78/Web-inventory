@@ -1,54 +1,31 @@
-import { Alert, Navbar } from 'flowbite-react'
-import React, { useState } from 'react'
-import { Link, Outlet, useLocation } from 'react-router-dom'
-import { AiOutlineInfoCircle } from 'react-icons/ai'
+import { Navbar } from 'flowbite-react'
+import React from 'react'
+import { Link, useLocation } from 'react-router-dom'
+import PageLayout from '../../components/PageLayout'
 
 const ProductProcessLayout: React.FC = () => {
-    const [showAlert , setShowAlert] = useState<boolean>(true)
-  
-    const dismissIt = () =>{
-        setShowAlert(n => !n)
-      }
 
-      const location = useLocation()
+    const location = useLocation()
   
     return (
-    <div className='w-full'>
-        {showAlert && <Alert
-            onDismiss={dismissIt}
-            color="success"
-            icon={AiOutlineInfoCircle}
-        >
-            <h1 className="font-semibold">Info: Only one product proccess can be active <i>(activate/deactivate process by clicking green/red)</i> </h1>
-        </Alert>}
-        <Navbar
-          className='!bg-gray-200 my-3 py-4 !border-gray-400'
-            fluid
-            rounded
-      >
-        <Navbar.Toggle />
-        <Navbar.Collapse>
-          <Navbar.Link
-            className={`hover:!text-green-500 ${location.pathname === "/processes" && `!text-green-500`}`}
-            as={Link}
-            active={location.pathname === "/processes" && true}
-            to="processes"
-          >
-            Overview
-          </Navbar.Link>
-          <Navbar.Link
-            className={`hover:!text-green-500 ${location.pathname === "/add-process" && `!text-green-500`}`}
-            as={Link}
-            active={location.pathname === "/add-process" && true}
-            to="add-process"
-          >
-            Add process
-          </Navbar.Link>
-        </Navbar.Collapse>
-      </Navbar>
-
-      <Outlet />
-    </div>
+      <PageLayout alert={true} title='Info: Only one product proccess can be active <i>(activate/deactivate process by clicking green/red)'>
+            <Navbar.Link
+              className={`hover:!text-green-500 ${location.pathname === "/processes" && `!text-green-500 underline underline-offset-8 decoration-2 decoration-green-500`}`}
+              as={Link}
+              active={location.pathname === "/processes" && true}
+              to="processes"
+              >
+              Overview
+            </Navbar.Link>
+            <Navbar.Link
+              className={`hover:!text-green-500 ${location.pathname === "/add-process" && `!text-green-500 underline underline-offset-8 decoration-2 decoration-green-500`}`}
+              as={Link}
+              active={location.pathname === "/add-process" && true}
+              to="add-process"
+              >
+              Add process
+            </Navbar.Link>
+      </PageLayout>
   )
 }
 
