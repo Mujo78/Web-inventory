@@ -7,7 +7,7 @@ const router = express.Router()
 
 router.get("/products", getProducts)
 router.get("/product/:id", getProductById)
-router.put("/edit-product/:id", addNewProduct, validate, editProduct)
+router.patch("/edit-product/:id", addNewProduct, validate, editProduct)
 router.post("/add-product",addNewProduct, validate, addProduct)
 
 module.exports = router;

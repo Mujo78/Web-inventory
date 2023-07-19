@@ -23,6 +23,8 @@ const initialState = {
 
 const AddProduct = () => {
 
+  const isEditing = false
+  const validationSchema = validationProductSchema(isEditing)
   const dispatch = useAppDispatch()
   const {status, message} = useSelector(product) 
 
@@ -36,7 +38,7 @@ const AddProduct = () => {
       <Header title='Add Product' status={status} message={message} />
       {freeProcesses.length > 0 ? <Formik
         initialValues={initialState}
-        validationSchema={validationProductSchema}
+        validationSchema={validationSchema}
         onSubmit={(values, {resetForm}) => {
           dispatch(createNewProduct(values)).then((action) =>{
             if(typeof action.payload === 'object') resetForm()

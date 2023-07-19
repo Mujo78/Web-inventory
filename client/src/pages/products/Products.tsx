@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { getProducts, product } from '../../features/product/productSlice';
 import { Alert } from 'flowbite-react';
 import ProductCard from '../../components/ProductCard';
+import CustomSpinner from '../../components/CustomSpinner';
 
 const Products: React.FC = () => {
 
@@ -14,18 +15,25 @@ const Products: React.FC = () => {
   }, [dispatch])
 
   const {products, message, status} = useSelector(product)
+
+
+  if(status === 'failed'){
+    <Alert>
+      <h1>{message}</h1>
+    </Alert>
+  }
+
   return (
-    <div>
+    <>
       {products.length > 0 ? (
         <div className='flex flex-wrap w-full justify-start items-start'>
           {products.map(n => (
             <ProductCard key={n._id} item={n} />
           ))}
         </div>
-      ) : <Alert>
-          <h1>{status === "failed" ? message : "There are no products available!"}</h1>
-        </Alert>}
-    </div>
+      ) : <CustomSpinner />
+      }
+    </>
   )
 }
 

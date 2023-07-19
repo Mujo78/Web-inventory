@@ -47,7 +47,7 @@ const getProductById = asyncHandler( async (req, res) => {
     const product = await Product.findById(req.params.id);
     if(product) return res.status(200).json(product)
 
-    return res.status(400).json("There was an error, please try again later!")
+    return res.status(400).json("There was no such product in database!")
 })
 
 const editProduct = asyncHandler( async(req, res) => {
@@ -61,7 +61,15 @@ const editProduct = asyncHandler( async(req, res) => {
         product_process_id,
         photo_url,
         mark_up,
+        price
     } = req.body;
+
+    if(name) {
+        const product = await Product.findOne({name})
+        if(product && product._id.toString() !== req.params.id) {
+            return res.status(400).json("Name already used!")
+        }
+    }
     
     const productToEdit = await Product.findById(req.params.id)
     const process = await Product_Process.findById(product_process_id);
@@ -77,9 +85,12 @@ const editProduct = asyncHandler( async(req, res) => {
         updates.mark_up = mark_up
         updates.price = Math.round((productToEdit.price * (1 + (mark_up / 100))) * 100) / 100
     }
+    if(price !== productToEdit.price){
+        updates.price = price
+    }
 
     const newOne =  await Product.findByIdAndUpdate(req.params.id, updates, {new: true})
-    if(newOne) return res.status(200).json(`Product: ${newOne.name} successfully updateed!`)
+    if(newOne) return res.status(200).json(newOne)
 
     return res.status(400).json("There was an error, please try again later!")
 })
