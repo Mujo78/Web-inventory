@@ -93,6 +93,9 @@ export const suppSlice = createSlice({
             state.status = "failed"
             state.message = action.payload as string
         })
+        .addCase(addNewSupplier.pending, (state) =>{
+            state.status = 'loading'
+        })
         .addCase(editSupplier.fulfilled, (state, action) => {
             state.status = "idle"
             const i = state.suppliers.findIndex(el => el._id === action.payload._id)

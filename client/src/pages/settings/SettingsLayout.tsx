@@ -1,6 +1,6 @@
 import React from 'react'
 import { Alert, Navbar } from 'flowbite-react'
-import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
+import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import { AiOutlineInfoCircle } from 'react-icons/ai'
 
 const SettingsLayout = () => {
@@ -23,29 +23,14 @@ const SettingsLayout = () => {
         <Navbar.Toggle />
         <Navbar.Collapse>
           <Navbar.Link
-            className={`hover:!text-green-500 ${location.pathname === "/change-password" && `!text-green-500`}`}
-            as={Link}
+            className={`hover:!text-green-500 ${location.pathname === "/change-password" && `!text-green-500 underline underline-offset-8 decoration-2 decoration-green-500`}`}
+            as={NavLink}
             active={location.pathname === "/change-password"}
             to="change-password"
           >
             Change Password
           </Navbar.Link>
-          <Navbar.Link
-            className={`hover:!text-green-500 ${location.pathname === "/about" && `!text-green-500`}`}
-            as={NavLink}
-            active={location.pathname === "/about"}
-            to="about"
-          >
-            About
-          </Navbar.Link>
-          <Navbar.Link
-            className={`hover:!text-green-500 ${location.pathname === "/contact" && `!text-green-500`}`}
-            as={NavLink}
-            active={location.pathname === "/contact"}
-            to="contact"
-          >
-            Contact
-          </Navbar.Link>
+          
         </Navbar.Collapse>
       </Navbar>
 

@@ -32,6 +32,7 @@ import SettingsLayout from './pages/settings/SettingsLayout';
 import ChangePassword from './pages/settings/ChangePassword';
 import About from './pages/settings/About';
 import Contact from './pages/settings/Contact';
+import HelpLayout from './pages/help/HelpLayout';
 
 
 const router = createBrowserRouter(createRoutesFromElements(
@@ -67,8 +68,10 @@ const router = createBrowserRouter(createRoutesFromElements(
           </Route>
           <Route path='/' element={<SettingsLayout />}>
             <Route path='change-password' element={<ChangePassword />}/>
-            <Route path='about' element={<About />}/>
+          </Route>
+          <Route path="/" element={<HelpLayout />}>
             <Route path='contact' element={<Contact />}/>
+            <Route path='about' element={<About />}/>
           </Route>
           <Route path='employee' element={<Employee />} />
       </Route>

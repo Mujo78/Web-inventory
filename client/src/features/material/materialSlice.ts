@@ -109,6 +109,9 @@ export const materialSlice = createSlice({
                 state.status = "failed"
                 state.message = action.payload as string
             })
+            .addCase(createMaterial.pending, (state) => {
+                state.status = 'loading'
+            })
             .addCase(getMaterials.pending, (state) => {
                 state.status = "loading"
             })

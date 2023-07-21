@@ -1,6 +1,6 @@
 import { Form, Formik, Field, ErrorMessage } from 'formik'
 import React, { useEffect } from 'react'
-import { createNewProduct, product, reset } from '../../features/product/productSlice'
+import { createNewProduct, product, productToCreate, reset } from '../../features/product/productSlice'
 import { validationProductSchema } from '../../validations/productValidation'
 import { Button, Label, TextInput, Select, Alert } from 'flowbite-react'
 import { useLoaderData } from 'react-router-dom'
@@ -8,13 +8,14 @@ import { getFreeProcesses } from '../../utilities/productHelpers'
 import { useAppDispatch } from '../../app/hooks'
 import { useSelector } from 'react-redux'
 import Header from '../../components/Header'
+import CustomSpinner from '../../components/CustomSpinner'
 
 export interface stateProcessInterface {
   _id: string,
   name: string
 }
 
-const initialState = {
+const initialState : productToCreate = {
   name: "",
   product_process_id: "",
   mark_up: 0,
@@ -33,20 +34,21 @@ const AddProduct = () => {
     dispatch(reset())
   }, [dispatch])
 
+  const handleSubmit = (values: productToCreate) => {
+    dispatch(createNewProduct(values))
+  }
+
   return (
     <>
       <Header title='Add Product' status={status} message={message} />
-      {freeProcesses.length > 0 ? <Formik
+  
+    {status === 'loading' ? <CustomSpinner /> :
+      freeProcesses.length > 0 ? <Formik
         initialValues={initialState}
         validationSchema={validationSchema}
-        onSubmit={(values, {resetForm}) => {
-          dispatch(createNewProduct(values)).then((action) =>{
-            if(typeof action.payload === 'object') resetForm()
-          })
-        }}
+        onSubmit={handleSubmit}
         >
-          {({errors, touched}) =>(
-
+      {({errors, touched}) =>(
         <Form className='flex w-full items-center mt-12 flex-col'>
           <div className='w-2/4 border rounded-lg p-10 border-gray-300'>
           <div className='flex mt-2 justify-between'>

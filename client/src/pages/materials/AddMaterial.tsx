@@ -1,5 +1,5 @@
 import { Button, Label, Select, TextInput } from 'flowbite-react'
-import { ErrorMessage, Field, Form, Formik } from 'formik'
+import { ErrorMessage, Field, Form, Formik, } from 'formik'
 import React, { useEffect } from 'react'
 import { materialValidationSchema } from '../../validations/materialValidation'
 import { useSelector } from 'react-redux'
@@ -7,6 +7,7 @@ import { MaterialInterface, createMaterial, material, reset } from '../../featur
 import { useAppDispatch } from '../../app/hooks'
 import { getSuppliers, supplier } from '../../features/supplier/suppSlice'
 import Header from '../../components/Header'
+import CustomSpinner from '../../components/CustomSpinner'
 
 const initialState : MaterialInterface = {
   name: "",
@@ -20,29 +21,28 @@ const initialState : MaterialInterface = {
 const AddMaterial : React.FC = () => {
   
   const dispatch = useAppDispatch()
-
+  const {status: materialStatus, message} = useSelector(material)
+  
   useEffect(() => {
-    dispatch(reset())
-    dispatch(getSuppliers())
-  }, [dispatch])
-
+      dispatch(reset())
+      dispatch(getSuppliers())
+    }, [dispatch])
+  
   const {suppliers} = useSelector(supplier)
-  const {status, message} = useSelector(material)
+    
+    const handleSubmit = (values: MaterialInterface) => {
+        dispatch(createMaterial(values))   
+    };
   
   return (
     <>
-        <Header title='Add Material' status={status} message={message} />
+        <Header title='Add Material' status={materialStatus} message={message} />
+        {materialStatus === 'loading' ? <CustomSpinner /> :
         <Formik
             initialValues={initialState}
             validationSchema={materialValidationSchema}
-            onSubmit={(values, {resetForm}) => {
-                
-                dispatch(createMaterial(values)).then((action) =>{
-                    if(typeof action.payload === "object") resetForm()
-                })
-                
-            }}
-            >
+            onSubmit={handleSubmit}
+        >
             {({errors, touched}) =>(
                 <Form className="flex  flex-col justify-center mt-12 items-center ">
                     <div className='w-2/4 border border-gray-300 rounded-xl p-12'>
@@ -186,6 +186,7 @@ const AddMaterial : React.FC = () => {
                 </Form>
             )}
         </Formik>
+    }
     </>
   )
 }

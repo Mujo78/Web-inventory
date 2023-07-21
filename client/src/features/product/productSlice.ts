@@ -119,6 +119,9 @@ export const productSlice = createSlice({
                 state.status = "failed"
                 state.message = action.payload as string
             })
+            .addCase(createNewProduct.pending, (state) => {
+                state.status = 'loading'
+            })
             .addCase(editProduct.rejected, (state, action) => {
                 state.status = 'failed'
                 state.message = action.payload as string

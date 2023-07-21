@@ -18,7 +18,7 @@ const Header: React.FC<Props> = ({title, other, status, message}) => {
             {other && <h1 className='font-Rubik text-2xl mt-9 pb-5 mr-5 font-bold'>
                 {'#' + other}
             </h1>}
-            {status && message && (
+            {(status === 'idle' ||  status === 'failed') && message && (
                 <CustomToast status={status} message={message} />
             )}
         </div>

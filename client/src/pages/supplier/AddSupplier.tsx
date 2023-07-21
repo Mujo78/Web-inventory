@@ -6,6 +6,7 @@ import { useAppDispatch } from '../../app/hooks'
 import { useSelector } from 'react-redux'
 import { addNewSupplier, reset, supplier } from '../../features/supplier/suppSlice'
 import Header from '../../components/Header'
+import CustomSpinner from '../../components/CustomSpinner'
 
 export type Supp = {
     name : string,
@@ -33,18 +34,19 @@ const AddSupplier: React.FC = () => {
         dispatch(reset())
     }, [dispatch])
 
+    const handleSubmit = (values: Supp) => {
+        dispatch(addNewSupplier(values))
+    }
+
   return (
     <>
         <Header title='Add new Supplier' status={status} message={message} />
+        {status === 'loading' ? <CustomSpinner /> : 
         <Formik
             initialValues={initialState}
             validationSchema={supplierValidationSchema}
-            onSubmit={(values, {resetForm}) => {
-                dispatch(addNewSupplier(values)).then((action) => {
-                    if(typeof action.payload === 'object') resetForm()
-                })
-            }}
-            >
+            onSubmit={handleSubmit}
+        >
             {({errors, touched}) =>(
             <Form className="flex flex-col justify-center items-center mt-8">
                 <div className='w-3/5 border border-gray-300 rounded-lg p-10'>
@@ -152,6 +154,7 @@ const AddSupplier: React.FC = () => {
             </Form>
             )}
         </Formik>
+    }
     </>
   )
 }
