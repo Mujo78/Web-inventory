@@ -30,8 +30,8 @@ import EditProduct from './pages/products/EditProduct';
 import AddProduct, {loader as productLoader} from './pages/products/AddProduct';
 import SettingsLayout from './pages/settings/SettingsLayout';
 import ChangePassword from './pages/settings/ChangePassword';
-import About from './pages/settings/About';
-import Contact from './pages/settings/Contact';
+import About from './pages/help/About';
+import Contact from './pages/help/Contact';
 import HelpLayout from './pages/help/HelpLayout';
 
 

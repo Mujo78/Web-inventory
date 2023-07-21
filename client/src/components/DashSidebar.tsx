@@ -23,7 +23,6 @@ const DashSidebar = () => {
     dispatch(reset())
     navigate("/")
   }
-  console.log(location.pathname)
 
   return (
     <div className="w-fit h-screen">
