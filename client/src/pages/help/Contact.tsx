@@ -1,38 +1,61 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import React from 'react'
 import { contactValidationSchema } from '../../validations/contactValidation'
-import { Button, FileInput, Label, TextInput, Textarea } from 'flowbite-react'
+import { Button, Label, TextInput, Textarea } from 'flowbite-react'
 import Header from '../../components/Header'
+import axios from 'axios'
 
 interface contactInterface {
   subject: string,
-  body: string,
-  file: File | string
+  bodyText: string,
+  file?: File | string
 }
 
 const initialState : contactInterface = {
   subject: "",
-  body: "",
-  file: ''
+  bodyText: ""
 }
 
 const Contact = () => {
   
+  const userJSON = localStorage.getItem('user');
+  const accessToken = userJSON ? JSON.parse(userJSON).accessToken : '';
+
   const handleSubmit = (values: contactInterface) =>{
-    console.log(values)
+    let formData = new FormData()
+    formData.append('subject', values.subject)
+    formData.append('bodyText', values.bodyText)
+    if(values.file) formData.append('file', values.file )
+
+    axios.post("/contact-us", formData, {
+      headers: {
+        Authorization:`Bearer ${accessToken}`,
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+    .then(() =>{
+      console.log("Finshed")
+    })
+    .catch((err) =>console.log(err))
+  
   }
 
   return (
    <>
     <Header title='Contact Us' />
     <Formik
-      validationSchema={contactValidationSchema}
       initialValues={initialState}
-      onSubmit={handleSubmit}
+      validationSchema={contactValidationSchema}
+      onSubmit={(values, {resetForm, setFieldValue}) => {
+        handleSubmit(values)
+        values.file = undefined
+        setFieldValue('file', '')
+        resetForm()
+      }}
     >
-      {({errors, touched}) =>(
+      {({errors, touched,values, setFieldValue}) =>(
         <Form>
-          <div className='flex max-w-2xl mt-12 border rounded-lg border-gray-300 p-10 mx-auto flex-col'>
+          <div className='flex max-w-2xl mt-5 border rounded-lg border-gray-300 p-8 mx-auto flex-col'>
           <div>
           <div className="mb-2 block">
             <Label
@@ -57,24 +80,25 @@ const Contact = () => {
         >
       <div className="mb-2 block">
         <Label
-          htmlFor="body"
+          htmlFor="bodyText"
           value="Tell us more about the problem"
         />
       </div>
       <Field as={Textarea}
-        id="body"
-        name='body'
-        color={errors.body && touched.body && 'failure'}
+        id="bodyText"
+        name='bodyText'
+        className='resize-none'
+        color={errors.bodyText && touched.bodyText && 'failure'}
         placeholder="It doesn't showing products on products page."
         required
         rows={4}
       />
       <div className='h-7'>
-        <ErrorMessage name='body' component='span' className='text-red-600 text-xs' />
+        <ErrorMessage name='bodyText' component='span' className='text-red-600 text-xs' />
       </div>
     </div>
     <div
-      className="max-w-md"
+      className='mb-4'
       id="fileUpload"
     >
       <div className="mb-2 block">
@@ -83,13 +107,18 @@ const Contact = () => {
           value="Upload file (photo, docs, pdf of the problem)"
         />
       </div>
-      <Field as={FileInput}
+      <input
+        type='file'
+        className='border border-gray-300 rounded-lg w-full bg-gray-50'
         id="file"
         name='file'
-        accept=".pdf,.docx,.jpg,.png"
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>{
+          if(e.currentTarget.files) setFieldValue('file', e.currentTarget.files[0])
+        }}
+        accept=".pdf,.docx,.jpg,.png,.txt"
       />
     </div>
-        <Button type='submit' className='ml-auto' color='success'>
+        <Button type="submit" className='ml-auto w-1/4' color='success'>
           Submit
         </Button>
         </div>
