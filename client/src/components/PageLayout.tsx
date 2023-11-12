@@ -30,7 +30,7 @@ const PageLayout: React.FC<Props> = ({children, title, alert}) => {
                 {title}
             </Alert> : ''
     }
-        <Navbar
+        {children && <Navbar
             className='!bg-gray-200 my-3 py-4 !border-gray-400'
             fluid
             rounded
@@ -39,7 +39,7 @@ const PageLayout: React.FC<Props> = ({children, title, alert}) => {
             <Navbar.Collapse>
                 {children}
             </Navbar.Collapse>
-        </Navbar>
+        </Navbar>}
 
         <Outlet />
     </div>

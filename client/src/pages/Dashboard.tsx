@@ -1,13 +1,9 @@
-import { Button } from 'flowbite-react'
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useAppDispatch } from '../app/hooks'
-import { logout, reset } from '../features/auth/authSlice'
-import DashSidebar from '../components/DashSidebar'
-import { useSelector } from 'react-redux'
-import { supplier } from '../features/supplier/suppSlice'
+import useSelectedPage from '../hooks/useSelectedPage'
 
 const Dashboard: React.FC = () => {
+
+  useSelectedPage("Dashboard")
   
   return (
     <div>

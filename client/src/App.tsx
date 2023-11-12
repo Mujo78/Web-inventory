@@ -16,7 +16,6 @@ import EditSupplier from './pages/supplier/EditSupplier';
 import Authorized from './helpers/Authorized';
 import UserRequired from './helpers/UserRequired';
 import SupplierDetails from './pages/supplier/SupplierDetails';
-import MaterialLayout from './pages/materials/MaterialLayout';
 import AddMaterial from './pages/materials/AddMaterial';
 import MaterialDetails from './pages/materials/MaterialDetails';
 import EditMaterial from './pages/materials/EditMaterial';
@@ -24,7 +23,6 @@ import ProductProcessLayout from './pages/product_process/ProductProcessLayout';
 import AddProductProcess from './pages/product_process/AddPP';
 import EditProductProcess from './pages/product_process/EditPP';
 import PPDetailPage from './pages/product_process/PPDetailPage';
-import ProductLayout from './pages/products/ProductLayout';
 import ProductDetail from './pages/products/ProductDetail';
 import EditProduct from './pages/products/EditProduct';
 import AddProduct, {loader as productLoader} from './pages/products/AddProduct';
@@ -41,14 +39,14 @@ const router = createBrowserRouter(createRoutesFromElements(
     <Route index element={<LandingPage />} loader={Authorized} />
         <Route path='/' element={<HomeLayout />} loader={UserRequired}>
           <Route path='dashboard' element={<Dashboard />} />
-          <Route path='/' element={<ProductLayout />}>
+          <Route path='/'>
             <Route path='products' element={<Products />} />
             <Route path='add-product' element={<AddProduct />} loader={productLoader} />
             <Route path='product/:id' element={<ProductDetail />} />
             <Route path='edit-product/:id' element={<EditProduct />} />
           </Route>
           
-          <Route path='/' element={<MaterialLayout />}>
+          <Route path='/'>
               <Route path='materials' element={<Materials />} />
               <Route path='add-material' element={<AddMaterial />} />
               <Route path='material/:id' element={<MaterialDetails />} />

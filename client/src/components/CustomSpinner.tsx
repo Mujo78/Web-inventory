@@ -1,10 +1,14 @@
 import { Spinner } from 'flowbite-react'
 import React from 'react'
 
-const CustomSpinner: React.FC = () => {
+type Props = {
+  size?: string
+}
+
+const CustomSpinner: React.FC<Props> = ({size}) => {
   return (
     <div className='flex items-center justify-center mt-12'>
-        <Spinner />
+        <Spinner size={size} />
     </div>
   )
 }

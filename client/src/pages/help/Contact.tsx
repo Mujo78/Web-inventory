@@ -4,6 +4,7 @@ import { contactValidationSchema } from '../../validations/contactValidation'
 import { Button, Label, TextInput, Textarea } from 'flowbite-react'
 import Header from '../../components/Header'
 import axios from 'axios'
+import useSelectedPage from '../../hooks/useSelectedPage'
 
 interface contactInterface {
   subject: string,
@@ -20,6 +21,8 @@ const Contact = () => {
   
   const userJSON = localStorage.getItem('user');
   const accessToken = userJSON ? JSON.parse(userJSON).accessToken : '';
+
+  useSelectedPage("Contact Us")
 
   const handleSubmit = (values: contactInterface) =>{
     let formData = new FormData()

@@ -8,6 +8,7 @@ import { FiEdit } from 'react-icons/fi'
 import CustomButton from '../../components/CustomButton'
 import { MdDisabledByDefault } from 'react-icons/md'
 import CustomSpinner from '../../components/CustomSpinner'
+import useSelectedPage from '../../hooks/useSelectedPage'
 
 
 
@@ -25,7 +26,8 @@ const ProductProcess:  React.FC = () => {
 
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
-  
+
+  useSelectedPage("Product Processes")
 
   useEffect(() =>{
     dispatch(getProcesses())

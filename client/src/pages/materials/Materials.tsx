@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import MaterialCard from '../../components/MaterialCard'
 import axios from 'axios'
 import CustomSpinner from '../../components/CustomSpinner'
+import useSelectedPage from '../../hooks/useSelectedPage'
 
 
 export interface SupplierWithMaterial {
@@ -18,6 +19,8 @@ export interface SupplierWithMaterial {
 const Materials: React.FC = () => {
   
   const [suppMatt, setSuppMatt] = useState<SupplierWithMaterial[]>([]);
+
+  useSelectedPage("Materials")
   
   const getSupplierMaterials = async () => {
     const res = await axios.get("/supplier-materials")
@@ -56,8 +59,8 @@ const Materials: React.FC = () => {
 
 
   return (
-    <div className='flex mt-8 max-w-full h-5/6'>
-      <div className='w-2/3  h-full p-6 mb-8 border-2 rounded-md'>
+    <div className='flex max-w-full h-5/6'>
+      <div className='w-2/3 p-6 mb-8 border-2 rounded-md'>
         <form onSubmit={onSubmit} className="flex max-w-full flex-col">
           <div className='focus:!ring-0 flex focus:border-green-500'>
             <TextInput
@@ -78,7 +81,7 @@ const Materials: React.FC = () => {
         <div className='pt-4 pb-12 h-full'>
           <div className= 'h-full mb-5 overflow-y-auto'>
           {status === "loading" ? (
-            <CustomSpinner />
+            <CustomSpinner size='md' />
           ) :
           materials.length > 0 ?
             searchInput ?

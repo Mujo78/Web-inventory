@@ -64,7 +64,7 @@ const MaterialChart: React.FC<Props> = ({suppMatt}) => {
               ))}
             </Pie>
             <Tooltip />
-            <Legend layout='vertical'  />
+            <Legend layout='vertical' align='center'  />
           </PieChart>
         </ResponsiveContainer>
       </div>

@@ -1,8 +1,8 @@
-import { Sidebar, Button, Avatar } from 'flowbite-react'
+import { Sidebar, Button, Avatar, CustomFlowbiteTheme } from 'flowbite-react'
 import React from 'react'
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { useAppDispatch } from '../app/hooks'
-import { authUser, logout, reset } from '../features/auth/authSlice'
+import { authUser, logout, reset, resetSelected } from '../features/auth/authSlice'
 import {AiFillDashboard} from "react-icons/ai"
 import { useSelector } from 'react-redux'
 import {FcProcess} from "react-icons/fc"
@@ -10,7 +10,13 @@ import {FaFileContract, FaUsers} from "react-icons/fa"
 import {MdBuild, MdLayers} from "react-icons/md"
 import {IoMdSettings, IoIosHelpCircleOutline} from "react-icons/io"
 
-const DashSidebar = () => {
+const customTheme: CustomFlowbiteTheme['sidebar'] = {
+  root: {
+    inner: "h-full overflow-y-auto overflow-x-hidden bg-green-500 py-0 px-0 dark:bg-gray-800"
+  }
+}
+
+const DashSidebar: React.FC = () => {
 
   const navigate = useNavigate()
 
@@ -21,29 +27,27 @@ const DashSidebar = () => {
   const onLogOut = () => {
     dispatch(logout())
     dispatch(reset())
+    dispatch(resetSelected())
     navigate("/")
   }
 
   return (
-    <div className="w-fit h-screen">
-      <Sidebar>
-        <Sidebar.Items className='h-full border-r-2 border-r-green-500 flex flex-col justify'>
-          <Sidebar.ItemGroup className='pt-4 first:pt-5 py-0'>
+    <div className="w-fit h-screen font-Rubik b-0">
+      <Sidebar theme={customTheme}>
+        <Sidebar.Items className='h-full border-r-2 p-0 border-r-green-500 flex flex-col justify'>
+          <Sidebar.ItemGroup className='pt-4 px-4 first:pt-5 py-0'>
               <Sidebar.Item
+                className="hover:!bg-green-500"
                 as={NavLink}
                 to="dashboard">
-                  <div className="flex justify-start gap-4 h-full items-center">
-                    <Avatar rounded={true} />
-                    <span className='font-semibold text-xl'>{accessUser?.username}</span>
-                  </div>
+                  <Avatar alt='s' size="lg" rounded img="./assets/company_logo.jpg" />
               </Sidebar.Item>
             </Sidebar.ItemGroup>
-            <Sidebar.ItemGroup className='flex flex-col justify-center'>     
+            <Sidebar.ItemGroup className='flex p-3 flex-col justify-center'>     
             <Sidebar.Item as={NavLink}
               to="dashboard"
               active={location.pathname === '/dashboard'}
               icon={AiFillDashboard}
-              className="mt-3"
             >
               Dashboard
             </Sidebar.Item>
@@ -89,33 +93,33 @@ const DashSidebar = () => {
                 active={location.pathname.includes('/employee')}
                 to="employee"
                 icon={FaUsers}
-                className="mt-3"
+                className="mt-3 p-3"
               >
                 Employee
               </Sidebar.Item>
             }
           </Sidebar.ItemGroup>
-          <Sidebar.ItemGroup className='flex flex-col justify-between h-full'>
-          <Sidebar.ItemGroup>
-          <Sidebar.Item
-              as={NavLink}
-              active={location.pathname === '/change-password'}
-              to="change-password"
-              icon={IoMdSettings}
-            >
-              Settings
-            </Sidebar.Item>
+          <Sidebar.ItemGroup className='flex p-3 flex-col justify-between h-full'>
+            <Sidebar.ItemGroup>
             <Sidebar.Item
-              as={NavLink}
-              active={location.pathname === '/contact' || location.pathname === '/about'}
-              to="contact"
-              icon={IoIosHelpCircleOutline}
-            >
-              Help
-            </Sidebar.Item>
-          </Sidebar.ItemGroup>
-            <Sidebar.Item>
-                <Button className='w-full mb-5' color="success"  onClick={onLogOut}>Log out</Button>
+                as={NavLink}
+                active={location.pathname === '/change-password'}
+                to="change-password"
+                icon={IoMdSettings}
+              >
+                Settings
+              </Sidebar.Item>
+              { accessUser?.role !== 'Admin' && <Sidebar.Item
+                as={NavLink}
+                active={location.pathname === '/contact' || location.pathname === '/about'}
+                to="contact"
+                icon={IoIosHelpCircleOutline}
+              >
+                Help
+              </Sidebar.Item>}
+            </Sidebar.ItemGroup>
+            <Sidebar.Item className="hover:!bg-green-500">
+                <Button className='w-full' color="success"  onClick={onLogOut}>Log out</Button>
             </Sidebar.Item>
             </Sidebar.ItemGroup>
         </Sidebar.Items>

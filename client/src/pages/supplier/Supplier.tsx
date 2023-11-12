@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import {GrOverview} from "react-icons/gr"
 import CustomButton from '../../components/CustomButton'
 import CustomSpinner from '../../components/CustomSpinner'
+import useSelectedPage from '../../hooks/useSelectedPage'
 
 const styles = {
   height: "20px",
@@ -19,6 +20,8 @@ const Supplier: React.FC = () => {
   const dispatch = useAppDispatch()
   const {suppliers, status} = useSelector(supplier)
   const navigate = useNavigate()
+
+  useSelectedPage("Suppliers")
 
   useEffect(() => {
 

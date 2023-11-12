@@ -2,10 +2,13 @@ import React from 'react'
 import { Alert, Navbar } from 'flowbite-react'
 import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import { AiOutlineInfoCircle } from 'react-icons/ai'
+import useSelectedPage from '../../hooks/useSelectedPage'
 
 const SettingsLayout = () => {
 
     const location = useLocation();
+
+    useSelectedPage("Settings")
 
   return (
     <div className='w-full'>

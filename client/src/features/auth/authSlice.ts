@@ -6,7 +6,8 @@ import { RootState } from "../../app/store"
 export interface AuthState {
     accessUser: any,
     status: 'idle' | 'loading' | 'failed',
-    message: string
+    message: string,
+    selected?: string
 }
 
 export interface LoginUser {
@@ -20,7 +21,8 @@ const storedObject = user !== null ? JSON.parse(user) : null
 const initialState: AuthState = {
     accessUser: storedObject,
     status: 'idle',
-    message: ""
+    message: "",
+    selected: ''
 }
 
 export const login = createAsyncThunk("/auth/login", async(loginData: LoginUser, thunkAPI) => {
@@ -45,6 +47,12 @@ export const authSlice = createSlice({
     reducers: {
         reset: (state) => {
             state.status = "idle"
+        },
+        setSelected: (state, action) => {
+            state.selected = action.payload
+        },
+        resetSelected: (state) => {
+            state.selected = ''
         }
     },
     extraReducers(builder) {
@@ -69,5 +77,5 @@ export const authSlice = createSlice({
 
 export const authUser = (state: RootState) => state.auth;
 
-export const {reset} = authSlice.actions
+export const {reset, setSelected, resetSelected} = authSlice.actions
 export default authSlice.reducer;

@@ -5,10 +5,12 @@ import { getProducts, product } from '../../features/product/productSlice';
 import { Alert } from 'flowbite-react';
 import ProductCard from '../../components/ProductCard';
 import CustomSpinner from '../../components/CustomSpinner';
+import useSelectedPage from '../../hooks/useSelectedPage';
 
 const Products: React.FC = () => {
 
   const dispatch = useAppDispatch();
+  useSelectedPage('Products')
 
   useEffect(() =>{
     dispatch(getProducts())
