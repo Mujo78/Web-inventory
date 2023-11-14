@@ -6,8 +6,8 @@ import { Alert, Card } from 'flowbite-react'
 import {FiEdit} from "react-icons/fi"
 import { useNavigate } from 'react-router-dom'
 import {GrOverview} from "react-icons/gr"
-import CustomButton from '../../components/CustomButton'
-import CustomSpinner from '../../components/CustomSpinner'
+import CustomButton from '../../components/UI/CustomButton'
+import CustomSpinner from '../../components/UI/CustomSpinner'
 import useSelectedPage from '../../hooks/useSelectedPage'
 
 const styles = {

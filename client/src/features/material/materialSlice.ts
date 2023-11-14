@@ -138,12 +138,8 @@ export const materialSlice = createSlice({
                 state.status = "failed"
                 state.message = action.payload as string
             })
-            .addCase(getMaterial.pending, (state) =>{
-                state.status = "loading"
-            })
             .addCase(getMaterial.fulfilled, (state, action) =>{
                 state.status = "idle"
-                console.log(action.payload)
                 state.specificMaterial = action.payload
             })
             .addCase(editMaterial.rejected, (state, action) => {

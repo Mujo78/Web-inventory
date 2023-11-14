@@ -117,8 +117,13 @@ const suppliersMaterials = asyncHandler( async (req, res) =>{
           }
         }
       ]);
+
+      const materialsQuantity = await Material.find().sort({quantity: -1}).select("name quantity").limit(5)
     
-      return res.status(200).json(supplierMaterialCounts);
+      return res.status(200).json({
+        materialsQuantity,
+        supplierMaterialCounts
+      });
     });
 
 module.exports = {

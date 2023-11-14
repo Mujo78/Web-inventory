@@ -1,14 +1,13 @@
 import './App.css';
 import LandingPage from './pages/LandingPage';
 import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from 'react-router-dom';
-import Layout from './components/Layout';
+import Layout from './components/Layouts/Layout';
 import Dashboard from './pages/Dashboard';
 import ErrorPage from './pages/ErrorPage';
-import HomeLayout from './components/HomeLayout';
+import HomeLayout from './components/Layouts/HomeLayout';
 import Products from './pages/products/Products';
 import Materials from './pages/materials/Materials';
 import ProductProcess from './pages/product_process/ProductProcess';
-import SupplierLayout from './pages/supplier/SupplierLayout';
 import Employee from './pages/Employee';
 import Supplier from './pages/supplier/Supplier';
 import AddSupplier from './pages/supplier/AddSupplier';
@@ -17,9 +16,7 @@ import Authorized from './helpers/Authorized';
 import UserRequired from './helpers/UserRequired';
 import SupplierDetails from './pages/supplier/SupplierDetails';
 import AddMaterial from './pages/materials/AddMaterial';
-import MaterialDetails from './pages/materials/MaterialDetails';
 import EditMaterial from './pages/materials/EditMaterial';
-import ProductProcessLayout from './pages/product_process/ProductProcessLayout';
 import AddProductProcess from './pages/product_process/AddPP';
 import EditProductProcess from './pages/product_process/EditPP';
 import PPDetailPage from './pages/product_process/PPDetailPage';
@@ -49,16 +46,15 @@ const router = createBrowserRouter(createRoutesFromElements(
           <Route path='/'>
               <Route path='materials' element={<Materials />} />
               <Route path='add-material' element={<AddMaterial />} />
-              <Route path='material/:id' element={<MaterialDetails />} />
               <Route path='edit-material/:id' element={<EditMaterial />} />
           </Route>
-          <Route path='/' element={<ProductProcessLayout />} >
+          <Route path='/' >
             <Route path='processes' element={<ProductProcess />} />
             <Route path='add-process' element={<AddProductProcess />} />
             <Route path='process/:id' element={<PPDetailPage />} />
             <Route path='edit-process/:id' element={<EditProductProcess />} />
           </Route>
-          <Route path="/" element={<SupplierLayout />}>
+          <Route path="/">
             <Route path='suppliers' element={<Supplier />}/>
             <Route path='add-supplier' element={<AddSupplier />} />
             <Route path='supplier/:id' element={<SupplierDetails />} />

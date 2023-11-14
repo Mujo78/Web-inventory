@@ -6,8 +6,9 @@ import { useSelector } from 'react-redux'
 import { MaterialInterface, createMaterial, material, reset } from '../../features/material/materialSlice'
 import { useAppDispatch } from '../../app/hooks'
 import { getSuppliers, supplier } from '../../features/supplier/suppSlice'
-import Header from '../../components/Header'
-import CustomSpinner from '../../components/CustomSpinner'
+import Header from '../../components/UI/Header'
+import CustomSpinner from '../../components/UI/CustomSpinner'
+import { useNavigate } from 'react-router-dom'
 
 const initialState : MaterialInterface = {
   name: "",
@@ -19,7 +20,7 @@ const initialState : MaterialInterface = {
 }
 
 const AddMaterial : React.FC = () => {
-  
+  const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const {status: materialStatus, message} = useSelector(material)
   
@@ -179,9 +180,14 @@ const AddMaterial : React.FC = () => {
                             </div>
                         </div>
                         </div>
-                        <Button type="submit" className='ml-auto w-1/3 px-6 mt-4' color="success">
-                            Submit
-                        </Button>
+                        <div className='flex justify-end mt-4 gap-3'>
+                            <Button type="button" onClick={() =>   navigate("/materials") } className='px-6' color="light">
+                                Cancel
+                            </Button>
+                            <Button type="submit" className='px-6' color="success">
+                                Submit
+                            </Button>
+                        </div>
                     </div>
                 </Form>
             )}

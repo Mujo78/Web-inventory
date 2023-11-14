@@ -1,5 +1,5 @@
 import axios from "axios";
-import { selectedMaterials } from "../../components/PPItems";
+import { selectedMaterials } from "../../components/ProductProcess/PPItems";
 
 export interface ProcessToEdit {
     name: string,

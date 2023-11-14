@@ -31,7 +31,7 @@ const PageLayout: React.FC<Props> = ({children, title, alert}) => {
             </Alert> : ''
     }
         {children && <Navbar
-            className='!bg-gray-200 my-3 py-4 !border-gray-400'
+            className='!bg-gray-200 py-4 !border-gray-400'
             fluid
             rounded
         >

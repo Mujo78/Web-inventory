@@ -7,8 +7,8 @@ import { editSupplier, getSupplier, resetSupplier, supplier } from '../../featur
 import { ErrorMessage, Field, Form, Formik } from 'formik'
 import { supplierValidationSchema } from '../../validations/supplierValidation'
 import { Button, Label, TextInput, ToggleSwitch } from 'flowbite-react'
-import CustomSpinner from '../../components/CustomSpinner'
-import Header from '../../components/Header'
+import CustomSpinner from '../../components/UI/CustomSpinner'
+import Header from '../../components/UI/Header'
 
 const EditSupplier: React.FC = () => {
     

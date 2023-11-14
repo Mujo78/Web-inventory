@@ -5,8 +5,8 @@ import { supplierValidationSchema } from '../../validations/supplierValidation'
 import { useAppDispatch } from '../../app/hooks'
 import { useSelector } from 'react-redux'
 import { addNewSupplier, reset, supplier } from '../../features/supplier/suppSlice'
-import Header from '../../components/Header'
-import CustomSpinner from '../../components/CustomSpinner'
+import Header from '../../components/UI/Header'
+import CustomSpinner from '../../components/UI/CustomSpinner'
 
 export type Supp = {
     name : string,

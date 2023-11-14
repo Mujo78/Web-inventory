@@ -1,10 +1,10 @@
 import axios from 'axios'
 import { Button, Label, TextInput } from 'flowbite-react'
 import React, { useState } from 'react'
-import CustomButton from './CustomButton'
+import CustomButton from '../UI/CustomButton'
 import { AiOutlineMinus} from 'react-icons/ai'
-import { useAppDispatch } from '../app/hooks'
-import { deleteSpecificProcessItem } from '../features/process/processSlice'
+import { useAppDispatch } from '../../app/hooks'
+import { deleteSpecificProcessItem } from '../../features/process/processSlice'
 
 interface Props {
     _id: string,

@@ -1,6 +1,6 @@
 import { Card } from 'flowbite-react'
 import React, { useState } from 'react'
-import { Product } from '../features/product/productSlice'
+import { Product } from '../../features/product/productSlice'
 import { FiEdit } from 'react-icons/fi'
 import { useNavigate } from 'react-router-dom'
 

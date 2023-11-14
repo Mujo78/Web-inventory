@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { makeProcess, process } from '../../features/process/processSlice'
 import { useAppDispatch } from '../../app/hooks'
-import PPItems from '../../components/PPItems'
+import PPItems from '../../components/ProductProcess/PPItems'
 
 export interface processNameIn {
   name: string

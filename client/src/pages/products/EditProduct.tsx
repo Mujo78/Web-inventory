@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import Header from '../../components/Header'
+import Header from '../../components/UI/Header'
 import { ErrorMessage, Field, Form, Formik } from 'formik'
 import { validationProductSchema } from '../../validations/productValidation'
 import { Product, editProduct, getProduct, product, resetProduct } from '../../features/product/productSlice'
@@ -9,7 +9,7 @@ import { useAppDispatch } from '../../app/hooks'
 import { useSelector } from 'react-redux'
 import axios from 'axios'
 import { stateProcessInterface } from './AddProduct'
-import CustomSpinner from '../../components/CustomSpinner'
+import CustomSpinner from '../../components/UI/CustomSpinner'
 
 const EditProduct: React.FC = () => {
   const isEditing = true

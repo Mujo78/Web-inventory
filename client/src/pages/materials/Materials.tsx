@@ -3,22 +3,34 @@ import { useAppDispatch } from '../../app/hooks'
 import { useSelector } from 'react-redux'
 import { Material, getMaterials, material } from '../../features/material/materialSlice'
 import { Alert, Button, TextInput } from 'flowbite-react'
-import MaterialChart from '../../components/MaterialChart'
+import MaterialChart from '../../components/Materials/MaterialChart'
 import { useNavigate } from 'react-router-dom'
-import MaterialCard from '../../components/MaterialCard'
+import MaterialCard from '../../components/Materials/MaterialCard'
 import axios from 'axios'
-import CustomSpinner from '../../components/CustomSpinner'
+import CustomSpinner from '../../components/UI/CustomSpinner'
 import useSelectedPage from '../../hooks/useSelectedPage'
+import  {AiOutlinePlus} from "react-icons/ai"
+import CustomButton from '../../components/UI/CustomButton'
+import { Tooltip as ToolTp } from 'flowbite-react'
 
+interface materialsQuantity {
+  name: string,
+  quantity: number
+}
 
-export interface SupplierWithMaterial {
+interface supplierMaterial {
   supplier: string,
   materialsCount: number
 }
 
+export interface SupplierWithMaterialAndQuantity {
+  materialsQuantity: materialsQuantity[],
+  supplierMaterialCounts: supplierMaterial[]
+}
+
 const Materials: React.FC = () => {
   
-  const [suppMatt, setSuppMatt] = useState<SupplierWithMaterial[]>([]);
+  const [suppMatt, setSuppMatt] = useState<SupplierWithMaterialAndQuantity>();
 
   useSelectedPage("Materials")
   
@@ -36,7 +48,7 @@ const Materials: React.FC = () => {
     dispatch(getMaterials())
   }, [dispatch])
 
-  const {materials, status, message} = useSelector(material)
+  const {materials, status} = useSelector(material)
   
   useEffect(() => {
     getSupplierMaterials()
@@ -59,58 +71,66 @@ const Materials: React.FC = () => {
 
 
   return (
-    <div className='flex max-w-full h-5/6'>
-      <div className='w-2/3 p-6 mb-8 border-2 rounded-md'>
-        <form onSubmit={onSubmit} className="flex max-w-full flex-col">
-          <div className='focus:!ring-0 flex focus:border-green-500'>
-            <TextInput
-              name='searchInput'
-              value={searchInput}
-              onChange={onChange}
-              className='mb-3 w-11/12 pr-3'
-              id="search-input"
-              placeholder="Material One"
-              type="text"
-            />
-            <Button type="submit" color="success">
-              Search
-            </Button>
-          </div>
-        </form>
+    <div className='flex relative w-full h-[89vh] overflow-y-hidden '>
+      <div className=' flex w-full h-full'>
+        <div className='w-2/4 p-6 border-2 h-full overflow-y-hidden rounded-md'>
+          <form onSubmit={onSubmit} className="flex flex-col">
+            <div className='focus:!ring-0 flex focus:border-green-500'>
+              <TextInput
+                name='searchInput'
+                value={searchInput}
+                onChange={onChange}
+                className='mb-3 w-full pr-3'
+                id="search-input"
+                placeholder="Material One"
+                type="text"
+              />
+              <Button type="submit" color="success">
+                Search
+              </Button>
+            </div>
+          </form>
 
-        <div className='pt-4 pb-12 h-full'>
-          <div className= 'h-full mb-5 overflow-y-auto'>
-          {status === "loading" ? (
-            <CustomSpinner size='md' />
-          ) :
-          materials.length > 0 ?
-            searchInput ?
-              searched.length > 0 ? 
-                searched.map( n => (
-                    <MaterialCard key={n._id} _id={n._id} name={n.name} quantity={n.quantity} />
-                )) : 
+          <div className='pt-4 pb-12 h-full w-full'>
+            <div className= 'h-full overflow-y-auto overflow-x-hidden pr-2 w-full'>
+              {status === "loading" ? (
+                <CustomSpinner size='md' />
+              ) :
+              materials.length > 0 ?
+                searchInput ?
+                  searched.length > 0 ? 
+                    searched.map( n => (
+                        <MaterialCard key={n._id} _id={n._id} name={n.name} quantity={n.quantity} />
+                    )) : 
+                    <div>
+                      <Alert color="info" className='text-center flex items-center' >
+                        <p>There are no such materials available.</p>
+                      </Alert>
+                    </div> 
+                :
+                  materials.map(m => (
+                    <MaterialCard key={m._id} _id={m._id} name={m.name} quantity={m.quantity} />
+                  ))
+                :
                 <div>
-                  <Alert color="info" className='text-center flex items-center' >
-                    <p>There are no such materials available.</p>
-                  </Alert>
+                    <Alert color="info" className='text-center flex items-center' >
+                      <p>There are no materials available.</p>
+                    </Alert>
                 </div> 
-            :
-              materials.map(m => (
-                  <MaterialCard key={m._id} _id={m._id} name={m.name} quantity={m.quantity} />
-              )) 
-            :
-            <div>
-                <Alert color="info" className='text-center flex items-center' >
-                  <p>There are no materials available.</p>
-                </Alert>
-            </div> 
-        }
-        </div>
-        </div>
+            }
+            </div>
+          </div>
         </div>   
-        {suppMatt.length > 0 && <div className='p-4 ml-4 border-2 rounded-md w-1/3'>
-          <MaterialChart suppMatt={suppMatt} />
-        </div>}
+          {suppMatt && 
+            <div className='ml-5 h-full w-2/4'>
+              <MaterialChart suppMatt={suppMatt} />
+          </div>}
+      </div>
+        <CustomButton v={1} onClick={() => navigate("/add-material")} className='bg-white absolute right-10 bottom-10 w-[81px] h-[81px] focus:ring-gray-50 shadow-xl hover:bg-gray-50 ring-2 ring-gray-100 hover:focus:ring-gray-100 flex justify-center border-gray-300 border-2 items-center hover:transition-all hover:duration-300 !rounded-full'>
+      <ToolTp content="Add new material" className='text-xs w-[140px] h-[50px] text-center flex justify-center items-center'>
+          <AiOutlinePlus style={{color: "green", width: 30, height: 30, fontWeight: 'bold'}} />
+      </ToolTp>
+        </CustomButton>
     </div>
   )
 }

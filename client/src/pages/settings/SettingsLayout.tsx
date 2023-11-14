@@ -1,25 +1,37 @@
-import React from 'react'
-import { Alert, Navbar } from 'flowbite-react'
+import React, { useEffect, useState } from 'react'
+import { Navbar } from 'flowbite-react'
 import { NavLink, Outlet, useLocation } from 'react-router-dom'
-import { AiOutlineInfoCircle } from 'react-icons/ai'
 import useSelectedPage from '../../hooks/useSelectedPage'
+import CustomToast from '../../components/UI/CustomToast'
 
-const SettingsLayout = () => {
+const SettingsLayout: React.FC = () => {
+
+  const [show, setShow] = useState<boolean>(true)
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setShow(false)
+    }, 3000)
+
+    return () => {
+      clearTimeout(interval)
+    }
+  }, [])
 
     const location = useLocation();
 
     useSelectedPage("Settings")
-
+    const message = "Important: If this is your first time to sign in, please change your password!"
   return (
-    <div className='w-full'>
-        <Alert 
-            color="success"
-            icon={AiOutlineInfoCircle}
-            >
-                <h1><b>Important:</b> If this is your first time to sign in, please change your password!</h1>
-        </Alert>
+    <div className='w-full relative'>
+        {show && <div className='absolute right-0 top-10'>
+          <CustomToast 
+              status='idle'
+              message={message}
+              />
+        </div>}
       <Navbar
-          className='!bg-gray-200 my-3 py-4 !border-gray-400'
+          className='!bg-gray-200 py-4 !border-gray-400'
             fluid
             rounded
       >

@@ -2,11 +2,11 @@ import React from 'react'
 import { useEffect, useState} from 'react'
 import { Label,Button } from 'flowbite-react'
 import { Formik,Field, Form, ErrorMessage} from 'formik'
-import { userValidationSchema } from '../validations/userValidation'
+import { userValidationSchema } from '../../validations/userValidation'
 import { useSelector } from 'react-redux'
-import { useAppDispatch } from '../app/hooks'
-import { authUser, login, reset } from '../features/auth/authSlice'
-import { classNm } from '../pages/LandingPage'
+import { useAppDispatch } from '../../app/hooks'
+import { authUser, login, reset } from '../../features/auth/authSlice'
+import { classNm } from '../../pages/LandingPage'
 
 type User = {
     username: string,

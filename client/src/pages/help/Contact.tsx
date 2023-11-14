@@ -2,7 +2,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik'
 import React from 'react'
 import { contactValidationSchema } from '../../validations/contactValidation'
 import { Button, Label, TextInput, Textarea } from 'flowbite-react'
-import Header from '../../components/Header'
+import Header from '../../components/UI/Header'
 import axios from 'axios'
 import useSelectedPage from '../../hooks/useSelectedPage'
 

@@ -7,8 +7,8 @@ import { MaterialInterface, editMaterial, getMaterial, material, resetMaterial }
 import { useAppDispatch } from '../../app/hooks'
 import { getSuppliers, supplier } from '../../features/supplier/suppSlice'
 import { useNavigate, useParams } from 'react-router-dom'
-import CustomSpinner from '../../components/CustomSpinner'
-import Header from '../../components/Header'
+import CustomSpinner from '../../components/UI/CustomSpinner'
+import Header from '../../components/UI/Header'
 
 
 const EditMaterial: React.FC = () => {
@@ -206,8 +206,8 @@ const EditMaterial: React.FC = () => {
                                     </div>
                             </div>
                         </div>
-                            <div className='flex justify-end flex-wrap mt-7'>
-                                <Button type="button" onClick={goBack} className='mr-5' color="light" >
+                            <div className='flex justify-end flex-wrap gap-3 mt-7'>
+                                <Button type="button" onClick={goBack} className=' px-6' color="light" >
                                     Cancel
                                 </Button>
                                 <Button type="submit" className=' px-6' color="success">

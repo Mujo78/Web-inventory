@@ -6,13 +6,13 @@ import { addManyProcessItems, deactivateProcess, editSpecificProcess, getProcess
 import { ErrorMessage, Field, Form, Formik } from 'formik'
 import { validationProcessSchema } from '../../validations/processValidation'
 import {MdRecommend, MdSaveAlt} from "react-icons/md"
-import EditPPItems from '../../components/EditPPItems'
+import EditPPItems from '../../components/ProductProcess/EditPPItems'
 import { useAppDispatch } from '../../app/hooks'
-import CustomSpinner from '../../components/CustomSpinner'
+import CustomSpinner from '../../components/UI/CustomSpinner'
 import { ProcessToEdit } from '../../features/process/processService'
 import axios from 'axios'
-import ProcessItemsToAdd from '../../components/ProcessItemsToAdd'
-import { selectedMaterials } from '../../components/PPItems'
+import ProcessItemsToAdd from '../../components/ProductProcess/ProcessItemsToAdd'
+import { selectedMaterials } from '../../components/ProductProcess/PPItems'
 
 
 export interface MaterialToAdd {

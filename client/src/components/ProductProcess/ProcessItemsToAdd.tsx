@@ -1,6 +1,6 @@
 import { Button, TextInput } from 'flowbite-react'
 import React, { useState } from 'react'
-import { MaterialToAdd } from '../pages/product_process/EditPP'
+import { MaterialToAdd } from '../../pages/product_process/EditPP'
 import { selectedMaterials } from './PPItems'
 import { IoMdAdd } from 'react-icons/io'
 

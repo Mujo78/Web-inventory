@@ -5,9 +5,9 @@ import { useAppDispatch } from '../../app/hooks'
 import { Alert, Button, Card} from 'flowbite-react'
 import { useNavigate } from 'react-router-dom'
 import { FiEdit } from 'react-icons/fi'
-import CustomButton from '../../components/CustomButton'
+import CustomButton from '../../components/UI/CustomButton'
 import { MdDisabledByDefault } from 'react-icons/md'
-import CustomSpinner from '../../components/CustomSpinner'
+import CustomSpinner from '../../components/UI/CustomSpinner'
 import useSelectedPage from '../../hooks/useSelectedPage'
 
 

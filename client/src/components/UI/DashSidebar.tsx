@@ -1,8 +1,8 @@
 import { Sidebar, Button, Avatar, CustomFlowbiteTheme } from 'flowbite-react'
 import React from 'react'
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
-import { useAppDispatch } from '../app/hooks'
-import { authUser, logout, reset, resetSelected } from '../features/auth/authSlice'
+import { useAppDispatch } from '../../app/hooks'
+import { authUser, logout, reset, resetSelected } from '../../features/auth/authSlice'
 import {AiFillDashboard} from "react-icons/ai"
 import { useSelector } from 'react-redux'
 import {FcProcess} from "react-icons/fc"
@@ -62,7 +62,7 @@ const DashSidebar: React.FC = () => {
             </Sidebar.Item>
             <Sidebar.Item as={NavLink}
               to="materials"
-              active={location.pathname === '/materials' || location.pathname === '/add-material'}
+              active={location.pathname === '/materials' || location.pathname === '/add-material' || location.pathname.startsWith('/edit-material')}
               icon={MdBuild}
               className="mt-3"
             >

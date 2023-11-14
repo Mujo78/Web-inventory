@@ -1,9 +1,9 @@
 import { useEffect, useState} from 'react'
 
-import LoginForm from '../components/LoginForm'
-import InfoLogin from '../components/InfoLogin'
-import ForgetPasswordForm from '../components/ForgetPasswordForm'
-import InfoForgot from '../components/InfoForgot'
+import LoginForm from '../components/Auth/LoginForm'
+import InfoLogin from '../components/Auth/InfoLogin'
+import ForgetPasswordForm from '../components/Auth/ForgetPasswordForm'
+import InfoForgot from '../components/Auth/InfoForgot'
 import { useNavigate } from 'react-router-dom'
 
 

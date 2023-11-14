@@ -1,14 +1,8 @@
 import React from 'react'
-import { Link } from 'react-router-dom';
-import { Avatar, CustomFlowbiteTheme, Flowbite, Navbar } from 'flowbite-react';
+import { Avatar} from 'flowbite-react';
 import { useSelector } from 'react-redux';
-import { authUser } from '../features/auth/authSlice';
+import { authUser } from '../../features/auth/authSlice';
 
-const customTheme: CustomFlowbiteTheme['navbar'] = {
-    root: {
-        base: "mx-auto flex flex-wrap items-center justify-between"
-    }
-}
 
 const CustomNavbar: React.FC = () => {
 
@@ -25,7 +19,7 @@ const CustomNavbar: React.FC = () => {
                    <p>{date}</p>
                 </div>
                 <div className='flex w-1/3 items-center justify-end gap-4'>
-                    <p>{accessUser.username}</p>
+                    <p>{accessUser?.username}</p>
                     <Avatar alt='s' size="sm" bordered rounded />
                 </div>
             </div>

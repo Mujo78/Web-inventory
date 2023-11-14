@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { getMaterials, material } from '../features/material/materialSlice'
-import { useAppDispatch } from '../app/hooks'
+import { getMaterials, material } from '../../features/material/materialSlice'
+import { useAppDispatch } from '../../app/hooks'
 import { Alert, Button, Label, TextInput, Tooltip } from 'flowbite-react'
 import { useNavigate } from 'react-router-dom'
-import { addManyProcessItems } from '../features/process/processSlice'
+import { addManyProcessItems } from '../../features/process/processSlice'
 import { AiOutlineCloseCircle } from 'react-icons/ai'
-import CustomSpinner from './CustomSpinner'
+import CustomSpinner from '../UI/CustomSpinner'
 
 
 export interface selectedMaterials {

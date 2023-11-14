@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
 import processServices, { ProcessToEdit } from "./processService";
-import { selectedMaterials } from "../../components/PPItems";
+import { selectedMaterials } from "../../components/ProductProcess/PPItems";
 import { Material } from "../material/materialSlice";
 
 export interface Process {

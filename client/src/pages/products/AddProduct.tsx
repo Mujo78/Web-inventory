@@ -7,8 +7,8 @@ import { useLoaderData } from 'react-router-dom'
 import { getFreeProcesses } from '../../utilities/productHelpers'
 import { useAppDispatch } from '../../app/hooks'
 import { useSelector } from 'react-redux'
-import Header from '../../components/Header'
-import CustomSpinner from '../../components/CustomSpinner'
+import Header from '../../components/UI/Header'
+import CustomSpinner from '../../components/UI/CustomSpinner'
 
 export interface stateProcessInterface {
   _id: string,
