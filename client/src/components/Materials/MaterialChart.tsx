@@ -52,7 +52,7 @@ const MaterialChart: React.FC<Props> = ({suppMatt}) => {
   return (
     <div className='flex flex-col justify-center h-full text-start w-full'>
       <div className='flex flex-col w-full gap-5 h-full'>
-        <div className='border-2 rounded-md h-2/4 w-full p-4'>
+        <div className='border rounded-md h-2/4 w-full p-4'>
           {
             chartData.length > 0 ?
             <>
@@ -90,7 +90,7 @@ const MaterialChart: React.FC<Props> = ({suppMatt}) => {
             </div>
           }
         </div>
-        <div className='border-2 rounded-md h-2/4 gap-3 p-4'>
+        <div className='border rounded-md h-2/4 gap-3 p-4'>
           {
             barchartData.length > 0 ?
             <>

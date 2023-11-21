@@ -12,6 +12,14 @@ export interface Process {
     start_date: Date | null
 }
 
+export interface ProcessesInfo {
+    processes: Process[],
+    processesNum: number,
+    finished: number,
+    newOnes: number,
+    activeOnes: number
+}
+
 export interface ProductItem {
     _id: string,
     material_id: Material,
@@ -20,21 +28,28 @@ export interface ProductItem {
 }
 
 
-interface specificProcess {
+export interface specificProcessType {
     processData: Process,
     processItems: ProductItem[]
 }
 
 export interface initialStateInterface {
-    processes: Process[],
-    specificProcess? : specificProcess
+    processInfo: ProcessesInfo,
+    specificProcess? : specificProcessType,
+    activeProcess?: specificProcessType,
     status: 'idle' | 'loading' | 'failed',
     message: string
 }
 
 
 const initialState : initialStateInterface = {
-    processes: [],
+    processInfo: {
+        processes: [],
+        processesNum: 0,
+        finished: 0,
+        newOnes: 0,
+        activeOnes: 0
+    },
     status: "idle",
     message: ""
 }
@@ -50,6 +65,16 @@ export const getProcesses = createAsyncThunk("processes/get", async (_, thunkAPI
 })
 
 export const getProcessById = createAsyncThunk("process/get", async (id: string, thunkAPI) => {
+    try{
+        return await processServices.getProcess(id)
+    }catch(error: any){
+        const message = error.response.data
+
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
+export const getActiveProcess = createAsyncThunk("active-process/get", async (id: string, thunkAPI) => {
     try{
         return await processServices.getProcess(id)
     }catch(error: any){
@@ -140,6 +165,9 @@ export const processSlice = createSlice({
         resetSpecificProcess: (state) => {
             state.specificProcess = undefined
         },
+        resetCurrentProcess: (state) => {
+            state.activeProcess = undefined
+        },
         resetMessage : (state) =>{
             state.message = ""
         }
@@ -155,14 +183,11 @@ export const processSlice = createSlice({
         })
         .addCase(getProcesses.fulfilled, (state, action) =>{
             state.status = "idle"
-            state.processes = action.payload
+            state.processInfo = action.payload
         })
         .addCase(getProcessById.rejected, (state, action) => {
             state.status = "failed"
             state.message = action.payload as string
-        })
-        .addCase(getProcessById.pending, (state) =>{
-            state.status = "loading"
         })
         .addCase(getProcessById.fulfilled, (state, action) =>{
             state.status = "idle"
@@ -176,7 +201,11 @@ export const processSlice = createSlice({
             state.status = "loading"
         })
         .addCase(makeProcess.fulfilled, (state, action) =>{
-            state.processes.push(action.payload)
+            state.processInfo = {
+                ...state.processInfo,
+                processes: [...state.processInfo.processes, action.payload],
+                processesNum: state.processInfo.processesNum + 1
+            }
             state.status = "idle"
         })
         .addCase(makeProcessActive.rejected, (state, action) => {
@@ -184,13 +213,13 @@ export const processSlice = createSlice({
             state.message = action.payload as string
         })
         .addCase(makeProcessActive.fulfilled, (state, action) =>{
-            state.processes.forEach((n) => {
+            state.processInfo.processes.forEach((n) => {
                 if(n._id !== action.payload._id && n.end_date === null){ 
                     n.start_date = null;
                 }
             })
-            const i = state.processes.findIndex(el => el._id === action.payload._id)
-            if(i !== -1) state.processes[i] = action.payload
+            const i = state.processInfo.processes.findIndex(el => el._id === action.payload._id)
+            if(i !== -1) state.processInfo.processes[i] = action.payload
             state.status = "idle"
         })
         .addCase(deactivateProcess.rejected, (state, action) =>{
@@ -198,8 +227,8 @@ export const processSlice = createSlice({
             state.message = action.payload as string
         })
         .addCase(deactivateProcess.fulfilled, (state, action) => {
-            const i = state.processes.findIndex(el => el._id === action.payload._id)
-            if(i !== -1) state.processes[i] = action.payload
+            const i = state.processInfo.processes.findIndex(el => el._id === action.payload._id)
+            if(i !== -1) state.processInfo.processes[i] = action.payload
             state.status = "idle"
         })
         .addCase(makeProcessUsable.rejected, (state, action) =>{
@@ -207,8 +236,8 @@ export const processSlice = createSlice({
             state.message = action.payload as string
         })
         .addCase(makeProcessUsable.fulfilled, (state, action) => {
-            const i = state.processes.findIndex(el => el._id === action.payload._id)
-            if(i !== -1) state.processes[i] = action.payload
+            const i = state.processInfo.processes.findIndex(el => el._id === action.payload._id)
+            if(i !== -1) state.processInfo.processes[i] = action.payload
             state.status = "idle"
         })
         .addCase(editSpecificProcess.rejected, (state, action) => {
@@ -217,8 +246,8 @@ export const processSlice = createSlice({
         })
         .addCase(editSpecificProcess.fulfilled, (state, action) => {
             state.status = "idle"
-            const i = state.processes.findIndex(el => el._id === action.payload._id)
-            if(i !== -1) state.processes[i] = action.payload
+            const i = state.processInfo.processes.findIndex(el => el._id === action.payload._id)
+            if(i !== -1) state.processInfo.processes[i] = action.payload
         })
         .addCase(addManyProcessItems.pending, (state) => {
             state.status = "loading"
@@ -243,9 +272,19 @@ export const processSlice = createSlice({
             }
             state.status = "idle"
         })
+
+        .addCase(getActiveProcess.rejected, (state, action) => {
+            state.status = "failed"
+            state.message = action.payload as string
+        })
+
+        .addCase(getActiveProcess.fulfilled, (state, action) =>{
+            state.status = "idle"
+            state.activeProcess = action.payload
+        })
     }
 })
 
 export const process = (state: RootState) => state.process
-export const {reset, resetSpecificProcess} = processSlice.actions
+export const {reset, resetSpecificProcess, resetCurrentProcess} = processSlice.actions
 export default processSlice.reducer

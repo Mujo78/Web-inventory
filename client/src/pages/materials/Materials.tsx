@@ -73,7 +73,7 @@ const Materials: React.FC = () => {
   return (
     <div className='flex relative w-full h-[89vh] overflow-y-hidden '>
       <div className=' flex w-full h-full'>
-        <div className='w-2/4 p-6 border-2 h-full overflow-y-hidden rounded-md'>
+        <div className='w-2/4 p-6 h-full overflow-y-hidden rounded-md'>
           <form onSubmit={onSubmit} className="flex flex-col">
             <div className='focus:!ring-0 flex focus:border-green-500'>
               <TextInput
@@ -92,7 +92,7 @@ const Materials: React.FC = () => {
           </form>
 
           <div className='pt-4 pb-12 h-full w-full'>
-            <div className= 'h-full overflow-y-auto overflow-x-hidden pr-2 w-full'>
+            <div id='content' className= 'h-full overflow-y-auto overflow-x-hidden pr-2 w-full'>
               {status === "loading" ? (
                 <CustomSpinner size='md' />
               ) :
@@ -126,7 +126,7 @@ const Materials: React.FC = () => {
               <MaterialChart suppMatt={suppMatt} />
           </div>}
       </div>
-        <CustomButton v={1} onClick={() => navigate("/add-material")} className='bg-white absolute right-10 bottom-10 w-[81px] h-[81px] focus:ring-gray-50 shadow-xl hover:bg-gray-50 ring-2 ring-gray-100 hover:focus:ring-gray-100 flex justify-center border-gray-300 border-2 items-center hover:transition-all hover:duration-300 !rounded-full'>
+        <CustomButton v={1} onClick={() => navigate("/add-material")} className='bg-white absolute right-10 bottom-10 !w-[81px] !h-[81px] focus:ring-gray-50 shadow-xl hover:bg-gray-50 ring-2 ring-gray-100 hover:focus:ring-gray-100 flex justify-center items-center hover:transition-all hover:duration-300 !rounded-full'>
       <ToolTp content="Add new material" className='text-xs w-[140px] h-[50px] text-center flex justify-center items-center'>
           <AiOutlinePlus style={{color: "green", width: 30, height: 30, fontWeight: 'bold'}} />
       </ToolTp>

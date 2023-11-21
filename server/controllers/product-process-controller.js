@@ -46,8 +46,32 @@ const editProcess = asyncHandler( async (req, res) => {
 const getProcesses = asyncHandler( async(req, res) =>{
 
     const processes = await Product_Process.find()
-    if(processes) return res.status(200).json(processes)
-    res.status(400).json("There are no product processes available!")
+    if(!processes) return res.status(400).json("There was an error, please try again later!")
+
+    const {finished, newOnes, activeOnes} = processes.reduce(
+        (result, p) =>{
+            if(p.start_date !== null && p.end_date !== null){
+                result.finished += 1;
+            }else if(p.start_date !== null && p.end_date === null){
+                result.activeOnes +=1;
+            }else{
+                result.newOnes +=1;
+            }
+
+            return result;
+        }, 
+        { finished: 0, newOnes: 0, activeOnes: 0}
+    )
+
+    const result = {
+        processes: processes,
+        processesNum: processes.length,
+        finished,
+        newOnes,
+        activeOnes
+    }
+
+    return res.status(200).json(result);
 
 })
 

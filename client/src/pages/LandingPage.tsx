@@ -37,7 +37,7 @@ const LandingPage : React.FC = () => {
            </div>
         }
   </div>
-  <div className={`bg-green-400 w-1/4 h-screen flex-col flex items-center justify-center ${forgotPass ? 'animate-slide-left' : ' animate-slide-back-left'}`}>
+  <div className={`bg-green-500 w-1/4 h-screen flex-col flex items-center justify-center ${forgotPass ? 'animate-slide-left' : ' animate-slide-back-left'}`}>
     <div className='w-full px-10 mx-5 flex flex-col justify-center'>
       {forgotPass ?
             <InfoForgot forgotPass={forgotPass} setForgotPass={setForgotPass}/>

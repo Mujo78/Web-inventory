@@ -19,7 +19,6 @@ import AddMaterial from './pages/materials/AddMaterial';
 import EditMaterial from './pages/materials/EditMaterial';
 import AddProductProcess from './pages/product_process/AddPP';
 import EditProductProcess from './pages/product_process/EditPP';
-import PPDetailPage from './pages/product_process/PPDetailPage';
 import ProductDetail from './pages/products/ProductDetail';
 import EditProduct from './pages/products/EditProduct';
 import AddProduct, {loader as productLoader} from './pages/products/AddProduct';
@@ -51,7 +50,6 @@ const router = createBrowserRouter(createRoutesFromElements(
           <Route path='/' >
             <Route path='processes' element={<ProductProcess />} />
             <Route path='add-process' element={<AddProductProcess />} />
-            <Route path='process/:id' element={<PPDetailPage />} />
             <Route path='edit-process/:id' element={<EditProductProcess />} />
           </Route>
           <Route path="/">

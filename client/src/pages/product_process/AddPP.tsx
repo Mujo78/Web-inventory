@@ -46,7 +46,7 @@ const AddProductProcess = () => {
   }
   
   return (
-    <div className='w-full h-5/6 flex items-center justify-center mt-2'>
+    <div className='w-full h-5/6 flex items-center justify-center mt-12'>
       <div className='px-3 h-3/4 border-gray-400 border-x border-y w-3/5 rounded-lg'>
         <div className='flex mt-5 '>
             <div className=' mr-1 w-3/6'>
