@@ -86,78 +86,85 @@ const PPItems : React.FC<{id: string}> = ({id}) => {
 
   return (
     <>
-      <div className='pb-9 ml-5 mt-12'>
+      <div className='pb-3 ml-5'>
         <h1 className='text-24 font-Rubik text-4xl font-bold'>
           Step 2 : Add process items
         </h1>
-        <p className='text-sm font-sans text-gray-500'>You can only add as many quantity as are in stock. Hover material to see quantity of material. </p>
+        <p className='text-xs mt-1 font-Rubik text-gray-500'>You can only add as many quantity as are in stock. Hover material to see quantity of material. </p>
       </div>
-      <div className='flex flex-col h-5/6 mt-3'>
-        <div className='flex h-4/6'>
-        <div className='overflow-y-auto w-4/6 h-full flex flex-col flex-wrap justify-start'>
-          {status === "loading" ? 
-            (
-              <CustomSpinner />
-            ): materials.length > 0 ? (
-              materials.map((n) => (
-                n.quantity > 0 && (
-                <Tooltip key={n._id} content={n.quantity}>
-                  <Button 
-                    disabled={materialsToAdd.some(m => m.material_id === n._id)}
-                    color="gray" 
-                    onClick={() => addMaterialAsItem(n._id)} 
-                    className='m-2 hover:!text-green-500'
-                  >
-                    {n.name}
-                  </Button>
-                </Tooltip>
-              )))
-          ) : 
-            <Alert className='flex items-center'>
-              <h1>There are no materials available!</h1>
-            </Alert>}
-        </div>
-        <div className='border-l flex items-center justify-center border-gray-300 w-2/6 h-5/6'>
-           {showForm && <form className='p-4 flex flex-col items-Start justify-center'>
-              <AiOutlineCloseCircle className='ml-auto text-gray-400 transition-all cursor-pointer hover:scale-125 ease-out' onClick={() => setShowForm(false)}  />
-              <Label htmlFor='name'>Name</Label>
-              <TextInput
-                autoComplete='off'
-                id='name'
-                className='mt-2 mb-2'
-                disabled
-                name='name'
-                value={formData.name}
-                onChange={handleChange}
-              />
-              <Label htmlFor='quantity'>Quantity</Label>
-              <div className='flex justify-between'>
-              <TextInput
-                autoComplete='off'
-                id='quantity'
-                className='mt-2 w-3/5'
-                type='number'
-                name='quantity'
-                min={1}
-                max={formData.material_quantity}
-                value={Number(formData.quantity) > formData.material_quantity ?  formData.material_quantity : formData.quantity}
-                onChange={handleChange}
+      <div className='flex flex-col h-5/6 ml-3 gap-8 mt-3'>
+        <div className='flex h-3/6'>
+          <div className='overflow-y-auto w-4/6 h-full flex flex-wrap justify-start'>
+            {status === 'loading' ? 
+              (
+                <div className='h-full w-full flex justify-center items-center p-10'>
+                  <CustomSpinner />
+                </div>
+              ): materials.length > 0 ? (
+                materials.map((n) => (
+                  n.quantity > 0 && (
+                  <Tooltip key={n._id} content={n.quantity}>
+                    <Button 
+                      disabled={materialsToAdd.some(m => m.material_id === n._id)}
+                      color="gray" 
+                      onClick={() => addMaterialAsItem(n._id)} 
+                      className='m-2 hover:!text-green-500'
+                    >
+                      {n.name}
+                    </Button>
+                  </Tooltip>
+                )))
+            ) :
+                    <div className='h-full p-10 w-full flex justify-center items-center'>
+                      <Alert className='flex items-center'>
+                        <h1>There are no materials available!</h1>
+                      </Alert>
+                    </div>
+              }
+          </div>
+          <div className='border-l flex items-center justify-center border-gray-300 w-2/6 h-2/4'>
+            {showForm && <form className=' flex flex-col items-start !h-full justify-center'>
+                <AiOutlineCloseCircle className='ml-auto text-gray-400 transition-all cursor-pointer hover:scale-125 ease-out' onClick={() => setShowForm(false)}  />
+                <Label htmlFor='name'>Name</Label>
+                <TextInput
+                  autoComplete='off'
+                  id='name'
+                  className='mt-2 mb-2'
+                  disabled
+                  name='name'
+                  value={formData.name}
+                  onChange={handleChange}
+                />
+                <Label htmlFor='quantity'>Quantity</Label>
+                <div className='flex justify-between'>
+                <TextInput
+                  autoComplete='off'
+                  id='quantity'
+                  className='mt-2 w-3/5'
+                  type='number'
+                  name='quantity'
+                  min={1}
+                  max={formData.material_quantity}
+                  value={Number(formData.quantity) > formData.material_quantity ?  formData.material_quantity : formData.quantity}
+                  onChange={handleChange}
+                  
+                />
+                <Button onClick={addMaterial} className='mt-2 ml-2' type='submit' color="success">Add</Button>
+                </div>
                 
-              />
-              <Button onClick={addMaterial} className='mt-2' type='submit' color="success">Add</Button>
-              </div>
-              
-            </form>}
+              </form>}
+          </div>
         </div>
-        </div>
-        <hr/>
-        <div className='flex justify-end mt-4'>
-            <Button color="gray" onClick={skipIt} className='mr-3 hover:!text-green-500 focus:!ring-green-500 focus:!text-green-500' >
-              Skip
-            </Button>
-            <Button color="success" onClick={addMany}>
-              Finish
-            </Button>
+        <div className='w-full h-1/6'>
+            <hr/>
+            <div className='flex justify-end my-3'>
+              <Button color="gray" onClick={skipIt} className='mr-3 hover:!text-green-500 focus:!ring-green-500 focus:!text-green-500' >
+                Skip
+              </Button>
+              <Button color="success" onClick={addMany}>
+                Finish
+              </Button>
+            </div>
         </div>
       </div>
     </>

@@ -13,7 +13,7 @@ const COLORS = ["#dc2626", "#9ca3af", "#16a34a"];
 
 const ProductProcessChart: React.FC = () => {
 
-    const {processInfo, status} = useSelector(process);
+    const {processInfo} = useSelector(process);
 
     const dataChart: ProcessType[] = [
         {

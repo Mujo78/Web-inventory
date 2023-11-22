@@ -46,14 +46,14 @@ const AddProductProcess = () => {
   }
   
   return (
-    <div className='w-full h-5/6 flex items-center justify-center mt-12'>
-      <div className='px-3 h-3/4 border-gray-400 border-x border-y w-3/5 rounded-lg'>
-        <div className='flex mt-5 '>
+    <div className='w-full h-full flex items-center justify-center mt-12'>
+      <div className='px-3 flex flex-col gap-16 h-3/4 border-gray-300 border w-3/5 rounded-lg'>
+        <div className='flex h-1/4 mt-6'>
             <div className=' mr-1 w-3/6'>
             <Progress
-            color="green"
-            progress={100}
-          />
+              color="green"
+              progress={100}
+            />
           </div>
           <div className='ml-1 w-3/6'>
             <Progress
@@ -64,31 +64,31 @@ const AddProductProcess = () => {
         </div>
           <div className=' h-3/4'>
             { step === 1 ?
-            <>
-              <h1 className='text-24 font-Rubik text-4xl mt-12 pb-9 ml-5 font-bold'>
+            <div className='flex flex-col gap-12'>
+              <h1 className='text-24 font-Rubik text-4xl ml-5 font-bold'>
                 Step {step} : Add new product process
               </h1>
-                <form onSubmit={nextOne} className='flex flex-col justify-between h-5/6'>
+                <form onSubmit={nextOne} className='flex flex-col justify-between gap-14 h-5/6'>
                   <div>
+                    <Label htmlFor='name' className='text-sm mx-5 mt-12 font-normal !text-gray-400'>(Type in unique product process name)</Label>
                     <TextInput
                       autoComplete='off'
                       name='name'
                       id='name'
                       value={processName.name}
                       onChange={handleChange}
-                      className='mx-5 mt-12'  />
-                    <div className='flex flex-col'>
+                      className='mx-5 mt-1'  />
+                    <div className='flex h-4 flex-col'>
                       {status === "failed" && <Label htmlFor='name' className='text-sm mx-5 mt-1 font-normal !text-red-600'>{message}</Label>}
                       {errorMessage && status !== "failed" && <Label htmlFor='name' className='text-sm mx-5 mt-1 font-normal !text-red-600'>{errorMessage}</Label>}
-                      <Label htmlFor='name' className='text-sm mx-5 mt-1 mb-24 font-normal !text-gray-400'>(Type in unique product process name)</Label>
                     </div>
                   </div>
-                  <hr/>
-                  <div className='flex justify-end'>
-                    <Button type='submit' color="success" className='mb-1'>Next</Button>
+                  <div className='mx-5'>
+                    <hr/>
+                    <Button type='submit' color="success" className='my-3 ml-auto'>Next</Button>
                   </div>
               </form>
-              </> :
+              </div> :
               <>
                 <PPItems id={processToModify} />
               </>

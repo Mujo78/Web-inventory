@@ -73,7 +73,7 @@ const Materials: React.FC = () => {
   return (
     <div className='flex relative w-full h-[89vh] overflow-y-hidden '>
       <div className=' flex w-full h-full'>
-        <div className='w-2/4 p-6 h-full overflow-y-hidden rounded-md'>
+        <div className='w-2/4 p-6 h-full overflow-y-hidden'>
           <form onSubmit={onSubmit} className="flex flex-col">
             <div className='focus:!ring-0 flex focus:border-green-500'>
               <TextInput
@@ -92,7 +92,7 @@ const Materials: React.FC = () => {
           </form>
 
           <div className='pt-4 pb-12 h-full w-full'>
-            <div id='content' className= 'h-full overflow-y-auto overflow-x-hidden pr-2 w-full'>
+            <div id='content' className= 'h-full overflow-y-auto overflow-x-hidden w-full'>
               {status === "loading" ? (
                 <CustomSpinner size='md' />
               ) :
