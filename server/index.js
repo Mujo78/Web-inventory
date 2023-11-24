@@ -11,15 +11,15 @@ connectDB();
 app.use(express.json())
 
 
-app.use("/", require("./routes/role-routes"))
-app.use("/", require("./routes/person-routes"))
-app.use("/", require("./routes/user-routes"))
-app.use("/", require("./routes/supplier-routes"))
-app.use("/", require("./routes/material-routes"))
-app.use("/", require("./routes/product-routes"))
-app.use("/", require("./routes/product-process-routes"))
-app.use("/", require("./routes/product-process-item-routes"))
-app.use("/", require("./routes/contact-routes"))
+app.use("/api/", require("./routes/role-routes"))
+app.use("/api/", require("./routes/person-routes"))
+app.use("/api/", require("./routes/user-routes"))
+app.use("/api/", require("./routes/supplier-routes"))
+app.use("/api/", require("./routes/material-routes"))
+app.use("/api/", require("./routes/product-routes"))
+app.use("/api/", require("./routes/product-process-routes"))
+app.use("/api/", require("./routes/product-process-item-routes"))
+app.use("/api/", require("./routes/contact-routes"))
 
 app.use(errorHandler)
 

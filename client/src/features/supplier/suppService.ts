@@ -11,25 +11,25 @@ export interface NewSupplier {
 
 
 const getSuppliers = async() =>{
-    const response = await axios.get("/suppliers")
+    const response = await axios.get("/api/suppliers")
 
     return response.data
 }
 
 const getSupplierById = async(id: string) => {
-    const response = await axios.get(`/supplier/${id}`)
+    const response = await axios.get(`/api/supplier/${id}`)
 
     return response.data;
 }
 
 const editSupplier = async(id: string, supplierData: Supp) => {
-    const response = await axios.put(`/edit-supplier/${id}`, supplierData)
+    const response = await axios.put(`/api/edit-supplier/${id}`, supplierData)
 
     return response.data;
 }
 
 const addSupplier = async(supplierData: NewSupplier) =>{
-    const response = await axios.post("/supplier-add", supplierData)
+    const response = await axios.post("/api/supplier-add", supplierData)
 
     return response.data;
 }

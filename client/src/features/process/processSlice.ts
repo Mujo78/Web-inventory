@@ -12,14 +12,6 @@ export interface Process {
     start_date: Date | null
 }
 
-export interface ProcessesInfo {
-    processes: Process[],
-    processesNum: number,
-    finished: number,
-    newOnes: number,
-    activeOnes: number
-}
-
 export interface ProductItem {
     _id: string,
     material_id: Material,
@@ -27,6 +19,12 @@ export interface ProductItem {
     quantity: number
 }
 
+export interface ProcessesInfo {
+    processesNum: number,
+    finished: number,
+    newOnes: number,
+    activeOnes: number
+}
 
 export interface specificProcessType {
     processData: Process,
@@ -34,6 +32,7 @@ export interface specificProcessType {
 }
 
 export interface initialStateInterface {
+    processes: Process[],
     processInfo: ProcessesInfo,
     specificProcess? : specificProcessType,
     activeProcess?: specificProcessType,
@@ -43,8 +42,8 @@ export interface initialStateInterface {
 
 
 const initialState : initialStateInterface = {
+    processes: [],
     processInfo: {
-        processes: [],
         processesNum: 0,
         finished: 0,
         newOnes: 0,
@@ -54,9 +53,25 @@ const initialState : initialStateInterface = {
     message: ""
 }
 
-export const getProcesses = createAsyncThunk("processes/get", async (_, thunkAPI) => {
+export const getProcesses = createAsyncThunk<
+    Process[],
+    {processName?: string} | undefined,
+    {state: RootState}
+>
+("processes/get", async (arg, thunkAPI) => {
     try{
-        return await processServices.getProcesses() 
+        const processName = arg?.processName;
+        return await processServices.getProcesses(processName) 
+    }catch(error: any){
+        const message = error.response.data
+
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
+export const getProcessesInfo = createAsyncThunk("processes-info/get", async (_, thunkAPI) => {
+    try{
+        return await processServices.getProcessInfo() 
     }catch(error: any){
         const message = error.response.data
 
@@ -183,6 +198,13 @@ export const processSlice = createSlice({
         })
         .addCase(getProcesses.fulfilled, (state, action) =>{
             state.status = "idle"
+            state.processes = action.payload
+        })
+        .addCase(getProcessesInfo.rejected, (state) =>{
+            state.status = "failed"   
+        })
+        .addCase(getProcessesInfo.fulfilled, (state, action) =>{
+            state.status = "idle"
             state.processInfo = action.payload
         })
         .addCase(getProcessById.rejected, (state, action) => {
@@ -201,25 +223,29 @@ export const processSlice = createSlice({
             state.status = "loading"
         })
         .addCase(makeProcess.fulfilled, (state, action) =>{
-            state.processInfo = {
-                ...state.processInfo,
-                processes: [...state.processInfo.processes, action.payload],
-                processesNum: state.processInfo.processesNum + 1
+            return {
+                ...state,
+                processes: [...state.processes, action.payload],
+                processInfo: {
+                    ...state.processInfo,
+                    processesNum: state.processInfo.processesNum + 1,
+                    newOnes: state.processInfo.newOnes + 1,
+                },
+                status: "idle"
             }
-            state.status = "idle"
         })
         .addCase(makeProcessActive.rejected, (state, action) => {
             state.status = "failed"
             state.message = action.payload as string
         })
         .addCase(makeProcessActive.fulfilled, (state, action) =>{
-            state.processInfo.processes.forEach((n) => {
+            state.processes.forEach((n) => {
                 if(n._id !== action.payload._id && n.end_date === null){ 
                     n.start_date = null;
                 }
             })
-            const i = state.processInfo.processes.findIndex(el => el._id === action.payload._id)
-            if(i !== -1) state.processInfo.processes[i] = action.payload
+            const i = state.processes.findIndex(el => el._id === action.payload._id)
+            if(i !== -1) state.processes[i] = action.payload
             state.status = "idle"
         })
         .addCase(deactivateProcess.rejected, (state, action) =>{
@@ -227,8 +253,8 @@ export const processSlice = createSlice({
             state.message = action.payload as string
         })
         .addCase(deactivateProcess.fulfilled, (state, action) => {
-            const i = state.processInfo.processes.findIndex(el => el._id === action.payload._id)
-            if(i !== -1) state.processInfo.processes[i] = action.payload
+            const i = state.processes.findIndex(el => el._id === action.payload._id)
+            if(i !== -1) state.processes[i] = action.payload
             state.status = "idle"
         })
         .addCase(makeProcessUsable.rejected, (state, action) =>{
@@ -236,8 +262,8 @@ export const processSlice = createSlice({
             state.message = action.payload as string
         })
         .addCase(makeProcessUsable.fulfilled, (state, action) => {
-            const i = state.processInfo.processes.findIndex(el => el._id === action.payload._id)
-            if(i !== -1) state.processInfo.processes[i] = action.payload
+            const i = state.processes.findIndex(el => el._id === action.payload._id)
+            if(i !== -1) state.processes[i] = action.payload
             state.status = "idle"
         })
         .addCase(editSpecificProcess.rejected, (state, action) => {
@@ -246,8 +272,8 @@ export const processSlice = createSlice({
         })
         .addCase(editSpecificProcess.fulfilled, (state, action) => {
             state.status = "idle"
-            const i = state.processInfo.processes.findIndex(el => el._id === action.payload._id)
-            if(i !== -1) state.processInfo.processes[i] = action.payload
+            const i = state.processes.findIndex(el => el._id === action.payload._id)
+            if(i !== -1) state.processes[i] = action.payload
         })
         .addCase(addManyProcessItems.pending, (state) => {
             state.status = "loading"

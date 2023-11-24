@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux'
 import { makeProcess, process } from '../../features/process/processSlice'
 import { useAppDispatch } from '../../app/hooks'
 import PPItems from '../../components/ProductProcess/PPItems'
+import { useNavigate } from 'react-router-dom'
 
 export interface processNameIn {
   name: string
@@ -17,6 +18,7 @@ const AddProductProcess = () => {
   const [errorMessage, setErrorMessage] = useState<string>("")
   const [processToModify, setProcessToModify] = useState<string>("")
 
+  const navigate = useNavigate();
   const {message, status} = useSelector(process)
   const dispatch = useAppDispatch()
 
@@ -85,7 +87,10 @@ const AddProductProcess = () => {
                   </div>
                   <div className='mx-5'>
                     <hr/>
-                    <Button type='submit' color="success" className='my-3 ml-auto'>Next</Button>
+                    <div className='flex my-3 justify-between'>
+                      <Button color='light' onClick={() => navigate(-1)}>Go Back</Button>
+                      <Button type='submit' color="success" >Next</Button>
+                    </div>
                   </div>
               </form>
               </div> :

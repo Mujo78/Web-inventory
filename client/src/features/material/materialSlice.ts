@@ -35,9 +35,15 @@ const initialState: materialState = {
     message: ""
 }
 
-export const getMaterials = createAsyncThunk("materials/get", async (_, thunkAPI) => {
+export const getMaterials = createAsyncThunk<
+    Material[],
+    {searchQuery?: string} | undefined,
+    {state: RootState}
+>
+("materials/get", async (arg, thunkAPI) => {
     try {
-        return await materialServices.getMaterials()
+        const searchQuery = arg?.searchQuery;
+        return await materialServices.getMaterials(searchQuery)
     } catch (error: any) {
         const message = error.response
 

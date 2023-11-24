@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useAppDispatch } from '../../app/hooks'
 import { useSelector } from 'react-redux'
-import { Material, getMaterials, material } from '../../features/material/materialSlice'
+import { getMaterials, material } from '../../features/material/materialSlice'
 import { Alert, Button, TextInput } from 'flowbite-react'
 import MaterialChart from '../../components/Materials/MaterialChart'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import MaterialCard from '../../components/Materials/MaterialCard'
 import axios from 'axios'
 import CustomSpinner from '../../components/UI/CustomSpinner'
@@ -12,6 +12,7 @@ import useSelectedPage from '../../hooks/useSelectedPage'
 import  {AiOutlinePlus} from "react-icons/ai"
 import CustomButton from '../../components/UI/CustomButton'
 import { Tooltip as ToolTp } from 'flowbite-react'
+import { useQuery } from '../../hooks/useQuery'
 
 interface materialsQuantity {
   name: string,
@@ -31,22 +32,31 @@ export interface SupplierWithMaterialAndQuantity {
 const Materials: React.FC = () => {
   
   const [suppMatt, setSuppMatt] = useState<SupplierWithMaterialAndQuantity>();
+  const location = useLocation();
+  const query = useQuery();
+  const searchQuery = query.get("searchQuery");
 
   useSelectedPage("Materials")
   
   const getSupplierMaterials = async () => {
-    const res = await axios.get("/supplier-materials")
+    const res = await axios.get("/api/supplier-materials")
     const data = res.data
-
     setSuppMatt(data)
   }
 
-  
-  const dispatch = useAppDispatch()
+    const navigate = useNavigate()
+    const [searchInput, setSearchInput] = useState<string>('');
+    const dispatch = useAppDispatch()
   
   useEffect(() =>{
-    dispatch(getMaterials())
-  }, [dispatch])
+    if(searchQuery) {
+      navigate(`${location.pathname}?searchQuery=${searchQuery}`)
+      dispatch(getMaterials({searchQuery}))
+    }else{
+      navigate(`${location.pathname}`)
+      dispatch(getMaterials())
+    }
+  }, [dispatch, searchQuery, location.pathname, navigate])
 
   const {materials, status} = useSelector(material)
   
@@ -54,21 +64,17 @@ const Materials: React.FC = () => {
     getSupplierMaterials()
   }, [materials])
 
-  const navigate = useNavigate()
-  const [searchInput, setSearchInput] = useState<string>("")
-  const [searched, setSearched] = useState<Material[]>([])
-
-
   const onChange = (event : React.FormEvent<HTMLInputElement>) => {
     setSearchInput(event.currentTarget.value)
   }
 
   const onSubmit = (event: React.FormEvent) => {
     event.preventDefault()
+    const searchQuery = searchInput.trim()
 
-    setSearched(materials.filter(n => n.name === searchInput || n.name.startsWith(searchInput.slice(0,3))))
+    navigate(`${location.pathname}?searchQuery=${searchQuery}`)
+    dispatch(getMaterials({searchQuery}))
   }
-
 
   return (
     <div className='flex relative w-full h-[89vh] overflow-y-hidden '>
@@ -97,17 +103,6 @@ const Materials: React.FC = () => {
                 <CustomSpinner size='md' />
               ) :
               materials.length > 0 ?
-                searchInput ?
-                  searched.length > 0 ? 
-                    searched.map( n => (
-                        <MaterialCard key={n._id} _id={n._id} name={n.name} quantity={n.quantity} />
-                    )) : 
-                    <div>
-                      <Alert color="info" className='text-center flex items-center' >
-                        <p>There are no such materials available.</p>
-                      </Alert>
-                    </div> 
-                :
                   materials.map(m => (
                     <MaterialCard key={m._id} _id={m._id} name={m.name} quantity={m.quantity} />
                   ))

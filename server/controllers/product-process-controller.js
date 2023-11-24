@@ -43,7 +43,26 @@ const editProcess = asyncHandler( async (req, res) => {
     return res.status(400).json("There was an error, please try again later!")
 })
 
+
 const getProcesses = asyncHandler( async(req, res) =>{
+    const {processName} = req.query;
+    let query = Product_Process.find();
+
+    if(processName){
+        query = query.where({name: new RegExp(processName, 'i')})
+        const processes = await query.exec();
+        if(!processes) return res.status(400).json("There are no processes with such name!")
+
+        return res.status(200).json(processes)
+    }
+    const allProcesses = await query.exec();
+    if(!allProcesses) return res.status(400).json("There are no processes available at this moment!")
+
+    return res.status(200).json(allProcesses)
+})
+
+
+const getProcessesInfo = asyncHandler( async(req, res) =>{
 
     const processes = await Product_Process.find()
     if(!processes) return res.status(400).json("There was an error, please try again later!")
@@ -64,7 +83,6 @@ const getProcesses = asyncHandler( async(req, res) =>{
     )
 
     const result = {
-        processes: processes,
         processesNum: processes.length,
         finished,
         newOnes,
@@ -74,6 +92,8 @@ const getProcesses = asyncHandler( async(req, res) =>{
     return res.status(200).json(result);
 
 })
+
+
 
 const getProcessById = asyncHandler( async(req, res) =>{
 
@@ -161,5 +181,6 @@ module.exports = {
     deactivateProcess,
     makeProcessUsable,
     getMaterialsForProcessToAdd,
-    getFreeProcesses
+    getFreeProcesses,
+    getProcessesInfo
 }

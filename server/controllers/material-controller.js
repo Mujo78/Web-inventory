@@ -41,7 +41,17 @@ const addMaterial = asyncHandler( async(req, res) => {
 
 const getMaterials = asyncHandler (async (req, res) => {
 
-    const allMaterials = await Material.find()
+    const {searchQuery} = req.query;
+    let query = Material.find();
+
+    if(searchQuery){
+        query = query.where({name: new RegExp(searchQuery, 'i')})
+        const materials = await query.exec();
+        if(!materials) return res.status(400).json("There are no materials with such name!")
+
+        return res.status(200).json(materials)
+    }
+    const allMaterials = await query.exec();
     if(!allMaterials) return res.status(400).json("There are no materials available at this moment!")
 
     return res.status(200).json(allMaterials)

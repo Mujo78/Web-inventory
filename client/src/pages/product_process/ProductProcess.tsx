@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import { Process, getProcesses, process } from '../../features/process/processSlice'
 import { useAppDispatch } from '../../app/hooks'
 import { Alert, Button, TextInput } from 'flowbite-react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import {AiOutlinePlus} from 'react-icons/ai'
 import CustomSpinner from '../../components/UI/CustomSpinner'
 import useSelectedPage from '../../hooks/useSelectedPage'
@@ -11,29 +11,38 @@ import CurrentActiveProcess from '../../components/ProductProcess/CurrentActiveP
 import ProductProcessChart from '../../components/ProductProcess/ProductProcessChart'
 import IconButton from '../../components/UI/IconButton'
 import ProcessCard from '../../components/ProductProcess/ProcessCard'
+import { useQuery } from '../../hooks/useQuery'
 
 const ProductProcess:  React.FC = () => {
 
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
+  const location = useLocation();
+  const query = useQuery();
+  const processName = query.get("processName");
 
-  const [searchInput, setSearchInput] = useState<string>();
-  const [searched, setSearched] = useState<Process[]>();
+  const [searchInput, setSearchInput] = useState<string>('');
 
   useSelectedPage("Product Processes")
 
   useEffect(() =>{
-    dispatch(getProcesses())
-  }, [dispatch])  
+    if(processName){
+      navigate(`${location.pathname}?processName=${processName}`)
+      dispatch(getProcesses({processName}))
+    }else{
+      navigate(`${location.pathname}`)
+      dispatch(getProcesses())
+    }
+  }, [dispatch, processName, location.pathname, navigate])  
   
-  const {processInfo, status} = useSelector(process)
+  const {processes, status} = useSelector(process)
   const [currentActiveProcess, setCurrentActiveProcess] = useState<string | undefined>()
 
   useEffect(() => {
-    if(processInfo){
-      setCurrentActiveProcess(processInfo?.processes?.find((p) => p.start_date !== null && p.end_date === null)?._id);
+    if(processes){
+      setCurrentActiveProcess(processes?.find((p) => p.start_date !== null && p.end_date === null)?._id);
     }
-  }, [processInfo])
+  }, [processes])
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const {value} = event.target;
@@ -41,17 +50,19 @@ const ProductProcess:  React.FC = () => {
     setSearchInput(value);
   }
 
-  useEffect(() => {
-    if(searchInput){
-      const searchedProcesses = processInfo.processes.filter((p) => p.name.toLowerCase() === searchInput.toLowerCase() || p.name.includes(searchInput))
-      setSearched(searchedProcesses)
-    }
-  }, [processInfo.processes, searchInput])
+  const onSubmit = (event: React.FormEvent) =>{
+    event.preventDefault();
+    const processName = searchInput.trim();
+
+    navigate(`${location.pathname}?processName=${processName}`)
+    dispatch(getProcesses({processName}))
+
+  }
 
   return (
     <div className='h-[89vh] w-full flex relative'>
       <div className='h-full pr-2 w-3/5 pb-12 overflow-hidden '>
-        <form className='flex gap-2 p-3 w-full'>
+        <form onSubmit={onSubmit} className='flex gap-2 p-3 w-full'>
           <TextInput 
             className='flex-grow'
             name='searchInput'
@@ -59,7 +70,7 @@ const ProductProcess:  React.FC = () => {
             placeholder='New material'
             onChange={(e) => onChange(e)}
           />
-          <Button color='success'>
+          <Button type='submit' color='success'>
             Search
           </Button>
         </form>
@@ -67,22 +78,12 @@ const ProductProcess:  React.FC = () => {
           {status === "loading" ? (
             <CustomSpinner />
           ) :
-          status !== "failed" ? (
-            searchInput && searched && searched?.length > 0 ? 
-            searched.map(m => (
-              !(m.start_date !== null && m.end_date === null) &&
-              <ProcessCard process={m} />
-            )) :
-            processInfo?.processes?.length > 0 ?
-              processInfo.processes.map(n => (
+          status !== "failed" && processes?.length > 0 ?
+              processes.map(n => (
                 !(n.start_date !== null && n.end_date === null) &&
-                <ProcessCard process={n} />
+                <ProcessCard key={n._id} process={n} />
               ))
-              :
-              <Alert color="info" className='flex items-center'>
-              <h1>There are no processes available!</h1>
-            </Alert>
-            ): 
+            : 
             <Alert color="info" className='flex items-center'>
               <h1>There are no processes available!</h1>
             </Alert>

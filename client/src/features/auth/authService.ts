@@ -6,7 +6,7 @@ export interface LoginUser {
 }
 
 const login =  async(loginData: LoginUser) => {
-    const response = await axios.post("/login", loginData)
+    const response = await axios.post("/api/login", loginData)
 
     if(response.data){
         localStorage.setItem('user', JSON.stringify(response.data))   

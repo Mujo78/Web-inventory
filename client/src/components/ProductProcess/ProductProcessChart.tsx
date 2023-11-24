@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { process } from '../../features/process/processSlice'
+import { getProcessesInfo, process } from '../../features/process/processSlice'
 import { Card } from 'flowbite-react'
 import { PieChart,Cell, Pie, Legend, Tooltip, ResponsiveContainer } from 'recharts';
+import { useAppDispatch } from '../../app/hooks';
 
 
 interface ProcessType {
@@ -12,6 +13,12 @@ interface ProcessType {
 const COLORS = ["#dc2626", "#9ca3af", "#16a34a"];
 
 const ProductProcessChart: React.FC = () => {
+
+  const dispatch = useAppDispatch();
+
+  useEffect(() =>{
+    dispatch(getProcessesInfo())
+  }, [dispatch])
 
     const {processInfo} = useSelector(process);
 
