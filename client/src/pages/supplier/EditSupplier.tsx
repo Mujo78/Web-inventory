@@ -62,7 +62,7 @@ const EditSupplier: React.FC = () => {
 
   return (
     <>
-        <Header title={'Edit Supplier'} other={specificSupplier?._id} />
+        <Header title='Edit Supplier' other={specificSupplier?._id} />
         {status === "loading" ? 
             <CustomSpinner />
             :  (

@@ -76,7 +76,7 @@ const EditMaterial: React.FC = () => {
             >
             {({errors, touched}) =>(
                 <Form className="flex flex-col justify-center items-center mt-6">
-                    <div className='w-2/4 border border-gray-300 rounded-lg p-10'>
+                    <div className='w-2/4 border rounded-lg p-10'>
                         <div className='flex'>
                             <div className='w-3/5'>
                                 <div className="mb-2 block">

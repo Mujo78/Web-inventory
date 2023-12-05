@@ -13,6 +13,7 @@ import { ProcessToEdit } from '../../features/process/processService'
 import axios from 'axios'
 import ProcessItemsToAdd from '../../components/ProductProcess/ProcessItemsToAdd'
 import { selectedMaterials } from '../../components/ProductProcess/PPItems'
+import Header from '../../components/UI/Header'
 
 
 export interface MaterialToAdd {
@@ -32,7 +33,7 @@ const EditProductProcess: React.FC = () => {
 
   const getMaterialsToAdd = async () => {
     try{
-      const res = await axios.get(`/process/${id}`)
+      const res = await axios.get(`/api/process/${id}`)
       const data = res.data
 
       setMaterialsToAdd(data)
@@ -91,36 +92,34 @@ const EditProductProcess: React.FC = () => {
   }
 
   return (
-    <div>
-        <div className='flex justify-between items-center'>
-          <h1 className='text-24 font-Rubik text-3xl mt-5 pb-7 ml-5 font-bold'>Edit product process</h1>
-          <Toast className='h-2/3'>
-            <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-200 dark:bg-blue-100 dark:text-blue-200">
-              <MdRecommend className="h-5 w-5 text-blue-600" />
-            </div>
-            <div className="ml-3 text-xs font-normal">
-              <p> <b>Recomended</b>: Do not change the price! Price depends on product process items! </p>
-            </div>
-            <Toast.Toggle />
-          </Toast>
-        </div>
-        <hr/>
+    <div className='h-[89vh] flex flex-col gap-3 overflow-hidden'>
+      <Header title='Edit product process'>
+        <Toast className='h-[50px]'>
+              <div className="inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-200 dark:bg-blue-100 dark:text-blue-200">
+                <MdRecommend className="h-5 w-5 text-blue-600" />
+              </div>
+              <div className="ml-3 text-xs font-normal">
+                <p> <b>Recomended</b>: Do not change the price! Price depends on product process items! </p>
+              </div>
+              <Toast.Toggle />
+            </Toast>
+      </Header>
       
         {!specificProcess ? (
           <CustomSpinner />
         ) :
-        <div>
-          <div className='flex h-3/4 justify-between'>
-            <div className='w-2/3 mt-4 p-8 border border-gray-300 rounded-lg'>
+        <div className='h-3/4 flex flex-col justify-between'>
+          <div className='flex h-full justify-between gap-3'>
+            <div className='w-2/3 p-6 border rounded-lg'>
               <Formik
                 enableReinitialize={true}
                 validationSchema={validationProcessSchema}
                 onSubmit={handleSubmit}
                 initialValues={initialState}>
                 {({errors, touched}) =>(
-                <Form>
-                    <h1 className='text-24 font-Rubik ml-3 text-xl font-bold'>Process data</h1>
-                    <div className='flex mt-4 mx-3 justify-between items-center'>
+                <Form className='flex flex-col gap-6'>
+                    <h1 className='text-24 font-Rubik text-xl font-bold'>Process data</h1>
+                    <div className='flex justify-between items-center'>
                         <div className='flex flex-col w-4/6'>
                           <Label htmlFor='name' className='mb-2'>Name</Label>
                           <Field as={TextInput}
@@ -159,33 +158,34 @@ const EditProductProcess: React.FC = () => {
                 <EditPPItems items={specificProcess?.processItems || []} />
               </div>
             </div>
-              <Accordion className='w-1/3 h-2/4 ml-4 mt-4 p-4 border border-gray-300 rounded-lg'>
-                <Accordion.Panel>
+            <div className='w-1/3 p-4 border rounded-lg'>
+              <Accordion id='content' className='w-full h-4/6 border-none'>
+                <Accordion.Panel id='content'>
                   <Accordion.Title>
                     Add new Items
                   </Accordion.Title>
-                  <Accordion.Content>
-                    {materialsToAdd.length > 0 ?
-                      <div className='h-3/4'>
-                        <p className='text-xs text-gray-500 font-normal pb-5'>Name (quantity) - quantity to add </p>
-                          <ul className="divide-y overflow-y-auto h-full p-0 divide-gray-300">
-                            {materialsToAdd.map((n) =>
-                              <ProcessItemsToAdd item={n} process_id={id ? id : ""} key={n._id} setMaterialsItems={setMaterialsItems} materialsItems={materialsItems}/> 
-                              )}
-                          </ul>
-                      </div>
-                      : <Alert><h1>There are no materials to add to this process!</h1></Alert>  
-                    }
+                  <Accordion.Content className='h-full overflow-y-auto'>
+                      {materialsToAdd.length > 0 ?
+                        <div id='content' className='h-full overflow-y-auto'>
+                          <p className='text-xs text-gray-500 pb-3'>Name (quantity) - quantity to add </p>
+                            <ul className="divide-y h-full p-0">
+                              {materialsToAdd.map((n) =>
+                                <ProcessItemsToAdd item={n} process_id={id ? id : ""} key={n._id} setMaterialsItems={setMaterialsItems} materialsItems={materialsItems}/> 
+                                )}
+                            </ul>
+                        </div>
+                       : <Alert><h1>There are no materials to add to this process!</h1></Alert>  
+                      }
                   </Accordion.Content>
-              
                 </Accordion.Panel>
               </Accordion>
             </div>
-            <div className='flex h-1/4 justify-between items-end'>
-              <div className='flex justify-end align-bottom items-end mt-6'>
+          </div>
+          <div className='flex mt-auto h-1/4 justify-between items-end'>
+              <div className='flex justify-end align-bottom items-end'>
                 <Button onClick={handleCancel} className='mr-4' color="light"  >Cancel</Button>
               </div>
-              <div className='flex justify-end align-bottom items-end mt-6'>
+              <div className='flex justify-end align-bottom items-end'>
                 { specificProcess?.processData.end_date !== null && 
                   specificProcess?.processData.start_date !== null && 
                   <Button color="gray" className='mr-4' onClick={() => makeProcessUsableAgain(specificProcess.processData._id)} >Use process again</Button>}
@@ -200,7 +200,7 @@ const EditProductProcess: React.FC = () => {
 
                   <Button color="success" outline onClick={() => saveChanges()} >Save changes</Button>
               </div>
-            </div>
+          </div>
         </div>}
     </div>
   )
