@@ -1,13 +1,18 @@
-const express = require("express")
+const express = require("express");
 const validate = require("../middleware/validate");
-const { addProduct, getProducts, getProductById, editProduct } = require("../controllers/product-controller");
+const {
+  addProduct,
+  getProducts,
+  getProductById,
+  editProduct,
+} = require("../controllers/product-controller");
 const { addNewProduct } = require("../validators/product-validator");
 const { authMiddleware } = require("../middleware/auth-middleware");
-const router = express.Router()
+const router = express.Router();
 
-router.get("/products", getProducts)
-router.get("/product/:id", getProductById)
-router.patch("/edit-product/:id", addNewProduct, validate, editProduct)
-router.post("/add-product",addNewProduct, validate, addProduct)
+router.get("/products", getProducts);
+router.get("/product/:id", getProductById);
+router.patch("/edit-product/:id", addNewProduct, validate, editProduct);
+router.post("/add-product", addNewProduct, validate, addProduct);
 
 module.exports = router;

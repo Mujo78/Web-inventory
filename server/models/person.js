@@ -1,37 +1,39 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 
-const personSchema = mongoose.Schema({
+const personSchema = mongoose.Schema(
+  {
     first_name: {
-        type: String,
-        maxlength: 50
+      type: String,
+      maxlength: 50,
     },
     last_name: {
-        type: String,
-        maxlength: 50
+      type: String,
+      maxlength: 50,
     },
-    phone_number:{
-        type: String, 
-        unique: true,
-        maxlength: 12
+    phone_number: {
+      type: String,
+      unique: true,
+      maxlength: 12,
     },
     address: {
-        type: String,
-        maxlength: 100
+      type: String,
+      maxlength: 100,
     },
     email: {
-        type: String,
-        unique: true
+      type: String,
+      unique: true,
     },
-    cancellation_date:{
-        type: Date,
-        required: false
-    }
-}, {
+    cancellation_date: {
+      type: Date,
+      required: false,
+    },
+  },
+  {
     timestamps: {
-        createdAt: 'date_of_employment',
-        updatedAt: true
-    }
-})
+      createdAt: "date_of_employment",
+      updatedAt: true,
+    },
+  }
+);
 
-
-module.exports = mongoose.model('Person', personSchema);
+module.exports = mongoose.model("Person", personSchema);
