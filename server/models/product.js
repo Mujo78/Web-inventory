@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Product_Process = require("./product-process");
 
-const productSchema = mongoose.Schema(
+const productSchema = new mongoose.Schema(
   {
     name: {
       type: String,

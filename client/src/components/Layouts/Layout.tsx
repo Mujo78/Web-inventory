@@ -1,16 +1,14 @@
-import React from 'react'
-import { Outlet } from 'react-router-dom'
-
+import React from "react";
+import { Outlet } from "react-router-dom";
 
 const Layout: React.FC = () => {
-
   return (
-    <div className='flex w-full font-Rubik'>
-      <main className='w-full'>
+    <div className="flex w-full font-Rubik">
+      <main className="w-full">
         <Outlet />
       </main>
     </div>
-  )
-}
+  );
+};
 
-export default Layout
+export default Layout;

@@ -1,16 +1,16 @@
-import React, { useEffect } from 'react'
-import { Outlet, useNavigate } from 'react-router-dom'
+import React, { useEffect } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
 
 const RequiredUser = () => {
-    const user = localStorage.getItem("user")
+  const user = localStorage.getItem("user");
 
-    const navigate = useNavigate()
+  const navigate = useNavigate();
 
-    useEffect(() =>{
-        if(!user) navigate("/")
-    }, [navigate, user])
+  useEffect(() => {
+    if (!user) navigate("/");
+  }, [navigate, user]);
 
-    return <Outlet />
-}
+  return <Outlet />;
+};
 
-export default RequiredUser
+export default RequiredUser;

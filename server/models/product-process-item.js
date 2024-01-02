@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Product_Process = require("./product-process");
 const Material = require("./material");
 
-const productProcessItemSchema = mongoose.Schema(
+const productProcessItemSchema = new mongoose.Schema(
   {
     material_id: {
       type: mongoose.Schema.Types.ObjectId,

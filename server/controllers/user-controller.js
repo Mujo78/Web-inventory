@@ -1,3 +1,4 @@
+/** @type {mongodb.Db} */
 const asyncHandler = require("express-async-handler");
 const { sign } = require("jsonwebtoken");
 const bcrypt = require("bcrypt");

@@ -1,42 +1,41 @@
-import React, { useEffect } from 'react'
-import { useAppDispatch } from '../../app/hooks'
-import { useSelector } from 'react-redux';
-import { getProducts, product } from '../../features/product/productSlice';
-import { Alert } from 'flowbite-react';
-import ProductCard from '../../components/Products/ProductCard';
-import CustomSpinner from '../../components/UI/CustomSpinner';
-import useSelectedPage from '../../hooks/useSelectedPage';
+import React, { useEffect } from "react";
+import { useAppDispatch } from "../../app/hooks";
+import { useSelector } from "react-redux";
+import { getProducts, product } from "../../features/product/productSlice";
+import { Alert } from "flowbite-react";
+import ProductCard from "../../components/Products/ProductCard";
+import CustomSpinner from "../../components/UI/CustomSpinner";
+import useSelectedPage from "../../hooks/useSelectedPage";
 
 const Products: React.FC = () => {
-
   const dispatch = useAppDispatch();
-  useSelectedPage('Products')
+  useSelectedPage("Products");
 
-  useEffect(() =>{
-    dispatch(getProducts())
-  }, [dispatch])
+  useEffect(() => {
+    dispatch(getProducts());
+  }, [dispatch]);
 
-  const {products, message, status} = useSelector(product)
+  const { products, message, status } = useSelector(product);
 
-
-  if(status === 'failed'){
+  if (status === "failed") {
     <Alert>
       <h1>{message}</h1>
-    </Alert>
+    </Alert>;
   }
 
   return (
     <>
       {products.length > 0 ? (
-        <div className='flex flex-wrap w-full justify-start items-start'>
-          {products.map(n => (
+        <div className="flex flex-wrap w-full justify-start items-start">
+          {products.map((n) => (
             <ProductCard key={n._id} item={n} />
           ))}
         </div>
-      ) : <CustomSpinner />
-      }
+      ) : (
+        <CustomSpinner />
+      )}
     </>
-  )
-}
+  );
+};
 
-export default Products
+export default Products;

@@ -1,19 +1,17 @@
-import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import counterReducer from '../features/counter/counterSlice';
+import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
 import authReducer from "../features/auth/authSlice";
 import suppReducer from "../features/supplier/suppSlice";
 import materialReducer from "../features/material/materialSlice";
-import processReducer from "../features/process/processSlice"
-import productReducer from "../features/product/productSlice"
+import processReducer from "../features/process/processSlice";
+import productReducer from "../features/product/productSlice";
 
 export const store = configureStore({
   reducer: {
-    counter: counterReducer,
     auth: authReducer,
-    supp:suppReducer,
+    supp: suppReducer,
     matt: materialReducer,
     process: processReducer,
-    product: productReducer
+    product: productReducer,
   },
 });
 

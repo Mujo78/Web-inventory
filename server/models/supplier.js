@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Material = require("./material");
 
-const supplierSchema = mongoose.Schema(
+const supplierSchema = new mongoose.Schema(
   {
     name: {
       type: String,

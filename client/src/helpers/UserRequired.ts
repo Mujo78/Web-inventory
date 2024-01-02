@@ -1,13 +1,13 @@
 import { redirect } from "react-router-dom";
 
 const UserRequired = () => {
-    const user = localStorage.getItem("user")
+  const user = localStorage.getItem("user");
 
-    if (!user) {
-        return redirect('/');
-    }
-    
-    return null
-}
+  if (!user) {
+    return redirect("/");
+  }
 
-export default UserRequired
+  return null;
+};
+
+export default UserRequired;

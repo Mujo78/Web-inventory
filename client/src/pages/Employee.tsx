@@ -1,15 +1,10 @@
-import React from 'react'
-import useSelectedPage from '../hooks/useSelectedPage'
+import React from "react";
+import useSelectedPage from "../hooks/useSelectedPage";
 
 const Employee: React.FC = () => {
+  useSelectedPage("Employee");
 
-  useSelectedPage("Employee")
+  return <div>Employee page here</div>;
+};
 
-  return (
-    <div>
-      Employee page here
-    </div>
-  )
-}
-
-export default Employee
+export default Employee;

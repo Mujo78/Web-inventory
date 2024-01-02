@@ -1,8 +1,6 @@
 const mongoose = require("mongoose");
-const Person = require("./person");
-const Role = require("./role");
 
-const userSchema = mongoose.Schema(
+const userSchema = new mongoose.Schema(
   {
     username: {
       type: String,

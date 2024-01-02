@@ -1,13 +1,13 @@
-import { redirect } from 'react-router-dom';
+import { redirect } from "react-router-dom";
 
 const Authorized = () => {
-    const user = localStorage.getItem("user")
+  const user = localStorage.getItem("user");
 
-    if (user) {
-        return redirect('/dashboard');
-    }
+  if (user) {
+    return redirect("/dashboard");
+  }
 
-    return null
-}
+  return null;
+};
 
-export default Authorized
+export default Authorized;
