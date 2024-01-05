@@ -27,10 +27,43 @@ const addSupplier = asyncHandler(async (req, res) => {
 });
 
 const allSuppliers = asyncHandler(async (req, res) => {
-  const allSuppliers = await Supplier.find();
-  if (allSuppliers) return res.status(200).json(allSuppliers);
+  const { searchQuery, page, limit } = req.query;
+  let query = Supplier.find();
+  let data;
 
-  res.status(400).json("There are no suppliers available!");
+  let pageNum = page ? page : 1;
+  const start = limit && (Number(pageNum) - 1) * limit;
+
+  if (searchQuery) {
+    query = query.where({
+      $or: [
+        { name: new RegExp(searchQuery.trim(), "i") },
+        { contact_person: new RegExp(searchQuery.trim(), "i") },
+      ],
+    });
+  }
+
+  const totalQuery = Supplier.find(query._conditions);
+  const total = await totalQuery.countDocuments();
+  let resObj = {};
+
+  if (limit) {
+    query = query.limit(limit).skip(start);
+  }
+
+  data = await query.exec();
+
+  if (data.length > 0) {
+    resObj.data = data;
+    resObj.currentPage = Number(pageNum);
+    resObj.numOfPages = Math.ceil(total / limit);
+
+    return res.status(200).json(resObj);
+  }
+
+  res
+    .status(400)
+    .json("There are no suppliers with such name or contact name!");
 });
 
 const supplierById = asyncHandler(async (req, res) => {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Supp } from "./AddSupplier";
 import { useAppDispatch } from "../../app/hooks";
 import { useSelector } from "react-redux";
@@ -13,7 +13,6 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import { supplierValidationSchema } from "../../validations/supplierValidation";
 import { Button, Label, TextInput, ToggleSwitch } from "flowbite-react";
 import CustomSpinner from "../../components/UI/CustomSpinner";
-import Header from "../../components/UI/Header";
 
 type Props = {
   id: string;

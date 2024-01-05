@@ -143,8 +143,8 @@ const EditMaterial: React.FC = () => {
                         name="supplier_id"
                       >
                         <option value="">Choose one option</option>
-                        {suppliers.length > 0 &&
-                          suppliers.map((n) => (
+                        {suppliers.data.length > 0 &&
+                          suppliers.data.map((n) => (
                             <option key={n._id} value={n._id}>
                               {n.name}
                             </option>

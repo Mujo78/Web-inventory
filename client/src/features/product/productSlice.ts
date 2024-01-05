@@ -62,7 +62,6 @@ export const createNewProduct = createAsyncThunk(
       return await productService.createProduct(productData);
     } catch (error: any) {
       const message = error.response.data;
-      console.log(error);
 
       return thunkAPI.rejectWithValue(message);
     }
@@ -79,7 +78,6 @@ export const editProduct = createAsyncThunk(
       return await productService.editproduct(id, productData);
     } catch (error: any) {
       const message = error.response.data;
-      console.log(message);
 
       return thunkAPI.rejectWithValue(message);
     }
@@ -139,7 +137,6 @@ export const productSlice = createSlice({
         state.message = action.payload as string;
       })
       .addCase(editProduct.fulfilled, (state, action) => {
-        console.log(action.meta);
         state.status = "idle";
         const i = state.products.findIndex((p) => p._id === action.payload._id);
         if (i !== -1) state.products[i] = action.payload;

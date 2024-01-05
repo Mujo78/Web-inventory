@@ -9,8 +9,22 @@ export interface NewSupplier {
   email: string;
 }
 
-const getSuppliers = async () => {
-  const response = await axios.get("/api/suppliers");
+type typeSuppliersData =
+  | {
+      searchQuery?: string;
+      page?: number;
+      limit?: number;
+    }
+  | undefined;
+
+const getSuppliers = async (data: typeSuppliersData) => {
+  const response = await axios.get("/api/suppliers", {
+    params: {
+      searchQuery: data?.searchQuery,
+      page: data?.page,
+      limit: data?.limit,
+    },
+  });
 
   return response.data;
 };
