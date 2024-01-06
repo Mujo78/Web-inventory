@@ -13,9 +13,9 @@ import { Button, Label, Select, TextInput } from "flowbite-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch } from "../../app/hooks";
 import { useSelector } from "react-redux";
-import axios from "axios";
 import { stateProcessInterface } from "./AddProduct";
 import CustomSpinner from "../../components/UI/CustomSpinner";
+import { getFreeProcesses } from "../../utilities/productHelpers";
 
 const EditProduct: React.FC = () => {
   const isEditing = true;
@@ -23,13 +23,20 @@ const EditProduct: React.FC = () => {
   const { id } = useParams();
   const dispatch = useAppDispatch();
   const [processes, setProcesses] = useState<stateProcessInterface[]>([]);
+  const [errorMsg, setErrorMsg] = useState<string>();
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios
-      .get("/free-processes")
-      .then((res) => setProcesses(res.data))
-      .catch((err) => console.log(err));
+    const fetchData = async () => {
+      try {
+        const res = await getFreeProcesses();
+        setProcesses(res);
+      } catch (error: any) {
+        setErrorMsg(error.message);
+      }
+    };
+
+    fetchData();
   }, []);
 
   useEffect(() => {
@@ -66,6 +73,8 @@ const EditProduct: React.FC = () => {
       });
     }
   };
+
+  console.log(processes);
 
   return (
     <>
@@ -162,26 +171,34 @@ const EditProduct: React.FC = () => {
                           </div>
                         </div>
                         <div>
-                          <div className="mb-2 block">
-                            <Label
-                              htmlFor="product_process_id"
-                              value="Product Process"
-                            />
-                          </div>
-                          <Field
-                            as={Select}
-                            disabled={!processes}
-                            id="product_process_id"
-                            required
-                            name="product_process_id"
-                            type="number"
-                          >
-                            {processes.map((p) => (
-                              <option key={p._id} value={p._id}>
-                                {p.name}
-                              </option>
-                            ))}
-                          </Field>
+                          {processes.length > 0 && !errorMsg ? (
+                            <>
+                              <div className="mb-2 block">
+                                <Label
+                                  htmlFor="product_process_id"
+                                  value="Product Process"
+                                />
+                              </div>
+                              <Field
+                                as={Select}
+                                disabled={!processes}
+                                id="product_process_id"
+                                required
+                                name="product_process_id"
+                                type="number"
+                              >
+                                {processes.map((p) => (
+                                  <option key={p._id} value={p._id}>
+                                    {p.name}
+                                  </option>
+                                ))}
+                              </Field>
+                            </>
+                          ) : (
+                            <div className="text-center mt-4">
+                              <span className="text-red-600">{errorMsg}</span>
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -212,7 +229,12 @@ const EditProduct: React.FC = () => {
                     <Button onClick={goBack} color="light" className="mr-5">
                       Cancel
                     </Button>
-                    <Button type="submit" color="success" className=" w-1/4">
+                    <Button
+                      type="submit"
+                      disabled={processes.length === 0}
+                      color="success"
+                      className=" w-1/4"
+                    >
                       Save changes
                     </Button>
                   </div>

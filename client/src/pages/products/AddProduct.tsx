@@ -1,5 +1,5 @@
 import { Form, Formik, Field, ErrorMessage } from "formik";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   createNewProduct,
   product,
@@ -8,7 +8,7 @@ import {
 } from "../../features/product/productSlice";
 import { validationProductSchema } from "../../validations/productValidation";
 import { Button, Label, TextInput, Select, Alert } from "flowbite-react";
-import { useLoaderData } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { getFreeProcesses } from "../../utilities/productHelpers";
 import { useAppDispatch } from "../../app/hooks";
 import { useSelector } from "react-redux";
@@ -31,10 +31,24 @@ const AddProduct = () => {
   const isEditing = false;
   const validationSchema = validationProductSchema(isEditing);
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const { status, message } = useSelector(product);
+  const [freeProcesses, setProcesses] = useState<stateProcessInterface[]>([]);
+  const [errorMsg, setErrorMsg] = useState<string>();
 
-  const freeProcesses: stateProcessInterface[] =
-    useLoaderData() as stateProcessInterface[];
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await getFreeProcesses();
+        setProcesses(res);
+      } catch (error: any) {
+        setErrorMsg(error.message);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   useEffect(() => {
     dispatch(reset());
   }, [dispatch]);
@@ -43,11 +57,15 @@ const AddProduct = () => {
     dispatch(createNewProduct(values));
   };
 
+  const goBack = () => {
+    navigate(-1);
+  };
+
   return (
     <>
       <Header title="Add Product" status={status} message={message} />
 
-      {status === "loading" ? (
+      {status === "loading" || (freeProcesses.length === 0 && !errorMsg) ? (
         <CustomSpinner />
       ) : freeProcesses.length > 0 ? (
         <Formik
@@ -104,36 +122,42 @@ const AddProduct = () => {
                     </div>
                   </div>
                 </div>
-                <>
-                  <div className="mb-2 block">
-                    <Label htmlFor="process" value="Product process*" />
-                  </div>
-                  <Field
-                    as={Select}
-                    id="process"
-                    color={
-                      errors.product_process_id &&
-                      touched.product_process_id &&
-                      "failure"
-                    }
-                    name="product_process_id"
-                    required
-                  >
-                    <option value="">Choose an option</option>
-                    {freeProcesses.map((p) => (
-                      <option key={p._id} value={p._id}>
-                        {p.name}
-                      </option>
-                    ))}
-                  </Field>
-                  <div className="h-7">
-                    <ErrorMessage
+                {freeProcesses.length > 0 ? (
+                  <>
+                    <div className="mb-2 block">
+                      <Label htmlFor="process" value="Product process*" />
+                    </div>
+                    <Field
+                      as={Select}
+                      id="process"
+                      color={
+                        errors.product_process_id &&
+                        touched.product_process_id &&
+                        "failure"
+                      }
                       name="product_process_id"
-                      component="span"
-                      className="text-red-600 text-xs"
-                    />
+                      required
+                    >
+                      <option value="">Choose an option</option>
+                      {freeProcesses.map((p) => (
+                        <option key={p._id} value={p._id}>
+                          {p.name}
+                        </option>
+                      ))}
+                    </Field>
+                    <div className="h-7">
+                      <ErrorMessage
+                        name="product_process_id"
+                        component="span"
+                        className="text-red-600 text-xs"
+                      />
+                    </div>
+                  </>
+                ) : (
+                  <div className="text-center">
+                    <span className="text-red-600">{errorMsg}</span>
                   </div>
-                </>
+                )}
                 <>
                   <div className="mb-2 block">
                     <Label htmlFor="photo_url" value="Photo URL*" />
@@ -154,8 +178,11 @@ const AddProduct = () => {
                     />
                   </div>
                 </>
-                <div className="flex justify-end">
-                  <Button type="submit" className="w-2/6" color="success">
+                <div className="flex justify-between">
+                  <Button color="light" onClick={goBack}>
+                    Cancel
+                  </Button>
+                  <Button type="submit" className="w-1/5" color="success">
                     Submit
                   </Button>
                 </div>
@@ -164,18 +191,17 @@ const AddProduct = () => {
           )}
         </Formik>
       ) : (
-        <Alert className="flex mt-24 justify-center items-center">
-          <h1>You have to add process before adding new product!</h1>
-        </Alert>
+        <>
+          <Alert className="flex mt-24 justify-center items-center w-2/4 mx-auto">
+            <h1>You have to add process before adding a new product!</h1>
+          </Alert>
+          <Button color="light" className="mx-auto mt-4 w-1/3" onClick={goBack}>
+            Cancel
+          </Button>
+        </>
       )}
     </>
   );
 };
-
-export async function loader() {
-  const freeProcesses: stateProcessInterface[] = await getFreeProcesses();
-
-  return freeProcesses;
-}
 
 export default AddProduct;

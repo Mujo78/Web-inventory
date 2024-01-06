@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import {
-  Process,
-  getProcesses,
-  process,
-} from "../../features/process/processSlice";
+import { getProcesses, process } from "../../features/process/processSlice";
 import { useAppDispatch } from "../../app/hooks";
 import { Alert, Button, TextInput } from "flowbite-react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -42,7 +38,6 @@ const ProductProcess: React.FC = () => {
   const [currentActiveProcess, setCurrentActiveProcess] = useState<
     string | undefined
   >();
-
   useEffect(() => {
     if (processes) {
       setCurrentActiveProcess(

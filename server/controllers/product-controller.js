@@ -31,8 +31,34 @@ const addProduct = asyncHandler(async (req, res) => {
 });
 
 const getProducts = asyncHandler(async (req, res) => {
-  const products = await Product.find();
-  if (products) return res.status(200).json(products);
+  const { searchQuery, page } = req.query;
+
+  const numPage = page ? page : 1;
+  const limit = 14;
+  const start = Number(numPage - 1) * limit;
+
+  let query = Product.find();
+  let data;
+  let resObj = {};
+
+  if (searchQuery) {
+    query = query.where({ name: new RegExp(searchQuery.trim(), "i") });
+  }
+
+  query = query.limit(limit).skip(start);
+
+  data = await query.exec();
+  const totalQuery = Product.find(query._conditions);
+  const total = await totalQuery.countDocuments();
+
+  if (data.length > 0) {
+    resObj.data = data;
+    resObj.currentPage = Number(numPage);
+    resObj.numOfPages = Math.ceil(total / limit);
+    resObj.total = total;
+
+    return res.status(200).json(resObj);
+  }
 
   return res.status(400).json("There are no products available!");
 });

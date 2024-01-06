@@ -11,6 +11,12 @@ export interface Product {
   price: number;
 }
 
+export interface ProductState {
+  numOfPages?: number;
+  currentPage?: number;
+  data: Product[];
+}
+
 export interface productToCreate {
   name: string;
   photo_url: string;
@@ -19,29 +25,32 @@ export interface productToCreate {
 }
 
 interface initialStateInterface {
-  products: Product[];
+  products: ProductState;
   specificProduct?: Product;
   status: "idle" | "loading" | "failed" | "start";
   message: string;
 }
 
 const initialState: initialStateInterface = {
-  products: [],
+  products: {
+    data: [],
+  },
   status: "start",
   message: "",
 };
 
-export const getProducts = createAsyncThunk(
-  "products/get",
-  async (_, thunkAPI) => {
-    try {
-      return await productService.getProducts();
-    } catch (error: any) {
-      const message = error.response.data;
-      return thunkAPI.rejectWithValue(message);
-    }
+export const getProducts = createAsyncThunk<
+  ProductState,
+  { searchQuery?: string; page: number },
+  { state: RootState }
+>("products/get", async (args, thunkAPI) => {
+  try {
+    return await productService.getProducts(args);
+  } catch (error: any) {
+    const message = error.response.data;
+    return thunkAPI.rejectWithValue(message);
   }
-);
+});
 
 export const getProduct = createAsyncThunk(
   "product/get",
@@ -123,7 +132,7 @@ export const productSlice = createSlice({
       .addCase(createNewProduct.fulfilled, (state, action) => {
         state.status = "idle";
         state.message = "Successfully added a new product!";
-        state.products.push(action.payload);
+        state.products.data.push(action.payload);
       })
       .addCase(createNewProduct.rejected, (state, action) => {
         state.status = "failed";
@@ -138,8 +147,10 @@ export const productSlice = createSlice({
       })
       .addCase(editProduct.fulfilled, (state, action) => {
         state.status = "idle";
-        const i = state.products.findIndex((p) => p._id === action.payload._id);
-        if (i !== -1) state.products[i] = action.payload;
+        const i = state.products.data.findIndex(
+          (p) => p._id === action.payload._id
+        );
+        if (i !== -1) state.products.data[i] = action.payload;
       });
   },
 });

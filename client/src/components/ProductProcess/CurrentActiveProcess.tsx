@@ -44,11 +44,7 @@ const CurrentActiveProcess: React.FC<Props> = ({ activeId }) => {
 
   return (
     <Card className="h-2/4" theme={customTheme}>
-      {!activeId && status === "loading" ? (
-        <div className="h-full w-full">
-          <CustomSpinner />
-        </div>
-      ) : status !== "failed" && activeProcess !== undefined ? (
+      {status !== "failed" && activeProcess !== undefined ? (
         <div className="flex flex-col h-full items-start">
           <div className="divide-y w-full flex flex-col justify-between h-full">
             <div className="px-6 py-4 divide-y w-full h-4/5">
@@ -111,10 +107,12 @@ const CurrentActiveProcess: React.FC<Props> = ({ activeId }) => {
             </div>
           </div>
         </div>
-      ) : (
+      ) : status === "failed" ? (
         <div className="h-ful w-full flex justify-center items-center">
           <p>There's no active process. Choose one!</p>
         </div>
+      ) : (
+        <CustomSpinner />
       )}
     </Card>
   );

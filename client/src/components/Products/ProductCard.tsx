@@ -1,8 +1,18 @@
-import { Card } from "flowbite-react";
+import { Card, CustomFlowbiteTheme } from "flowbite-react";
 import React, { useState } from "react";
 import { Product } from "../../features/product/productSlice";
 import { FiEdit } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
+
+const customTheme: CustomFlowbiteTheme["card"] = {
+  img: {
+    base: "h-48 object-cover md:hover:scale-105 duration-300  transition-all",
+    horizontal: {
+      off: "rounded-t-lg",
+      on: "!h-[20px] w-full rounded-t-lg object-cover md:h-auto md:w-48 md:rounded-none md:rounded-l-lg",
+    },
+  },
+};
 
 interface Props {
   item: Product;
@@ -11,7 +21,7 @@ interface Props {
 const ProductCard: React.FC<Props> = ({ item }) => {
   const navigate = useNavigate();
 
-  const [editIcon, setEditIcon] = useState(false);
+  const [editIcon, setEditIcon] = useState<boolean>(false);
   const seeMore = (id: string) => {
     console.log(id);
     navigate(`/product/${id}`);
@@ -32,7 +42,8 @@ const ProductCard: React.FC<Props> = ({ item }) => {
 
   return (
     <Card
-      className="max-w-xs relative !p-0 !m-2 cursor-pointer hover:ease-out hover:!bg-gray-100"
+      theme={customTheme}
+      className=" relative m-2 cursor-pointer hover:ease-out hover:!bg-gray-100 overflow-hidden transition-all duration-300 text-center"
       onClick={() => seeMore(item._id)}
       imgSrc={item.photo_url && item.photo_url}
       imgAlt="product_photo"
@@ -47,8 +58,10 @@ const ProductCard: React.FC<Props> = ({ item }) => {
           <FiEdit className="h-3" />
         </button>
       )}
-      <h1>{item.name}</h1>
-      <p>{item.price}</p>
+      <div className="w-full">
+        <h1>{item.name}</h1>
+        <p>${item.price.toFixed(2)}</p>
+      </div>
     </Card>
   );
 };

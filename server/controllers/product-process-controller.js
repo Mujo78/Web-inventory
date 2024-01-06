@@ -111,9 +111,10 @@ const getProcessById = asyncHandler(async (req, res) => {
 });
 
 const getFreeProcesses = asyncHandler(async (req, res) => {
-  const TakenProcesses = await Product.find().distinct("product_process_id");
+  //const TakenProcesses = await Product.find().distinct("product_process_id");
 
   //const freeProcesses = await Product_Process.find({_id: {$nin : TakenProcesses}}).select("name _id")
+
   const freeProcesses = await Product_Process.aggregate([
     {
       $lookup: {
@@ -138,7 +139,9 @@ const getFreeProcesses = asyncHandler(async (req, res) => {
     },
   ]);
 
-  res.status(200).json(freeProcesses);
+  if (freeProcesses.length > 0) return res.status(200).json(freeProcesses);
+
+  return res.status(400).json("There are no free processes available.");
 });
 
 const makeProcessActive = asyncHandler(async (req, res) => {

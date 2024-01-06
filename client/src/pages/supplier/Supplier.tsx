@@ -124,12 +124,12 @@ const Supplier: React.FC = () => {
             </div>
           </div>
         </div>
+      ) : status === "failed" ? (
+        <Alert color="info" className="flex items-center mt-6">
+          <h1>There are no suppliers available.</h1>
+        </Alert>
       ) : (
-        <div>
-          <Alert color="info" className="flex items-center mt-6">
-            <h1>There are no suppliers available.</h1>
-          </Alert>
-        </div>
+        <CustomSpinner />
       )}
 
       <div className="mt-10">

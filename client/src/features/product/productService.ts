@@ -1,8 +1,13 @@
 import axios from "axios";
 import { Product, productToCreate } from "./productSlice";
 
-const getProducts = async () => {
-  const response = await axios.get("/api/products");
+const getProducts = async (args: { searchQuery?: string; page: number }) => {
+  const response = await axios.get("/api/products", {
+    params: {
+      searchQuery: args.searchQuery,
+      page: args.page,
+    },
+  });
 
   return response.data;
 };
