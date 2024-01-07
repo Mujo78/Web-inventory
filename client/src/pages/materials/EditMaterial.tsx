@@ -15,11 +15,14 @@ import { getSuppliers, supplier } from "../../features/supplier/suppSlice";
 import { useNavigate, useParams } from "react-router-dom";
 import CustomSpinner from "../../components/UI/CustomSpinner";
 import Header from "../../components/UI/Header";
+import useSelectedPage from "../../hooks/useSelectedPage";
 
 const EditMaterial: React.FC = () => {
   const { id } = useParams();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  useSelectedPage("Materials");
 
   useEffect(() => {
     if (id) {
@@ -225,7 +228,7 @@ const EditMaterial: React.FC = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="flex justify-end flex-wrap gap-3 mt-7">
+                  <div className="flex justify-between flex-wrap gap-3 mt-7">
                     <Button
                       type="button"
                       onClick={goBack}

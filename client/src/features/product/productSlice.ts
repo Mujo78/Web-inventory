@@ -1,12 +1,13 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
 import productService from "./productService";
+import { Process } from "../process/processSlice";
 
 export interface Product {
   _id: string;
   name: string;
   photo_url: string;
-  product_process_id: string;
+  product_process_id: string | Process;
   mark_up: number;
   price: number;
 }
@@ -52,17 +53,18 @@ export const getProducts = createAsyncThunk<
   }
 });
 
-export const getProduct = createAsyncThunk(
-  "product/get",
-  async (id: string, thunkAPI) => {
-    try {
-      return await productService.getProduct(id);
-    } catch (error: any) {
-      const message = error.response.data;
-      return thunkAPI.rejectWithValue(message);
-    }
+export const getProduct = createAsyncThunk<
+  Product,
+  { id: string },
+  { state: RootState }
+>("product/get", async ({ id }, thunkAPI) => {
+  try {
+    return await productService.getProduct(id);
+  } catch (error: any) {
+    const message = error.response.data;
+    return thunkAPI.rejectWithValue(message);
   }
-);
+});
 
 export const createNewProduct = createAsyncThunk(
   "product/post",

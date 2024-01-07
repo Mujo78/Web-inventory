@@ -30,6 +30,7 @@ import axios from "axios";
 import ProcessItemsToAdd from "../../components/ProductProcess/ProcessItemsToAdd";
 import { selectedMaterials } from "../../components/ProductProcess/PPItems";
 import Header from "../../components/UI/Header";
+import useSelectedPage from "../../hooks/useSelectedPage";
 
 export interface MaterialToAdd {
   _id: string;
@@ -44,6 +45,8 @@ const EditProductProcess: React.FC = () => {
   const { status, message, specificProcess } = useSelector(process);
   const [materialsToAdd, setMaterialsToAdd] = useState<MaterialToAdd[]>([]);
   const [materialsItems, setMaterialsItems] = useState<selectedMaterials[]>([]);
+
+  useSelectedPage("Product Processes");
 
   const getMaterialsToAdd = async () => {
     try {

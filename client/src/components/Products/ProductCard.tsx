@@ -43,7 +43,7 @@ const ProductCard: React.FC<Props> = ({ item }) => {
   return (
     <Card
       theme={customTheme}
-      className=" relative m-2 cursor-pointer hover:ease-out hover:!bg-gray-100 overflow-hidden transition-all duration-300 text-center"
+      className="w-1/6 relative m-2 cursor-pointer hover:ease-out hover:!bg-gray-100 overflow-hidden transition-all duration-300 text-center"
       onClick={() => seeMore(item._id)}
       imgSrc={item.photo_url && item.photo_url}
       imgAlt="product_photo"

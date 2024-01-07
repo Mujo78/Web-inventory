@@ -25,10 +25,10 @@ const Products: React.FC = () => {
   useEffect(() => {
     if (searchQuery) {
       dispatch(getProducts({ searchQuery, page }));
-      navigate(`${location}?searchQuery=${searchQuery}&page${page}`);
+      navigate(`${location}?searchQuery=${searchQuery}&page=${page}`);
     } else {
       dispatch(getProducts({ page }));
-      navigate(`${location}?page${page}`);
+      navigate(`${location}?page=${page}`);
     }
   }, [dispatch, page, searchQuery, navigate, location]);
 
@@ -47,10 +47,10 @@ const Products: React.FC = () => {
   const handleNavigate = (page: number) => {
     if (searchQuery) {
       dispatch(getProducts({ searchQuery, page }));
-      navigate(`${location}?searchQuery=${searchQuery}&page${page}`);
+      navigate(`${location}?searchQuery=${searchQuery}&page=${page}`);
     } else {
       dispatch(getProducts({ page }));
-      navigate(`${location}?page${page}`);
+      navigate(`${location}?page=${page}`);
     }
   };
 
@@ -59,8 +59,8 @@ const Products: React.FC = () => {
       {status === "start" ? (
         <CustomSpinner />
       ) : status !== "failed" && products.data.length > 0 ? (
-        <div className="flex h-5/6 flex-col gap-3">
-          <SearchHeader />
+        <div className="flex h-5/6 flex-col gap-6">
+          <SearchHeader placeholder="Product name" className="mt-1" />
           <div className="flex flex-wrap w-full justify-center items-start">
             {status === "loading" ? (
               <CustomSpinner />

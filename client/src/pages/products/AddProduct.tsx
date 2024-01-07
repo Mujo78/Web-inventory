@@ -14,6 +14,7 @@ import { useAppDispatch } from "../../app/hooks";
 import { useSelector } from "react-redux";
 import Header from "../../components/UI/Header";
 import CustomSpinner from "../../components/UI/CustomSpinner";
+import useSelectedPage from "../../hooks/useSelectedPage";
 
 export interface stateProcessInterface {
   _id: string;
@@ -35,6 +36,8 @@ const AddProduct = () => {
   const { status, message } = useSelector(product);
   const [freeProcesses, setProcesses] = useState<stateProcessInterface[]>([]);
   const [errorMsg, setErrorMsg] = useState<string>();
+
+  useSelectedPage("Products");
 
   useEffect(() => {
     const fetchData = async () => {

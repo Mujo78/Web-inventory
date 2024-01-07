@@ -34,7 +34,7 @@ const getProducts = asyncHandler(async (req, res) => {
   const { searchQuery, page } = req.query;
 
   const numPage = page ? page : 1;
-  const limit = 14;
+  const limit = 10;
   const start = Number(numPage - 1) * limit;
 
   let query = Product.find();
@@ -64,7 +64,9 @@ const getProducts = asyncHandler(async (req, res) => {
 });
 
 const getProductById = asyncHandler(async (req, res) => {
-  const product = await Product.findById(req.params.id);
+  const product = await Product.findById(req.params.id).populate(
+    "product_process_id"
+  );
   if (product) return res.status(200).json(product);
 
   return res.status(400).json("There was no such product in database!");

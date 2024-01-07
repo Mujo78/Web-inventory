@@ -12,6 +12,7 @@ import {
 import Header from "../../components/UI/Header";
 import CustomSpinner from "../../components/UI/CustomSpinner";
 import { useNavigate } from "react-router-dom";
+import useSelectedPage from "../../hooks/useSelectedPage";
 
 export type Supp = {
   name: string;
@@ -34,6 +35,8 @@ const AddSupplier: React.FC = () => {
   const dispatch = useAppDispatch();
   const { status, message } = useSelector(supplier);
   const navigate = useNavigate();
+
+  useSelectedPage("Suppliers");
 
   useEffect(() => {
     dispatch(reset());

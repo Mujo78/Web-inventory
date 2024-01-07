@@ -9,6 +9,9 @@ module.exports = {
       container: {
         center: true,
       },
+      height: {
+        128: "32rem",
+      },
       fontFamily: {
         Rubik: ["Rubik", "sans-serif"],
       },

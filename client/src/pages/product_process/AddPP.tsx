@@ -5,12 +5,14 @@ import { makeProcess, process } from "../../features/process/processSlice";
 import { useAppDispatch } from "../../app/hooks";
 import PPItems from "../../components/ProductProcess/PPItems";
 import { useNavigate } from "react-router-dom";
+import useSelectedPage from "../../hooks/useSelectedPage";
 
 export interface processNameIn {
   name: string;
 }
 
 const AddProductProcess = () => {
+  useSelectedPage("Product Processes");
   const [step, setStep] = useState<number>(1);
   const [processName, setProcessName] = useState<processNameIn>({
     name: "",

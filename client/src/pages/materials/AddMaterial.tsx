@@ -14,6 +14,7 @@ import { getSuppliers, supplier } from "../../features/supplier/suppSlice";
 import Header from "../../components/UI/Header";
 import CustomSpinner from "../../components/UI/CustomSpinner";
 import { useNavigate } from "react-router-dom";
+import useSelectedPage from "../../hooks/useSelectedPage";
 
 const initialState: MaterialInterface = {
   name: "",
@@ -28,6 +29,8 @@ const AddMaterial: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { status: materialStatus, message } = useSelector(material);
+
+  useSelectedPage("Materials");
 
   useEffect(() => {
     dispatch(reset());
@@ -200,7 +203,7 @@ const AddMaterial: React.FC = () => {
                     </div>
                   </div>
                 </div>
-                <div className="flex justify-end mt-4 gap-3">
+                <div className="flex justify-between mt-4 gap-3">
                   <Button
                     type="button"
                     onClick={() => navigate("/materials")}

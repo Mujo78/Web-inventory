@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useAppDispatch } from "../../app/hooks";
 import { useSelector } from "react-redux";
 import { getMaterials, material } from "../../features/material/materialSlice";
-import { Alert, Button, TextInput } from "flowbite-react";
+import { Alert } from "flowbite-react";
 import MaterialChart from "../../components/Materials/MaterialChart";
 import { useLocation, useNavigate } from "react-router-dom";
 import MaterialCard from "../../components/Materials/MaterialCard";
@@ -13,6 +13,7 @@ import { AiOutlinePlus } from "react-icons/ai";
 import CustomButton from "../../components/UI/CustomButton";
 import { Tooltip as ToolTp } from "flowbite-react";
 import { useQuery } from "../../hooks/useQuery";
+import SearchHeader from "../../components/UI/SearchHeader";
 
 interface materialsQuantity {
   name: string;
@@ -44,7 +45,6 @@ const Materials: React.FC = () => {
   };
 
   const navigate = useNavigate();
-  const [searchInput, setSearchInput] = useState<string>("");
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -63,38 +63,11 @@ const Materials: React.FC = () => {
     getSupplierMaterials();
   }, [materials]);
 
-  const onChange = (event: React.FormEvent<HTMLInputElement>) => {
-    setSearchInput(event.currentTarget.value);
-  };
-
-  const onSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    const searchQuery = searchInput.trim();
-
-    navigate(`${location.pathname}?searchQuery=${searchQuery}`);
-    dispatch(getMaterials({ searchQuery }));
-  };
-
   return (
     <div className="flex relative w-full h-[89vh] overflow-y-hidden ">
       <div className=" flex w-full h-full">
         <div className="w-2/4 p-6 h-full overflow-y-hidden">
-          <form onSubmit={onSubmit} className="flex flex-col">
-            <div className="focus:!ring-0 flex focus:border-green-500">
-              <TextInput
-                name="searchInput"
-                value={searchInput}
-                onChange={onChange}
-                className="mb-3 w-full pr-3"
-                id="search-input"
-                placeholder="Material One"
-                type="text"
-              />
-              <Button type="submit" color="success">
-                Search
-              </Button>
-            </div>
-          </form>
+          <SearchHeader placeholder="Material name" className="w-full" />
 
           <div className="pt-4 pb-12 h-full w-full">
             <div

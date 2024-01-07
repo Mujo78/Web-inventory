@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { getProcesses, process } from "../../features/process/processSlice";
 import { useAppDispatch } from "../../app/hooks";
-import { Alert, Button, TextInput } from "flowbite-react";
+import { Alert } from "flowbite-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { AiOutlinePlus } from "react-icons/ai";
 import CustomSpinner from "../../components/UI/CustomSpinner";
@@ -12,21 +12,20 @@ import ProductProcessChart from "../../components/ProductProcess/ProductProcessC
 import IconButton from "../../components/UI/IconButton";
 import ProcessCard from "../../components/ProductProcess/ProcessCard";
 import { useQuery } from "../../hooks/useQuery";
+import SearchHeader from "../../components/UI/SearchHeader";
 
 const ProductProcess: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const location = useLocation();
   const query = useQuery();
-  const processName = query.get("processName");
-
-  const [searchInput, setSearchInput] = useState<string>("");
+  const processName = query.get("searchQuery");
 
   useSelectedPage("Product Processes");
 
   useEffect(() => {
     if (processName) {
-      navigate(`${location.pathname}?processName=${processName}`);
+      navigate(`${location.pathname}?searchQuery=${processName}`);
       dispatch(getProcesses({ processName }));
     } else {
       navigate(`${location.pathname}`);
@@ -47,48 +46,28 @@ const ProductProcess: React.FC = () => {
     }
   }, [processes]);
 
-  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;
-
-    setSearchInput(value);
-  };
-
-  const onSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    const processName = searchInput.trim();
-
-    navigate(`${location.pathname}?processName=${processName}`);
-    dispatch(getProcesses({ processName }));
-  };
-
   return (
     <div className="h-[89vh] w-full flex relative">
       <div className="h-full pr-2 w-3/5 pb-12 overflow-hidden ">
-        <form onSubmit={onSubmit} className="flex gap-2 p-3 w-full">
-          <TextInput
-            className="flex-grow"
-            name="searchInput"
-            value={searchInput}
-            placeholder="New material"
-            onChange={(e) => onChange(e)}
-          />
-          <Button type="submit" color="success">
-            Search
-          </Button>
-        </form>
+        <SearchHeader
+          placeholder="Product process name"
+          className="w-full px-3 py-2"
+        />
         <div
           id="content"
           className="p-3 scroll-smooths h-full scroll-p-0 overflow-y-scroll"
         >
           {status === "loading" ? (
             <CustomSpinner />
-          ) : status !== "failed" && processes?.length > 0 ? (
+          ) : status === "idle" && processes?.length > 0 ? (
             processes.map(
               (n) =>
                 !(n.start_date !== null && n.end_date === null) && (
                   <ProcessCard key={n._id} process={n} />
                 )
             )
+          ) : status !== "failed" ? (
+            <CustomSpinner />
           ) : (
             <Alert color="info" className="flex items-center">
               <h1>There are no processes available!</h1>

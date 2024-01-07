@@ -16,6 +16,7 @@ import { useSelector } from "react-redux";
 import { stateProcessInterface } from "./AddProduct";
 import CustomSpinner from "../../components/UI/CustomSpinner";
 import { getFreeProcesses } from "../../utilities/productHelpers";
+import useSelectedPage from "../../hooks/useSelectedPage";
 
 const EditProduct: React.FC = () => {
   const isEditing = true;
@@ -25,6 +26,8 @@ const EditProduct: React.FC = () => {
   const [processes, setProcesses] = useState<stateProcessInterface[]>([]);
   const [errorMsg, setErrorMsg] = useState<string>();
   const navigate = useNavigate();
+
+  useSelectedPage("Products");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -41,7 +44,7 @@ const EditProduct: React.FC = () => {
 
   useEffect(() => {
     if (id) {
-      dispatch(getProduct(id));
+      dispatch(getProduct({ id }));
     }
 
     return () => {
@@ -73,8 +76,6 @@ const EditProduct: React.FC = () => {
       });
     }
   };
-
-  console.log(processes);
 
   return (
     <>
@@ -225,8 +226,8 @@ const EditProduct: React.FC = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="flex justify-end mt-3">
-                    <Button onClick={goBack} color="light" className="mr-5">
+                  <div className="flex justify-between mt-3">
+                    <Button onClick={goBack} color="light">
                       Cancel
                     </Button>
                     <Button
