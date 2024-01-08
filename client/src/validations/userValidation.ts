@@ -8,3 +8,9 @@ export const userValidationSchema = Yup.object({
 export const forgotPasswordValidation = Yup.object({
   email: Yup.string().required("Email is required").email(),
 });
+
+export const changePasswordValidation = Yup.object({
+  oldPassword: Yup.string().required("Password is required!"),
+  newPassword: Yup.string().required("New Password is required!"),
+  confirmPassword: Yup.string().required("Confirm Password is required!"),
+});

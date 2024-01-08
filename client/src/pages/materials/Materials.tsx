@@ -10,10 +10,10 @@ import axios from "axios";
 import CustomSpinner from "../../components/UI/CustomSpinner";
 import useSelectedPage from "../../hooks/useSelectedPage";
 import { AiOutlinePlus } from "react-icons/ai";
-import CustomButton from "../../components/UI/CustomButton";
 import { Tooltip as ToolTp } from "flowbite-react";
 import { useQuery } from "../../hooks/useQuery";
 import SearchHeader from "../../components/UI/SearchHeader";
+import IconButton from "../../components/UI/IconButton";
 
 interface materialsQuantity {
   name: string;
@@ -101,10 +101,9 @@ const Materials: React.FC = () => {
           </div>
         )}
       </div>
-      <CustomButton
-        v={1}
+      <IconButton
         onClick={() => navigate("/add-material")}
-        className="bg-white absolute right-10 bottom-10 !w-[81px] !h-[81px] focus:ring-gray-50 shadow-xl hover:bg-gray-50 ring-2 ring-gray-100 hover:focus:ring-gray-100 flex justify-center items-center hover:transition-all hover:duration-300 !rounded-full"
+        className="absolute right-10 bottom-10"
       >
         <ToolTp
           content="Add new material"
@@ -119,7 +118,7 @@ const Materials: React.FC = () => {
             }}
           />
         </ToolTp>
-      </CustomButton>
+      </IconButton>
     </div>
   );
 };

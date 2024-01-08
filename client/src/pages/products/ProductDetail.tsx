@@ -5,7 +5,7 @@ import { getProduct, product } from "../../features/product/productSlice";
 import useSelectedPage from "../../hooks/useSelectedPage";
 import { useNavigate, useParams } from "react-router-dom";
 import CustomSpinner from "../../components/UI/CustomSpinner";
-import { Alert } from "flowbite-react";
+import { Alert, Button } from "flowbite-react";
 import { MdOutlineArrowRightAlt } from "react-icons/md";
 
 const ProductDetail = () => {
@@ -24,13 +24,21 @@ const ProductDetail = () => {
 
   return (
     <div className="h-[89vh]">
-      <header className="w-fit h-fit ml-6">
+      <header className="w-full flex justify-between items-center h-fit">
         <button onClick={() => navigate(-1)}>
           <MdOutlineArrowRightAlt
             style={{ height: 41, width: 41 }}
             className="hover:scale-105 transition-all duration-300 rotate-180"
           />
         </button>
+        {id && status !== "failed" && (
+          <Button
+            color="success"
+            onClick={() => navigate(`/edit-product/${id}`)}
+          >
+            Edit product
+          </Button>
+        )}
       </header>
       {status === "start" ? (
         <CustomSpinner />

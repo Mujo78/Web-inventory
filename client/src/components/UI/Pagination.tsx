@@ -56,8 +56,8 @@ function CustomPagination({ currentPage, totalPages, handleNavigate }: Props) {
                 onClick={() => handlePageChange(pageNumber)}
                 className={`relative inline-flex items-center mx-auto justify-center focus:ring-green-200 rounded-lg p-1 text-sm font-medium ${
                   pageNumber === pageNum
-                    ? "text-blue-600 bg-green-500 hover:!bg-green-600"
-                    : "text-gray-700 bg-gray-200 hover:bg-gray-300"
+                    ? "text-white bg-green-500 hover:!bg-green-600"
+                    : "text-gray-700 bg-gray-200 hover:!bg-gray-300"
                 }`}
               >
                 {pageNumber}
@@ -69,7 +69,7 @@ function CustomPagination({ currentPage, totalPages, handleNavigate }: Props) {
               <Button
                 color="success"
                 onClick={() => handlePageChange(pageNum + 1)}
-                className="relative inline-flex items-center px-2 py-2 focus:ring-none text-gray-700 bg-white hover:!bg-gray-50"
+                className="relative inline-flex items-center px-2 py-2 text-gray-700 bg-white hover:!bg-gray-50"
               >
                 <HiArrowRight style={{ color: "black" }} />
               </Button>

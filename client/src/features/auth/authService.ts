@@ -5,6 +5,12 @@ export interface LoginUser {
   password: string;
 }
 
+export interface IChangePassword {
+  oldPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
 const login = async (loginData: LoginUser) => {
   const response = await axios.post("/api/login", loginData);
 
@@ -15,12 +21,26 @@ const login = async (loginData: LoginUser) => {
   return response.data;
 };
 
+const changePassword = async (
+  token: string,
+  passwordsData: IChangePassword
+) => {
+  const response = await axios.put("/api/change-password", passwordsData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response.data;
+};
+
 const logout = () => {
   localStorage.removeItem("user");
 };
 
 const authServices = {
   login,
+  changePassword,
   logout,
 };
 

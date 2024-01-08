@@ -10,7 +10,7 @@ const SettingsLayout: React.FC = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setShow(false);
-    }, 3000);
+    }, 5000);
 
     return () => {
       clearTimeout(interval);

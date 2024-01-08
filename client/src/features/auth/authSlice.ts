@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import authServices from "./authService";
+import authServices, { IChangePassword } from "./authService";
 import { RootState } from "../../app/store";
 
 export interface AuthState {
@@ -14,8 +14,15 @@ export interface LoginUser {
   password: string;
 }
 
+type userObject = {
+  accessToken: string;
+  username: string;
+  id: string;
+  role: string;
+};
+
 const user = localStorage.getItem("user");
-const storedObject = user !== null ? JSON.parse(user) : null;
+const storedObject: userObject = user !== null ? JSON.parse(user) : null;
 
 const initialState: AuthState = {
   accessUser: storedObject,
@@ -36,6 +43,23 @@ export const login = createAsyncThunk(
     }
   }
 );
+
+export const changePassword = createAsyncThunk<
+  string,
+  { passwordsData: IChangePassword },
+  { state: RootState }
+>("/auth/change-password", async ({ passwordsData }, thunkAPI) => {
+  try {
+    const token = thunkAPI.getState().auth.accessUser.accessToken as string;
+    const safeToken = token || "";
+    return await authServices.changePassword(safeToken, passwordsData);
+  } catch (error: any) {
+    console.log(error);
+    const message = error.response.data.message || error.response.data.errors;
+
+    return thunkAPI.rejectWithValue(message);
+  }
+});
 
 export const logout = createAsyncThunk("auth/logout", async () => {
   await authServices.logout();
@@ -67,6 +91,18 @@ export const authSlice = createSlice({
       .addCase(login.rejected, (state, action) => {
         state.status = "failed";
         state.accessUser = null;
+        state.message = action.payload as string;
+      })
+
+      .addCase(changePassword.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(changePassword.fulfilled, (state, action) => {
+        state.status = "idle";
+        state.message = action.payload as string;
+      })
+      .addCase(changePassword.rejected, (state, action) => {
+        state.status = "failed";
         state.message = action.payload as string;
       })
       .addCase(logout.fulfilled, (state) => {

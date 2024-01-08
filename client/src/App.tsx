@@ -29,6 +29,7 @@ import ChangePassword from "./pages/settings/ChangePassword";
 import About from "./pages/help/About";
 import Contact from "./pages/help/Contact";
 import HelpLayout from "./pages/help/HelpLayout";
+import MessagesCenter from "./pages/MessagesCenter";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -65,6 +66,8 @@ const router = createBrowserRouter(
           <Route path="about" element={<About />} />
         </Route>
         <Route path="employee" element={<Employee />} />
+
+        <Route path="/messages/:id" element={<MessagesCenter />} />
       </Route>
       <Route path="*" element={<ErrorPage />} />
     </Route>
