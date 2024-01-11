@@ -9,6 +9,7 @@ import {
 } from "../../features/process/processSlice";
 import CustomSpinner from "../UI/CustomSpinner";
 import { getDate } from "../../helpers/ProductProcessSideFunc";
+import { customTheme } from "../Materials/MaterialDetailsModal";
 
 interface Props {
   activeId: string | undefined;
@@ -40,7 +41,7 @@ const ProcessModal: React.FC<Props> = ({ activeId, show, setShow }) => {
   }
 
   return (
-    <Modal dismissible show={show} onClose={onClose}>
+    <Modal theme={customTheme} dismissible show={show} onClose={onClose}>
       <Modal.Header>{specificProcess?.processData.name}</Modal.Header>
       <Modal.Body>
         <div className="flex w-full justify-between">

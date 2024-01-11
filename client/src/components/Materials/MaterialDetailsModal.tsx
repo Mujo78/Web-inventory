@@ -1,4 +1,4 @@
-import { Button, Modal, Table } from "flowbite-react";
+import { Button, CustomFlowbiteTheme, Modal, Table } from "flowbite-react";
 import React, { useEffect } from "react";
 import { useAppDispatch } from "../../app/hooks";
 import {
@@ -13,6 +13,15 @@ type Props = {
   id: string;
   show: boolean;
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+export const customTheme: CustomFlowbiteTheme["modal"] = {
+  root: {
+    show: {
+      on: "flex bg-gray-900 !bg-opacity-50 !dark:bg-opactiy-10",
+      off: "hidden",
+    },
+  },
 };
 
 const MaterialDetails: React.FC<Props> = ({ id, show, setShow }) => {
@@ -40,7 +49,13 @@ const MaterialDetails: React.FC<Props> = ({ id, show, setShow }) => {
   }
 
   return (
-    <Modal dismissible show={show} onClose={onClose} className="font-Rubik">
+    <Modal
+      theme={customTheme}
+      dismissible
+      show={show}
+      onClose={onClose}
+      className="font-Rubik"
+    >
       <Modal.Header>{specificMaterial?.name}</Modal.Header>
       <Modal.Body>
         <Table>

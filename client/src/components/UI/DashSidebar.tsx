@@ -115,8 +115,8 @@ const DashSidebar: React.FC = () => {
             {accessUser?.role === "Admin" && (
               <Sidebar.Item
                 as={NavLink}
-                active={location.pathname.includes("/employee")}
-                to="employee"
+                active={location.pathname.includes("/employees")}
+                to="employees"
                 icon={FaUsers}
                 className="mt-3 p-3"
               >

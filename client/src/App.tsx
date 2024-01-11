@@ -12,7 +12,7 @@ import HomeLayout from "./components/Layouts/HomeLayout";
 import Products from "./pages/products/Products";
 import Materials from "./pages/materials/Materials";
 import ProductProcess from "./pages/product_process/ProductProcess";
-import Employee from "./pages/Employee";
+import Employees from "./pages/employee/Employees";
 import Supplier from "./pages/supplier/Supplier";
 import AddSupplier from "./pages/supplier/AddSupplier";
 import Authorized from "./helpers/Authorized";
@@ -30,6 +30,8 @@ import About from "./pages/help/About";
 import Contact from "./pages/help/Contact";
 import HelpLayout from "./pages/help/HelpLayout";
 import MessagesCenter from "./pages/MessagesCenter";
+import AddEmployee from "./pages/employee/AddEmployee";
+import EditEmployee from "./pages/employee/EditEmployee";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -65,7 +67,11 @@ const router = createBrowserRouter(
           <Route path="contact" element={<Contact />} />
           <Route path="about" element={<About />} />
         </Route>
-        <Route path="employee" element={<Employee />} />
+        <Route path="/">
+          <Route path="employees" element={<Employees />} />
+          <Route path="add-employee" element={<AddEmployee />} />
+          <Route path="edit-employee/:id" element={<EditEmployee />} />
+        </Route>
 
         <Route path="/messages/:id" element={<MessagesCenter />} />
       </Route>
