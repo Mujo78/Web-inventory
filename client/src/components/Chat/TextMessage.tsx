@@ -1,7 +1,7 @@
 import React from "react";
 
-const TextMessage = () => {
-  return <div>Message</div>;
+const TextMessage = ({ message }: { message: string }) => {
+  return <div>{message}</div>;
 };
 
 export default TextMessage;

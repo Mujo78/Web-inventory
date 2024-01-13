@@ -21,6 +21,10 @@ const userSchema = new mongoose.Schema(
       ref: "Role",
       required: true,
     },
+    status: {
+      type: String,
+      default: "offline",
+    },
   },
   {
     timestamps: true,

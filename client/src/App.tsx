@@ -32,6 +32,7 @@ import HelpLayout from "./pages/help/HelpLayout";
 import MessagesCenter from "./pages/MessagesCenter";
 import AddEmployee from "./pages/employee/AddEmployee";
 import EditEmployee from "./pages/employee/EditEmployee";
+import Chat from "./components/Chat/Chat";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -73,7 +74,9 @@ const router = createBrowserRouter(
           <Route path="edit-employee/:id" element={<EditEmployee />} />
         </Route>
 
-        <Route path="/messages/:id" element={<MessagesCenter />} />
+        <Route path="/messages/:id/t" element={<MessagesCenter />}>
+          <Route path=":receiverId?" element={<Chat />} />
+        </Route>
       </Route>
       <Route path="*" element={<ErrorPage />} />
     </Route>

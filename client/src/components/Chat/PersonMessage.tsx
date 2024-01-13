@@ -1,32 +1,52 @@
 import { Avatar } from "flowbite-react";
-import React from "react";
+import React, { useEffect } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import socket from "../../socket";
+import { UserDataType } from "./Messages";
 
-const PersonMessage = () => {
+const PersonMessage: React.FC<UserDataType> = ({ _id, status, username }) => {
+  const navigate = useNavigate();
+  const locationPathname = useLocation().pathname;
+
+  const { receiverId: recId } = useParams();
+
+  useEffect(() => {
+    if (recId && recId !== _id) {
+      const receiverId = recId;
+      socket.emit("joinRoom", { receiverId });
+    }
+  }, [_id, recId]);
+
+  const sendMessageTo = () => {
+    if (_id !== recId) {
+      const receiverId = _id;
+      const baseLocationPath = locationPathname.slice(
+        0,
+        locationPathname.indexOf("/t") + 2
+      );
+      socket.emit("joinRoom", { receiverId });
+      navigate(`${baseLocationPath}/${receiverId}`);
+    }
+  };
+
   return (
-    <>
-      <div className="border-y flex items-center gap-6 p-3 bg-gray-100 hover:bg-gray-200 transition-all duration-300 cursor-pointer">
-        <Avatar size="md" rounded />
-        <div className="flex items-center justify-between w-full">
-          <div className="flex flex-col gap-2">
-            <h1 className="font-semibold">username.username</h1>
-            <p>21:32 - Some message</p>
-          </div>
-          <div className="h-3 w-3 bg-green-500 p-2 rounded-full"></div>
+    <div
+      onClick={sendMessageTo}
+      className={`${
+        _id === recId
+          ? "bg-green-100 hover:bg-green-200"
+          : "bg-gray-100 hover:bg-gray-200"
+      } border-y flex items-center gap-6 p-3 transition-all duration-300 cursor-pointer`}
+    >
+      <Avatar size="md" rounded status={status} statusPosition="bottom-right" />
+      <div className="flex items-center justify-between w-full">
+        <div className="flex flex-col gap-2">
+          <h1 className="font-semibold">{username}</h1>
+          <p className="line-clamp-1">21:32 - Some message</p>
         </div>
+        <div className="h-3 w-3 bg-blue-500 p-2 rounded-full"></div>
       </div>
-      <div className="border-y flex items-center gap-6 p-3 hover:bg-gray-100 cursor-pointer">
-        <Avatar size="md" rounded />
-        <div className="flex items-center justify-between w-full">
-          <div className="flex flex-col gap-2">
-            <h1 className="font-semibold">username.username</h1>
-            <p className="line-clamp-1">
-              21:32 - Some
-              messagesadasdasdasdasdasasdasdasdaasdasdasdasdasdasdsa
-            </p>
-          </div>
-        </div>
-      </div>
-    </>
+    </div>
   );
 };
 

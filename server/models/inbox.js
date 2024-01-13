@@ -14,9 +14,11 @@ const inboxSchema = new mongoose.Schema(
     },
     isDeletedByPOne: {
       type: Boolean,
+      default: false,
     },
     isDeletedByPTwo: {
       type: Boolean,
+      default: false,
     },
   },
   {

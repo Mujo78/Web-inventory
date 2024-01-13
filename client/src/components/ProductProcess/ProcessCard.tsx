@@ -59,7 +59,7 @@ const ProcessCard: React.FC<Props> = ({ process }) => {
       <Card
         theme={customTheme}
         onClick={seeMore}
-        className={`mb-4 w-full hover:!bg-gray-100 p-0 cursor-pointer ${
+        className={`mb-4 w-full hover:!bg-gray-100 p-0 cursor-pointer overflow-hidden ${
           show && "!bg-green-100"
         }`}
         key={process._id}

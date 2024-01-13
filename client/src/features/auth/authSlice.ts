@@ -2,8 +2,15 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import authServices, { IChangePassword } from "./authService";
 import { RootState } from "../../app/store";
 
+type userObject = {
+  accessToken: string;
+  username: string;
+  id: string;
+  role: string;
+};
+
 export interface AuthState {
-  accessUser: any;
+  accessUser: userObject | null;
   status: "idle" | "loading" | "failed";
   message: string;
   selected?: string;
@@ -13,13 +20,6 @@ export interface LoginUser {
   username: string;
   password: string;
 }
-
-type userObject = {
-  accessToken: string;
-  username: string;
-  id: string;
-  role: string;
-};
 
 const user = localStorage.getItem("user");
 const storedObject: userObject = user !== null ? JSON.parse(user) : null;
@@ -50,7 +50,7 @@ export const changePassword = createAsyncThunk<
   { state: RootState }
 >("/auth/change-password", async ({ passwordsData }, thunkAPI) => {
   try {
-    const token = thunkAPI.getState().auth.accessUser.accessToken as string;
+    const token = thunkAPI.getState().auth.accessUser?.accessToken as string;
     const safeToken = token || "";
     return await authServices.changePassword(safeToken, passwordsData);
   } catch (error: any) {

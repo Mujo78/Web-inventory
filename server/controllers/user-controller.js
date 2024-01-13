@@ -1,10 +1,19 @@
-/** @type {mongodb.Db} */
 const asyncHandler = require("express-async-handler");
 const { sign } = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const User = require("../models/user");
 const Person = require("../models/person");
 const { validationResult } = require("express-validator");
+
+const getAllUsers = asyncHandler(async (req, res) => {
+  const allUsers = await User.find({ _id: { $ne: req.user.id } }).select(
+    "_id username status"
+  );
+
+  if (allUsers) return res.status(200).json(allUsers);
+
+  return res.status(400).json("There are no available users!");
+});
 
 const login = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
@@ -94,4 +103,5 @@ module.exports = {
   login,
   changePassword,
   resignation,
+  getAllUsers,
 };

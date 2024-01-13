@@ -14,6 +14,7 @@ import { FcProcess } from "react-icons/fc";
 import { FaFileContract, FaUsers } from "react-icons/fa";
 import { MdBuild, MdLayers } from "react-icons/md";
 import { IoMdSettings, IoIosHelpCircleOutline } from "react-icons/io";
+import socket from "../../socket";
 
 const customTheme: CustomFlowbiteTheme["sidebar"] = {
   root: {
@@ -30,6 +31,8 @@ const DashSidebar: React.FC = () => {
   const { accessUser } = useSelector(authUser);
 
   const onLogOut = () => {
+    socket.emit("logout");
+
     dispatch(logout());
     dispatch(reset());
     dispatch(resetSelected());

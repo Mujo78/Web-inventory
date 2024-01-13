@@ -24,7 +24,7 @@ const LandingPage: React.FC = () => {
   }, [user, navigate]);
 
   const [forgotPass, setForgotPass] = useState<boolean>(false);
-  console.log(forgotPass);
+
   return (
     <div className="text-start w-full h-screen flex items-center">
       <div

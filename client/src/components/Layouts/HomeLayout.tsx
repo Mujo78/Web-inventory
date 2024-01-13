@@ -5,7 +5,7 @@ import CustomNavbar from "../UI/CustomNavbar";
 
 const HomeLayout: React.FC = () => {
   return (
-    <div className="flex w-full">
+    <div className="flex w-full font-Rubik">
       <div className="flex-shrink-0">
         <DashSidebar />
       </div>
