@@ -40,6 +40,12 @@ const login = asyncHandler(async (req, res) => {
         process.env.SECRET
       );
 
+      await User.findByIdAndUpdate(
+        user._id,
+        { $set: { status: "online" } },
+        { new: true }
+      );
+
       return res.status(200).json({
         accessToken: token,
         username: username,

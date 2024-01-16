@@ -2,114 +2,104 @@ const Inbox = require("./models/inbox");
 const Message = require("./models/message");
 const User = require("./models/user");
 
-let users = {};
-let rooms = {};
-
 module.exports = function (io) {
   io.on("connection", (socket) => {
-    socket.on("login", async (userId) => {
-      const userFound = await User.findById(userId);
-      if (userFound) {
-        users[socket.id] = userId;
-
-        userFound.status = "online";
-        await userFound.save();
-
+    console.log("User connected!");
+    socket.on("login", (userId) => {
+      if (userId) {
         console.log("User connected: ", socket.id);
       } else {
         console.log("Socket: No user with id: ", userId);
       }
     });
 
-    socket.on("logout", async () => {
-      const userId = users[socket.id];
-
+    socket.on("logout", async (userId) => {
       if (userId !== undefined) {
         const userFound = await User.findByIdAndUpdate(
           userId,
           {
-            $set: { status: "offline" },
+            status: "offline",
           },
           { new: true }
         );
 
         if (userFound) {
-          delete users[socket.id];
-
           socket.disconnect();
+          console.log("User disconnected: ", socket.id);
         }
       }
     });
 
     socket.on("sendMessage", async ({ receiverId, content }) => {
-      const senderId = users[socket.id];
+      const senderId = socket.handshake.auth.authId;
 
       let inbox = await Inbox.findOne({
         $or: [
-          { pOne: senderId, pTwo: receiverId },
-          { pOne: receiverId, pTwo: senderId },
+          { participants: [senderId, receiverId] },
+          { participants: [receiverId, senderId] },
         ],
       });
 
+      console.log(inbox);
       if (!inbox) {
-        inbox = await Inbox.create({
-          pOne: senderId,
-          pTwo: receiverId,
-        });
-      }
-      const room = inbox._id.toString();
-
-      console.log(rooms);
-
-      if (!rooms[room]) {
-        rooms[room] = [];
+        inbox = await Inbox.create({ participants: [senderId, receiverId] });
       }
 
-      if (!Object.values(rooms[room]).includes(senderId)) {
-        console.log(senderId);
-        rooms[room].push(senderId);
+      const roomId = inbox._id.toString();
+      socket.join(roomId);
 
-        socket.join(room);
-      }
-
-      io.to(room).emit("message", {
+      io.to(roomId).emit("message", {
         from: senderId,
         content,
       });
 
       /*
-      await Message.create({
+      const newMmessage = await Message.create({
         content,
         senderId,
         receiverId,
         inboxId: inbox._id,
       });
 
-      console.log({ receiverId, content, senderId });
+      inbox.lastMessage = {
+        senderId,
+        content,
+        isRead: false,
+        date: newMmessage.createdAt,
+      };
+
+      await inbox.save();
+      
+
+      io.to(room).emit("message", {
+        from: senderId,
+        content,
+      });
+
+
+      console.log({ inbox });
       */
     });
 
     socket.on("joinRoom", async ({ receiverId }) => {
-      const senderId = users[socket.id];
+      const senderId = socket.handshake.auth.authId;
 
       const inbox = await Inbox.findOne({
         $or: [
-          { pOne: senderId, pTwo: receiverId },
-          { pOne: receiverId, pTwo: senderId },
+          { participants: [senderId, receiverId] },
+          { participants: [receiverId, senderId] },
         ],
       });
 
       if (inbox) {
         const room = inbox._id.toString();
 
-        if (!rooms[room]) {
-          rooms[room] = [];
-        }
-
-        rooms[room].push(senderId);
+        socket.rooms.forEach((lastRoom) => {
+          if (lastRoom !== room) socket.leave(lastRoom);
+        });
 
         socket.join(room);
-        console.log(senderId, " joined");
+        console.log(senderId, " joined ", room);
       } else {
         socket.emit("noPreviousMessages", { receiverId });
       }

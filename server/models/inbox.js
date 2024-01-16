@@ -2,23 +2,24 @@ const mongoose = require("mongoose");
 
 const inboxSchema = new mongoose.Schema(
   {
-    pOne: {
+    participants: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    deletedBy: {
       type: mongoose.Types.ObjectId,
       ref: "User",
-      required: true,
     },
-    pTwo: {
-      type: mongoose.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
-    isDeletedByPOne: {
-      type: Boolean,
-      default: false,
-    },
-    isDeletedByPTwo: {
-      type: Boolean,
-      default: false,
+    lastMessage: {
+      senderId: {
+        type: mongoose.Types.ObjectId,
+        ref: "User",
+      },
+      content: String,
+      isRead: Boolean,
+      date: Date,
     },
   },
   {

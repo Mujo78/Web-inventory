@@ -5,15 +5,29 @@ import { useSelector } from "react-redux";
 import { authUser } from "../../features/auth/authSlice";
 import axios from "axios";
 
-export type UserDataType = {
+type lastMessageType = {
+  senderId: string;
+  content: string;
+  isRead: boolean;
+  date: Date;
+};
+
+type UserDataType = {
   _id: string;
   username: string;
   status: "away" | "busy" | "offline" | "online" | undefined;
 };
 
+export type InboxType = {
+  _id: string;
+  deletedBy: string;
+  lastMessage: lastMessageType;
+  participant: UserDataType;
+};
+
 const Messages = () => {
   const { accessUser } = useSelector(authUser);
-  const [value, setValue] = useState<UserDataType[]>();
+  const [value, setValue] = useState<InboxType[]>();
 
   useEffect(() => {
     async function getData() {

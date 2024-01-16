@@ -13,6 +13,10 @@ const CustomNavbar: React.FC = () => {
   useEffect(() => {
     if (accessUser?.id) {
       socket.emit("login", accessUser.id);
+      socket.auth = {
+        authId: accessUser.id,
+      };
+      socket.connect();
     }
   }, [accessUser]);
 

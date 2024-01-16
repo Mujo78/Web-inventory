@@ -31,7 +31,7 @@ const DashSidebar: React.FC = () => {
   const { accessUser } = useSelector(authUser);
 
   const onLogOut = () => {
-    socket.emit("logout");
+    socket.emit("logout", accessUser?.id);
 
     dispatch(logout());
     dispatch(reset());
