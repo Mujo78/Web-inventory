@@ -5,11 +5,11 @@ import { useSelector } from "react-redux";
 import { authUser } from "../../features/auth/authSlice";
 import axios from "axios";
 
-type lastMessageType = {
+export type lastMessageType = {
   senderId: string;
   content: string;
   isRead: boolean;
-  date: Date;
+  createdAt: Date;
 };
 
 type UserDataType = {

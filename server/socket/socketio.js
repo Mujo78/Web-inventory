@@ -1,13 +1,17 @@
-const Inbox = require("./models/inbox");
-const Message = require("./models/message");
-const User = require("./models/user");
+const Inbox = require("../models/inbox");
+const Message = require("../models/message");
+const User = require("../models/user");
+const { v4: uuidv4 } = require("uuid");
 
 module.exports = function (io) {
   io.on("connection", (socket) => {
+    let onlineUsers = [];
     console.log("User connected!");
     socket.on("login", (userId) => {
       if (userId) {
+        onlineUsers.push(socket.id);
         console.log("User connected: ", socket.id);
+        io.emit("updateUserStatus", { userId, status: "online" });
       } else {
         console.log("Socket: No user with id: ", userId);
       }
@@ -22,7 +26,9 @@ module.exports = function (io) {
           },
           { new: true }
         );
+        onlineUsers.pop(socket.id);
 
+        io.emit("updateUserStatus", { userId, status: "offline" });
         if (userFound) {
           socket.disconnect();
           console.log("User disconnected: ", socket.id);
@@ -40,7 +46,6 @@ module.exports = function (io) {
         ],
       });
 
-      console.log(inbox);
       if (!inbox) {
         inbox = await Inbox.create({ participants: [senderId, receiverId] });
       }
@@ -48,37 +53,37 @@ module.exports = function (io) {
       const roomId = inbox._id.toString();
       socket.join(roomId);
 
-      io.to(roomId).emit("message", {
-        from: senderId,
-        content,
+      const usersInRoom = await io.in(roomId).fetchSockets();
+      const users = [];
+      usersInRoom.forEach((socket) => {
+        users.push(socket.handshake.auth.authId);
       });
 
-      /*
-      const newMmessage = await Message.create({
+      const messageToSend = {
+        _id: uuidv4(),
+        senderId,
         content,
+        isRead: users.includes(receiverId),
+        createdAt: new Date(),
+      };
+      console.log(messageToSend);
+      io.to(roomId).emit("message", messageToSend);
+
+      io.emit("lastMessageHere", { messageToSend, roomId });
+
+      await Message.create({
+        content,
+        isRead: messageToSend.isRead,
         senderId,
         receiverId,
         inboxId: inbox._id,
       });
 
-      inbox.lastMessage = {
-        senderId,
-        content,
-        isRead: false,
-        date: newMmessage.createdAt,
-      };
+      inbox.lastMessage = messageToSend;
 
       await inbox.save();
-      
 
-      io.to(room).emit("message", {
-        from: senderId,
-        content,
-      });
-
-
-      console.log({ inbox });
-      */
+      console.log(inbox.lastMessage);
     });
 
     socket.on("joinRoom", async ({ receiverId }) => {

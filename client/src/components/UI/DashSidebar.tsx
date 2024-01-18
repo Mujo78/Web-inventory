@@ -21,6 +21,14 @@ const customTheme: CustomFlowbiteTheme["sidebar"] = {
     inner:
       "h-full overflow-y-auto overflow-x-hidden bg-green-500 py-0 px-0 dark:bg-gray-800",
   },
+  item: {
+    base: "flex items-center transition-all duration-300 justify-center rounded-lg p-2 !text-white font-normal hover:!text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700",
+    active: "bg-gray-100 !text-gray-900 dark:bg-gray-700",
+    icon: {
+      base: "h-6 w-6 flex-shrink-0 transition-all duration-100 hover:!text-gray-900 dark:text-gray-400 hover:!text-white",
+      active: "!text-gray-700 hover:!text-gray-900 dark:text-gray-100",
+    },
+  },
 };
 
 const DashSidebar: React.FC = () => {

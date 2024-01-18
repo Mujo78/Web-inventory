@@ -7,7 +7,6 @@ const dotenv = require("dotenv").config();
 const port = process.env.PORT || 3001;
 const connectDB = require("./config/db");
 const { errorHandler } = require("./middleware/error-handler");
-const chatSystem = require("./socketio");
 
 connectDB();
 
@@ -20,7 +19,7 @@ const io = new Server(server, {
   },
 });
 
-require("./socketio")(io);
+require("./socket/socketio")(io);
 
 app.use("/api/", require("./routes/role-routes"));
 app.use("/api/", require("./routes/person-routes"));

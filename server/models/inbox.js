@@ -11,6 +11,7 @@ const inboxSchema = new mongoose.Schema(
     deletedBy: {
       type: mongoose.Types.ObjectId,
       ref: "User",
+      required: false,
     },
     lastMessage: {
       senderId: {
@@ -19,7 +20,7 @@ const inboxSchema = new mongoose.Schema(
       },
       content: String,
       isRead: Boolean,
-      date: Date,
+      createdAt: Date,
     },
   },
   {
