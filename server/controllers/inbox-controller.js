@@ -26,7 +26,7 @@ const getMyInbox = asyncHandler(async (req, res) => {
 
 const getInboxMessages = asyncHandler(async (req, res) => {
   const userId = req.user.id;
-  const { receiverId } = req.body;
+  const receiverId = req.params.userId;
 
   const inbox = await Inbox.findOne({
     $or: [

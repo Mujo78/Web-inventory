@@ -4,8 +4,9 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import socket from "../../socket";
 import { InboxType, lastMessageType } from "./Messages";
 import { convertTimeMessage } from "../../utilities/chatHelpers";
+import { formatUserName } from "../../helpers/UserSideFunctions";
+import { StatusType } from "./Chat";
 
-type StatusType = "away" | "busy" | "offline" | "online" | undefined;
 type LastMessagesType = Record<string, lastMessageType>;
 
 const PersonMessage: React.FC<InboxType> = ({
@@ -90,7 +91,7 @@ const PersonMessage: React.FC<InboxType> = ({
       />
       <div className="flex items-center justify-between w-full">
         <div className="flex flex-col gap-2">
-          <h1 className="font-semibold">{username}</h1>
+          <h1 className="font-semibold">{formatUserName(username)}</h1>
           <span className="line-clamp-1">
             {lastMessagesState[inboxId].content}
           </span>

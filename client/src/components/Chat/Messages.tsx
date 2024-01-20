@@ -4,6 +4,7 @@ import PersonMessage from "./PersonMessage";
 import { useSelector } from "react-redux";
 import { authUser } from "../../features/auth/authSlice";
 import axios from "axios";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 export type lastMessageType = {
   senderId: string;
@@ -12,7 +13,7 @@ export type lastMessageType = {
   createdAt: Date;
 };
 
-type UserDataType = {
+export type UserDataType = {
   _id: string;
   username: string;
   status: "away" | "busy" | "offline" | "online" | undefined;
@@ -28,6 +29,9 @@ export type InboxType = {
 const Messages = () => {
   const { accessUser } = useSelector(authUser);
   const [value, setValue] = useState<InboxType[]>();
+  const { receiverId } = useParams();
+  const location = useLocation().pathname;
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function getData() {
@@ -44,6 +48,12 @@ const Messages = () => {
       getData();
     }
   }, [accessUser]);
+
+  useEffect(() => {
+    if (!receiverId && value) {
+      navigate(`${location}/${value[0].participant._id}`);
+    }
+  }, [location, navigate, value, receiverId]);
 
   return (
     <div className="h-[89vh] w-full flex flex-col px-3 py-2 items-start gap-6">

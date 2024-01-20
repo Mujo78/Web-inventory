@@ -66,7 +66,7 @@ module.exports = function (io) {
         isRead: users.includes(receiverId),
         createdAt: new Date(),
       };
-      console.log(messageToSend);
+
       io.to(roomId).emit("message", messageToSend);
 
       io.emit("lastMessageHere", { messageToSend, roomId });
@@ -82,8 +82,6 @@ module.exports = function (io) {
       inbox.lastMessage = messageToSend;
 
       await inbox.save();
-
-      console.log(inbox.lastMessage);
     });
 
     socket.on("joinRoom", async ({ receiverId }) => {
@@ -105,6 +103,12 @@ module.exports = function (io) {
 
         socket.join(room);
         console.log(senderId, " joined ", room);
+
+        await Message.updateMany(
+          { inboxId: inbox._id, senderId: receiverId },
+          { $set: { isRead: true } },
+          { new: true }
+        );
       } else {
         socket.emit("noPreviousMessages", { receiverId });
       }

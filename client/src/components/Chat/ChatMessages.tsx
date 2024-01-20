@@ -12,13 +12,14 @@ export type MessageType = {
   content: string;
   senderId: string;
   receiverId: string;
-  isRead?: boolean;
-  createdAt?: Date;
+  isRead: boolean;
+  createdAt: Date;
 };
 
 const ChatMessages = () => {
   const [messages, setMessages] = useState<MessageType[]>([]);
   const [infoMessage, setInfoMessage] = useState<string>();
+  const [loading, setLoading] = useState<boolean>(false);
   const { accessUser } = useSelector(authUser);
   const { receiverId } = useParams();
 
@@ -26,11 +27,17 @@ const ChatMessages = () => {
     async function getChatHistory() {
       try {
         if (accessUser && receiverId) {
+          setLoading(true);
           const res = await getInboxChat(accessUser?.accessToken, receiverId);
           setMessages(res);
+
+          setLoading(false);
         }
       } catch (error: any) {
         setInfoMessage(error);
+        setLoading(false);
+      } finally {
+        setLoading(false);
       }
     }
 
@@ -56,20 +63,21 @@ const ChatMessages = () => {
 
   return (
     <>
-      <div className="flex flex-col gap-3 w-full p-3">
-        {messages.length > 0 ? (
+      <div className="transition-all duration-300 w-full px-3 py-3 flex flex-col gap-2">
+        {loading ? (
+          <CustomSpinner />
+        ) : messages.length > 0 ? (
           messages.map((value) => (
             <TextMessage
               key={value._id}
-              receiver={value.receiverId}
+              createdAt={value.createdAt}
               message={value.content}
               sender={value.senderId}
+              isRead={value.isRead}
             />
           ))
-        ) : messages ? (
-          <CustomSpinner />
         ) : (
-          <p>{infoMessage}</p>
+          infoMessage && <p>{infoMessage}</p>
         )}
       </div>
     </>

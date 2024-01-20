@@ -7,5 +7,5 @@ const {
 const router = express.Router();
 
 router.get("/inbox", authMiddleware, getMyInbox);
-router.post("/inbox-messages", authMiddleware, getInboxMessages);
+router.get("/inbox-messages/:userId", authMiddleware, getInboxMessages);
 module.exports = router;

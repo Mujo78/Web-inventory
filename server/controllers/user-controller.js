@@ -15,6 +15,15 @@ const getAllUsers = asyncHandler(async (req, res) => {
   return res.status(400).json("There are no available users!");
 });
 
+const getUserInfo = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.userId).select("username status");
+
+  if (!user)
+    return res.status(400).json("There was an error, please try again latter!");
+
+  return res.status(200).json(user);
+});
+
 const login = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
@@ -110,4 +119,5 @@ module.exports = {
   changePassword,
   resignation,
   getAllUsers,
+  getUserInfo,
 };

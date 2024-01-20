@@ -5,6 +5,7 @@ const {
   changePassword,
   resignation,
   getAllUsers,
+  getUserInfo,
 } = require("../controllers/user-controller");
 const validate = require("../middleware/validate");
 const { loginUserValidator } = require("../validators/user-validator");
@@ -12,6 +13,7 @@ const { authMiddleware } = require("../middleware/auth-middleware");
 const { adminCheck } = require("../middleware/admin-check");
 
 router.get("/users", authMiddleware, getAllUsers);
+router.get("/user/:userId", authMiddleware, getUserInfo);
 router.post("/login", loginUserValidator, validate, login);
 router.put("/change-password", authMiddleware, changePassword);
 router.post("/resignation/:id", authMiddleware, resignation);
