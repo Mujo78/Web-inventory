@@ -7,7 +7,7 @@ const getMyInbox = asyncHandler(async (req, res) => {
   const userId = req.user.id;
 
   const inbox = await Inbox.find({
-    participants: { $in: [userId] },
+    $and: [{ deletedBy: { $ne: userId } }, { participants: { $in: [userId] } }],
   })
     .populate({ path: "participants", select: "_id username status" })
     .lean();
@@ -35,9 +35,9 @@ const getInboxMessages = asyncHandler(async (req, res) => {
     ],
   });
 
-  if (inbox) {
+  if (inbox && inbox.deletedBy !== userId) {
     const messages = await Message.find({ inboxId: inbox._id })
-      .select("-inboxId -updatedAt")
+      .select("-updatedAt")
       .sort({
         createdAt: 1,
       });
@@ -48,7 +48,34 @@ const getInboxMessages = asyncHandler(async (req, res) => {
   return res.status(400).json("There was an error please try again later!");
 });
 
+const deleteInboxWithPerson = asyncHandler(async (req, res) => {
+  const userId = req.user.id;
+  const receiverId = req.params.userId;
+
+  const inbox = await Inbox.findOne({
+    $or: [
+      { participants: [userId, receiverId] },
+      { participants: [receiverId, userId] },
+    ],
+  });
+
+  if (inbox) {
+    if (!inbox.deletedBy) {
+      inbox.deletedBy = userId;
+      await inbox.save();
+    } else {
+      await Message.deleteMany({ inboxId: inbox._id });
+      await Inbox.findByIdAndDelete(inbox._id);
+    }
+
+    return res.status(200).json("Successfully deleted!");
+  }
+
+  return res.status(400).json("There was an error, please try again latter!");
+});
+
 module.exports = {
   getMyInbox,
   getInboxMessages,
+  deleteInboxWithPerson,
 };

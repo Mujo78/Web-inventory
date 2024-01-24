@@ -8,7 +8,7 @@ import { useParams } from "react-router-dom";
 import { formatUserName, getUserInfo } from "../../helpers/UserSideFunctions";
 import { useSelector } from "react-redux";
 import { authUser } from "../../features/auth/authSlice";
-import { UserDataType } from "./Messages";
+import { UserDataType } from "../../features/chat/chatSlice";
 import CustomSpinner from "../UI/CustomSpinner";
 
 export type StatusType = "away" | "busy" | "offline" | "online" | undefined;
@@ -19,7 +19,7 @@ const Chat = () => {
   const [infoMessage, setInfoMessage] = useState<string>("");
   const [userInfo, setUserInfo] = useState<UserDataType>();
   const [loading, setLoading] = useState<boolean>(false);
-  const [status, setStatus] = useState<StatusType>();
+  const [status, setStatus] = useState<StatusType>(userInfo?.status);
   const { accessUser } = useSelector(authUser);
 
   const onChange = (e: React.FormEvent<HTMLInputElement>) => {
@@ -46,7 +46,9 @@ const Chat = () => {
         if (accessUser && receiverId) {
           setLoading(true);
           const res = await getUserInfo(accessUser?.accessToken, receiverId);
+
           setUserInfo(res);
+          setStatus(res.status);
 
           setLoading(false);
         }
@@ -61,10 +63,6 @@ const Chat = () => {
     getUser();
   }, [receiverId, accessUser]);
 
-  useEffect(() => {
-    if (userInfo?.status) setStatus(status);
-  }, [userInfo?.status, status]);
-
   const deleteChat = () => {
     console.log("object");
   };
@@ -73,6 +71,10 @@ const Chat = () => {
     socket.on("updateUserStatus", ({ userId, status }) => {
       if (userInfo?._id === userId) setStatus(status);
     });
+
+    return () => {
+      socket.off("updateUserStatus");
+    };
   }, [userInfo?._id]);
 
   return (

@@ -109,6 +109,8 @@ module.exports = function (io) {
           { $set: { isRead: true } },
           { new: true }
         );
+
+        io.to(room).emit("updateMessageStatusRead", room);
       } else {
         socket.emit("noPreviousMessages", { receiverId });
       }

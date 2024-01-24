@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { convertTimeMessage } from "../../utilities/chatHelpers";
 
@@ -18,7 +18,12 @@ const TextMessage: React.FC<SingleMessageType> = ({
   const { id } = useParams();
 
   const [see, SetSee] = useState<boolean>(false);
+  const [isReadState, setIsReadState] = useState<boolean>(isRead);
   const isMyMessage = id === sender;
+
+  useEffect(() => {
+    if (isRead) setIsReadState(isRead);
+  }, [isRead]);
 
   return (
     <>
@@ -39,7 +44,7 @@ const TextMessage: React.FC<SingleMessageType> = ({
           className={`${isMyMessage ? "ml-auto" : "mr-auto"}
           text-xs text-gray-800 transform transition-transform ease-out translate-y duration-700`}
         >
-          {isRead
+          {isReadState
             ? isMyMessage
               ? "Seen"
               : `Received - ${convertTimeMessage(createdAt)}`

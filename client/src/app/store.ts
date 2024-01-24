@@ -4,10 +4,12 @@ import suppReducer from "../features/supplier/suppSlice";
 import materialReducer from "../features/material/materialSlice";
 import processReducer from "../features/process/processSlice";
 import productReducer from "../features/product/productSlice";
+import chatReducer from "../features/chat/chatSlice";
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
+    chat: chatReducer,
     supp: suppReducer,
     matt: materialReducer,
     process: processReducer,

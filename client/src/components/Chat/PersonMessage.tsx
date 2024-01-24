@@ -2,50 +2,59 @@ import { Avatar } from "flowbite-react";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import socket from "../../socket";
-import { InboxType, lastMessageType } from "./Messages";
+import {
+  InboxType,
+  addLastMessage,
+  chat,
+  updateMessageStatus,
+} from "../../features/chat/chatSlice";
 import { convertTimeMessage } from "../../utilities/chatHelpers";
 import { formatUserName } from "../../helpers/UserSideFunctions";
 import { StatusType } from "./Chat";
+import { useSelector } from "react-redux";
+import { useAppDispatch } from "../../app/hooks";
 
-type LastMessagesType = Record<string, lastMessageType>;
-
-const PersonMessage: React.FC<InboxType> = ({
-  lastMessage,
-  participant,
-  _id: inboxId,
-}) => {
+const PersonMessage: React.FC<InboxType> = ({ participant, _id: inboxId }) => {
+  const { lastMessagesState } = useSelector(chat);
+  const dispatch = useAppDispatch();
   const { _id, status, username } = participant;
-
   const [statusUser, setStatusUser] = useState<StatusType>(status);
-  const [lastMessagesState, setLastMessagesState] = useState<LastMessagesType>({
-    [inboxId]: lastMessage,
-  });
+
+  const [newMessage, setNewMessage] = useState<boolean>(
+    lastMessagesState[inboxId].isRead
+  );
   const navigate = useNavigate();
   const locationPathname = useLocation().pathname;
 
-  const { id, receiverId: recId } = useParams();
+  const { receiverId: recId } = useParams();
 
   useEffect(() => {
     if (recId !== undefined) {
       const receiverId = recId;
       socket.emit("joinRoom", { receiverId });
+      dispatch(updateMessageStatus(inboxId));
     }
-  }, [_id, recId]);
+  }, [_id, recId, dispatch, inboxId]);
 
   useEffect(() => {
     socket.on("updateUserStatus", ({ userId, status }) => {
       if (_id === userId) setStatusUser(status);
     });
+
+    return () => {
+      socket.off("updateUserStatus");
+    };
   }, [_id]);
 
   useEffect(() => {
     socket.on("lastMessageHere", ({ messageToSend, roomId }) => {
-      setLastMessagesState((prev) => ({
-        ...prev,
-        [roomId]: messageToSend,
-      }));
+      dispatch(addLastMessage({ messageToSend, roomId }));
     });
-  }, [_id, recId, lastMessage]);
+
+    return () => {
+      socket.off("lastMessageHere");
+    };
+  }, [dispatch]);
 
   const sendMessageTo = () => {
     if (_id !== recId) {
@@ -55,22 +64,14 @@ const PersonMessage: React.FC<InboxType> = ({
         locationPathname.indexOf("/t") + 2
       );
       socket.emit("joinRoom", { receiverId });
-      if (!lastMessagesState[inboxId].isRead) {
-        setLastMessagesState((prev) => ({
-          ...prev,
-          [inboxId]: {
-            ...prev[inboxId],
-            isRead: true,
-          },
-        }));
+      if (!lastMessagesState[inboxId]?.isRead) {
+        setNewMessage(false);
+      } else {
+        setNewMessage(true);
       }
-      newMessage = lastMessagesState[inboxId].isRead ? false : true;
       navigate(`${baseLocationPath}/${receiverId}`);
     }
   };
-
-  let newMessage =
-    lastMessagesState[inboxId].isRead && id !== _id ? false : true;
 
   return (
     <div
@@ -93,15 +94,15 @@ const PersonMessage: React.FC<InboxType> = ({
         <div className="flex flex-col gap-2">
           <h1 className="font-semibold">{formatUserName(username)}</h1>
           <span className="line-clamp-1">
-            {lastMessagesState[inboxId].content}
+            {lastMessagesState[inboxId]?.content}
           </span>
         </div>
         <div className="flex flex-col gap-4 items-end">
-          {newMessage && (
+          {newMessage && _id === recId && (
             <div className="h-3 w-3 bg-blue-500 p-2 rounded-full"></div>
           )}
           <span>
-            {convertTimeMessage(lastMessagesState[inboxId].createdAt)}
+            {convertTimeMessage(lastMessagesState[inboxId]?.createdAt)}
           </span>
         </div>
       </div>
