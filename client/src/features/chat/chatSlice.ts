@@ -9,7 +9,7 @@ export type MessageType = {
   receiverId: string;
   isRead: boolean;
   createdAt: Date;
-  inboxId?: string;
+  inboxId: string;
 };
 
 export type lastMessageType = {
@@ -68,13 +68,13 @@ export const getMyInbox = createAsyncThunk<
 
 export const getInboxChatHistory = createAsyncThunk<
   MessageType[],
-  { receiverId: string },
+  { inboxId: string },
   { state: RootState }
->("chat/inbox-history", async ({ receiverId }, thunkAPI) => {
+>("chat/inbox-history", async ({ inboxId }, thunkAPI) => {
   try {
     const token = thunkAPI.getState().auth.accessUser?.accessToken as string;
     const safeToken = token || "";
-    return await chatServices.getInboxChat(safeToken, receiverId);
+    return await chatServices.getInboxChat(safeToken, inboxId);
   } catch (error: any) {
     const message = error.response;
 
@@ -94,7 +94,9 @@ export const chatSlice = createSlice({
       state.messages = [...state.messages, action.payload];
     },
     updateMessageStatus: (state, action) => {
-      state.lastMessagesState[action.payload].isRead = true;
+      if (state.lastMessagesState[action.payload]) {
+        state.lastMessagesState[action.payload].isRead = true;
+      }
 
       state.messages.forEach((m) => {
         if (m.inboxId === action.payload && !m.isRead) {

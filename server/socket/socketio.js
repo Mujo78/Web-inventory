@@ -36,15 +36,10 @@ module.exports = function (io) {
       }
     });
 
-    socket.on("sendMessage", async ({ receiverId, content }) => {
+    socket.on("sendMessage", async ({ receiverId, inboxId, content }) => {
       const senderId = socket.handshake.auth.authId;
 
-      let inbox = await Inbox.findOne({
-        $or: [
-          { participants: [senderId, receiverId] },
-          { participants: [receiverId, senderId] },
-        ],
-      });
+      let inbox = await Inbox.findById(inboxId);
 
       if (!inbox) {
         inbox = await Inbox.create({ participants: [senderId, receiverId] });
@@ -63,6 +58,7 @@ module.exports = function (io) {
         _id: uuidv4(),
         senderId,
         content,
+        inboxId: roomId,
         isRead: users.includes(receiverId),
         createdAt: new Date(),
       };
@@ -84,36 +80,43 @@ module.exports = function (io) {
       await inbox.save();
     });
 
-    socket.on("joinRoom", async ({ receiverId }) => {
-      const senderId = socket.handshake.auth.authId;
+    socket.on("joinRoom", async ({ inboxId }) => {
+      const userId = socket.handshake.auth.authId;
 
-      const inbox = await Inbox.findOne({
-        $or: [
-          { participants: [senderId, receiverId] },
-          { participants: [receiverId, senderId] },
-        ],
-      });
+      const inbox = await Inbox.findById(inboxId);
 
       if (inbox) {
         const room = inbox._id.toString();
 
         socket.rooms.forEach((lastRoom) => {
-          if (lastRoom !== room) socket.leave(lastRoom);
+          if (lastRoom !== room) {
+            socket.leave(lastRoom);
+          }
         });
 
         socket.join(room);
-        console.log(senderId, " joined ", room);
+        console.log(userId, " joined ", room);
 
         await Message.updateMany(
-          { inboxId: inbox._id, senderId: receiverId },
+          { inboxId: room, receiverId: userId },
           { $set: { isRead: true } },
           { new: true }
         );
 
         io.to(room).emit("updateMessageStatusRead", room);
       } else {
-        socket.emit("noPreviousMessages", { receiverId });
+        socket.emit("noPreviousMessages", { userId });
       }
+    });
+
+    socket.on("typingMessage", (room) => {
+      const userId = socket.handshake.auth.authId;
+      socket.in(room).emit("userTyping", userId);
+    });
+
+    socket.on("stopTyping", (room) => {
+      const userId = socket.handshake.auth.authId;
+      socket.in(room).emit("userStopedTyping", userId);
     });
 
     socket.on("disconnect", async () => {

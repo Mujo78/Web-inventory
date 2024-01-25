@@ -5,7 +5,11 @@ import { LuSendHorizonal } from "react-icons/lu";
 import socket from "../../socket";
 import ChatMessages from "./ChatMessages";
 import { useParams } from "react-router-dom";
-import { formatUserName, getUserInfo } from "../../helpers/UserSideFunctions";
+import {
+  formatUserName,
+  getUserInfo,
+  getUserParticipantInfo,
+} from "../../helpers/UserSideFunctions";
 import { useSelector } from "react-redux";
 import { authUser } from "../../features/auth/authSlice";
 import { UserDataType } from "../../features/chat/chatSlice";
@@ -14,7 +18,7 @@ import CustomSpinner from "../UI/CustomSpinner";
 export type StatusType = "away" | "busy" | "offline" | "online" | undefined;
 
 const Chat = () => {
-  const { id, receiverId } = useParams();
+  const { inboxId } = useParams();
   const [message, setMessage] = useState<string>("");
   const [infoMessage, setInfoMessage] = useState<string>("");
   const [userInfo, setUserInfo] = useState<UserDataType>();
@@ -29,11 +33,11 @@ const Chat = () => {
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (message !== "" && id && receiverId) {
+    if (message !== "" && inboxId && userInfo) {
       socket.emit("sendMessage", {
         content: message,
-        receiverId: receiverId,
-        senderId: id,
+        receiverId: userInfo?._id,
+        inboxId,
       });
 
       setMessage("");
@@ -43,9 +47,12 @@ const Chat = () => {
   useEffect(() => {
     async function getUser() {
       try {
-        if (accessUser && receiverId) {
+        if (accessUser && inboxId) {
           setLoading(true);
-          const res = await getUserInfo(accessUser?.accessToken, receiverId);
+          const res = await getUserParticipantInfo(
+            accessUser?.accessToken,
+            inboxId
+          );
 
           setUserInfo(res);
           setStatus(res.status);
@@ -61,7 +68,7 @@ const Chat = () => {
     }
 
     getUser();
-  }, [receiverId, accessUser]);
+  }, [inboxId, accessUser]);
 
   const deleteChat = () => {
     console.log("object");
@@ -76,6 +83,17 @@ const Chat = () => {
       socket.off("updateUserStatus");
     };
   }, [userInfo?._id]);
+
+  useEffect(() => {
+    if (inboxId) {
+      const room = inboxId;
+      if (message !== "") {
+        socket.emit("typingMessage", room);
+      } else {
+        socket.emit("stopTyping", room);
+      }
+    }
+  }, [message, inboxId]);
 
   return (
     <>

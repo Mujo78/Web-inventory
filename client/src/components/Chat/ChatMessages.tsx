@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import TextMessage from "./TextMessage";
 import socket from "../../socket";
 import { useSelector } from "react-redux";
@@ -13,16 +13,22 @@ import {
 } from "../../features/chat/chatSlice";
 import { useAppDispatch } from "../../app/hooks";
 
+type Props = {
+  isTyping: boolean;
+};
+
 const ChatMessages = () => {
+  const [isTyping, setIsTyping] = useState<boolean>(false);
   const dispatch = useAppDispatch();
   const { accessUser } = useSelector(authUser);
-  const { receiverId } = useParams();
+  const { messages, status, message } = useSelector(chat);
+  const { inboxId } = useParams();
 
   useEffect(() => {
-    if (receiverId && accessUser) {
-      dispatch(getInboxChatHistory({ receiverId }));
+    if (inboxId && accessUser) {
+      dispatch(getInboxChatHistory({ inboxId }));
     }
-  }, [receiverId, accessUser, dispatch]);
+  }, [inboxId, accessUser, dispatch]);
 
   useEffect(() => {
     socket.on("message", (data) => {
@@ -33,33 +39,42 @@ const ChatMessages = () => {
       dispatch(updateMessageStatus(data));
     });
 
+    socket.on("userTyping", () => {
+      setIsTyping(true);
+    });
+    socket.on("userStopedTyping", () => {
+      setIsTyping(false);
+    });
+
     return () => {
       socket.off("message");
-      socket.off("updateMessageStatus");
+      socket.off("updateMessageStatusRead");
     };
-  }, [dispatch]);
-
-  const { messages, status, message } = useSelector(chat);
+  }, [dispatch, accessUser]);
 
   return (
     <>
       <div className="transition-all duration-300 w-full px-3 py-3 flex flex-col gap-2">
         {status === "start" ? (
           <CustomSpinner />
-        ) : messages.length > 0 ? (
-          messages.map((value) => (
-            <TextMessage
-              key={value._id}
-              createdAt={value.createdAt}
-              message={value.content}
-              sender={value.senderId}
-              isRead={value.isRead}
-            />
-          ))
-        ) : status !== "failed" ? (
+        ) : status === "failed" ? (
+          <p>{message}</p>
+        ) : status !== "idle" && messages.length !== 0 ? (
           <CustomSpinner />
         ) : (
-          <p>{message}</p>
+          <>
+            {messages.length > 0 &&
+              messages.map((value) => (
+                <TextMessage
+                  key={value._id}
+                  createdAt={value.createdAt}
+                  message={value.content}
+                  sender={value.senderId}
+                  isRead={value.isRead}
+                />
+              ))}
+            {isTyping && <p>Typing...</p>}
+          </>
         )}
       </div>
     </>

@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { useState } from "react";
 import { convertTimeMessage } from "../../utilities/chatHelpers";
+import { useSelector } from "react-redux";
+import { authUser } from "../../features/auth/authSlice";
 
 type SingleMessageType = {
   message: string;
@@ -15,15 +16,10 @@ const TextMessage: React.FC<SingleMessageType> = ({
   isRead,
   createdAt,
 }) => {
-  const { id } = useParams();
+  const { accessUser } = useSelector(authUser);
 
   const [see, SetSee] = useState<boolean>(false);
-  const [isReadState, setIsReadState] = useState<boolean>(isRead);
-  const isMyMessage = id === sender;
-
-  useEffect(() => {
-    if (isRead) setIsReadState(isRead);
-  }, [isRead]);
+  const isMyMessage = accessUser?.id === sender;
 
   return (
     <>
@@ -44,7 +40,7 @@ const TextMessage: React.FC<SingleMessageType> = ({
           className={`${isMyMessage ? "ml-auto" : "mr-auto"}
           text-xs text-gray-800 transform transition-transform ease-out translate-y duration-700`}
         >
-          {isReadState
+          {isRead
             ? isMyMessage
               ? "Seen"
               : `Received - ${convertTimeMessage(createdAt)}`

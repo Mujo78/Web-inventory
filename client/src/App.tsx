@@ -74,8 +74,8 @@ const router = createBrowserRouter(
           <Route path="edit-employee/:id" element={<EditEmployee />} />
         </Route>
 
-        <Route path="/messages/:id/t" element={<MessagesCenter />}>
-          <Route path=":receiverId?" element={<Chat />} />
+        <Route path="/messages/t" element={<MessagesCenter />}>
+          <Route path=":inboxId?" element={<Chat />} />
         </Route>
       </Route>
       <Route path="*" element={<ErrorPage />} />

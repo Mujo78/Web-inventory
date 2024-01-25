@@ -10,7 +10,7 @@ import CustomSpinner from "../UI/CustomSpinner";
 const Messages = () => {
   const dispatch = useAppDispatch();
   const { status, inbox, message } = useSelector(chat);
-  const { receiverId } = useParams();
+  const { inboxId } = useParams();
   const location = useLocation().pathname;
   const navigate = useNavigate();
 
@@ -19,10 +19,10 @@ const Messages = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (!receiverId && inbox.length > 0) {
-      navigate(`${location}/${inbox[0].participant._id}`);
+    if (!inboxId && inbox.length > 0) {
+      navigate(`${location}/${inbox[0]._id}`);
     }
-  }, [location, navigate, inbox, receiverId]);
+  }, [location, navigate, inbox, inboxId]);
 
   return (
     <div className="h-[89vh] w-full flex flex-col px-3 py-2 items-start gap-6">

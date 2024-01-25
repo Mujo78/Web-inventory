@@ -19,22 +19,20 @@ const PersonMessage: React.FC<InboxType> = ({ participant, _id: inboxId }) => {
   const dispatch = useAppDispatch();
   const { _id, status, username } = participant;
   const [statusUser, setStatusUser] = useState<StatusType>(status);
-
   const [newMessage, setNewMessage] = useState<boolean>(
-    lastMessagesState[inboxId].isRead
+    lastMessagesState[inboxId]?.isRead ?? false
   );
   const navigate = useNavigate();
   const locationPathname = useLocation().pathname;
 
-  const { receiverId: recId } = useParams();
+  const { inboxId: roomId } = useParams();
 
   useEffect(() => {
-    if (recId !== undefined) {
-      const receiverId = recId;
-      socket.emit("joinRoom", { receiverId });
+    if (inboxId !== undefined) {
+      socket.emit("joinRoom", { inboxId });
       dispatch(updateMessageStatus(inboxId));
     }
-  }, [_id, recId, dispatch, inboxId]);
+  }, [dispatch, inboxId]);
 
   useEffect(() => {
     socket.on("updateUserStatus", ({ userId, status }) => {
@@ -57,19 +55,18 @@ const PersonMessage: React.FC<InboxType> = ({ participant, _id: inboxId }) => {
   }, [dispatch]);
 
   const sendMessageTo = () => {
-    if (_id !== recId) {
-      const receiverId = _id;
+    if (roomId !== inboxId) {
       const baseLocationPath = locationPathname.slice(
         0,
         locationPathname.indexOf("/t") + 2
       );
-      socket.emit("joinRoom", { receiverId });
+      socket.emit("joinRoom", { inboxId });
       if (!lastMessagesState[inboxId]?.isRead) {
         setNewMessage(false);
       } else {
         setNewMessage(true);
       }
-      navigate(`${baseLocationPath}/${receiverId}`);
+      navigate(`${baseLocationPath}/${inboxId}`);
     }
   };
 
@@ -77,7 +74,7 @@ const PersonMessage: React.FC<InboxType> = ({ participant, _id: inboxId }) => {
     <div
       onClick={sendMessageTo}
       className={`${
-        _id === recId
+        roomId === inboxId
           ? "bg-green-100 hover:bg-green-200"
           : newMessage
           ? "bg-gray-200 hover:bg-gray-300"
@@ -98,12 +95,14 @@ const PersonMessage: React.FC<InboxType> = ({ participant, _id: inboxId }) => {
           </span>
         </div>
         <div className="flex flex-col gap-4 items-end">
-          {newMessage && _id === recId && (
+          {newMessage && roomId === inboxId && (
             <div className="h-3 w-3 bg-blue-500 p-2 rounded-full"></div>
           )}
-          <span>
-            {convertTimeMessage(lastMessagesState[inboxId]?.createdAt)}
-          </span>
+          {lastMessagesState[inboxId]?.createdAt && (
+            <span>
+              {convertTimeMessage(lastMessagesState[inboxId]?.createdAt)}
+            </span>
+          )}
         </div>
       </div>
     </div>

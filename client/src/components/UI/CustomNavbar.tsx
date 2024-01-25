@@ -30,7 +30,7 @@ const CustomNavbar: React.FC = () => {
           <p>{date}</p>
         </div>
         <div className="flex w-1/3 items-center justify-end gap-4">
-          <Link to={`/messages/${accessUser?.id}/t`}>
+          <Link to={`/messages/t`}>
             <LuMessageSquare className="w-[30px] h-[30px]" />
           </Link>
           <Avatar alt="s" size="sm" stacked rounded />

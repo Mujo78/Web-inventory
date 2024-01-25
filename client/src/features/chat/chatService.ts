@@ -10,8 +10,8 @@ const getInboxes = async (token: string) => {
   return res.data;
 };
 
-const getInboxChat = async (token: string, receiverId: string) => {
-  const res = await axios.get(`/api/inbox-messages/${receiverId}`, {
+const getInboxChat = async (token: string, inboxId: string) => {
+  const res = await axios.get(`/api/inbox-messages/${inboxId}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

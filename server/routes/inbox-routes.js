@@ -4,11 +4,17 @@ const {
   getMyInbox,
   getInboxMessages,
   deleteInboxWithPerson,
+  getUserParticipantInfo,
 } = require("../controllers/inbox-controller");
 const router = express.Router();
 
 router.get("/inbox", authMiddleware, getMyInbox);
-router.get("/inbox-messages/:userId", authMiddleware, getInboxMessages);
-router.patch("/delete-inbox/:userId", authMiddleware, deleteInboxWithPerson);
+router.get(
+  "/inbox-participant/:inboxId",
+  authMiddleware,
+  getUserParticipantInfo
+);
+router.get("/inbox-messages/:inboxId", authMiddleware, getInboxMessages);
+router.patch("/delete-inbox/:inboxId", authMiddleware, deleteInboxWithPerson);
 
 module.exports = router;
