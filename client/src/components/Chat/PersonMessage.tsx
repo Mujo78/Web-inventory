@@ -7,18 +7,19 @@ import {
   addLastMessage,
   chat,
   updateMessageStatus,
+  updateUserStatus,
 } from "../../features/chat/chatSlice";
 import { convertTimeMessage } from "../../utilities/chatHelpers";
 import { formatUserName } from "../../helpers/UserSideFunctions";
-import { StatusType } from "./Chat";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "../../app/hooks";
+import { StatusType } from "./Chat";
 
 const PersonMessage: React.FC<InboxType> = ({ participant, _id: inboxId }) => {
   const { lastMessagesState } = useSelector(chat);
   const dispatch = useAppDispatch();
   const { _id, status, username } = participant;
-  const [statusUser, setStatusUser] = useState<StatusType>(status);
+  const [userStatus, setUserStatus] = useState<StatusType>(status);
   const [newMessage, setNewMessage] = useState<boolean>(
     lastMessagesState[inboxId]?.isRead ?? false
   );
@@ -36,13 +37,16 @@ const PersonMessage: React.FC<InboxType> = ({ participant, _id: inboxId }) => {
 
   useEffect(() => {
     socket.on("updateUserStatus", ({ userId, status }) => {
-      if (_id === userId) setStatusUser(status);
+      if (_id === userId) {
+        setUserStatus(status);
+        dispatch(updateUserStatus({ status, userId: _id }));
+      }
     });
 
     return () => {
       socket.off("updateUserStatus");
     };
-  }, [_id]);
+  }, [status, _id, dispatch, inboxId]);
 
   useEffect(() => {
     socket.on("lastMessageHere", ({ messageToSend, roomId }) => {
@@ -84,7 +88,7 @@ const PersonMessage: React.FC<InboxType> = ({ participant, _id: inboxId }) => {
       <Avatar
         size="md"
         rounded
-        status={statusUser}
+        status={userStatus}
         statusPosition="bottom-right"
       />
       <div className="flex items-center justify-between w-full">

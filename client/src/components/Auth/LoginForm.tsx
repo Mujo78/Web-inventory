@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useEffect } from "react";
 import { Label, Button } from "flowbite-react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
@@ -8,6 +8,7 @@ import { useAppDispatch } from "../../app/hooks";
 import { authUser, login, reset } from "../../features/auth/authSlice";
 import { classNm } from "../../pages/LandingPage";
 import { useNavigate } from "react-router-dom";
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 
 type User = {
   username: string;
@@ -23,6 +24,7 @@ const LoginForm = () => {
   };
   const dispatch = useAppDispatch();
   const { accessUser, status, message } = useSelector(authUser);
+  const [show, setShow] = useState<boolean>(false);
 
   useEffect(() => {
     if (accessUser || status === "idle") {
@@ -38,6 +40,10 @@ const LoginForm = () => {
 
   const handleSubmit = (values: User) => {
     dispatch(login(values));
+  };
+
+  const toggle = () => {
+    setShow((n) => !n);
   };
 
   return (
@@ -80,13 +86,27 @@ const LoginForm = () => {
               <div className="mb-2 block">
                 <Label htmlFor="password" value="Password*" />
               </div>
-              <Field
-                id="password"
-                type="password"
-                name="password"
-                className={classNm}
-                placeholder="********"
-              />
+              <div className="relative">
+                <Field
+                  id="password"
+                  type={show ? "text" : "password"}
+                  required
+                  name="password"
+                  className={classNm}
+                  placeholder="******************"
+                />
+                <button
+                  type="button"
+                  onClick={toggle}
+                  className="absolute right-2 bottom-2 top-2"
+                >
+                  {show ? (
+                    <FaRegEyeSlash className="h-[20px] w-[20px]" />
+                  ) : (
+                    <FaRegEye className="h-[20px] w-[20px]" />
+                  )}
+                </button>
+              </div>
               <div className="h-4">
                 {errors.password ? (
                   <ErrorMessage

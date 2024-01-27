@@ -5,26 +5,25 @@ import { LuSendHorizonal } from "react-icons/lu";
 import socket from "../../socket";
 import ChatMessages from "./ChatMessages";
 import { useParams } from "react-router-dom";
-import {
-  formatUserName,
-  getUserInfo,
-  getUserParticipantInfo,
-} from "../../helpers/UserSideFunctions";
+import { formatUserName } from "../../helpers/UserSideFunctions";
 import { useSelector } from "react-redux";
-import { authUser } from "../../features/auth/authSlice";
-import { UserDataType } from "../../features/chat/chatSlice";
+import { chat, getInboxById } from "../../features/chat/chatSlice";
 import CustomSpinner from "../UI/CustomSpinner";
+import { useAppDispatch } from "../../app/hooks";
 
 export type StatusType = "away" | "busy" | "offline" | "online" | undefined;
 
 const Chat = () => {
   const { inboxId } = useParams();
   const [message, setMessage] = useState<string>("");
-  const [infoMessage, setInfoMessage] = useState<string>("");
-  const [userInfo, setUserInfo] = useState<UserDataType>();
-  const [loading, setLoading] = useState<boolean>(false);
-  const [status, setStatus] = useState<StatusType>(userInfo?.status);
-  const { accessUser } = useSelector(authUser);
+  const { selectedInbox, message: infoMessage, status } = useSelector(chat);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (inboxId) {
+      dispatch(getInboxById({ inboxId }));
+    }
+  }, [dispatch, inboxId]);
 
   const onChange = (e: React.FormEvent<HTMLInputElement>) => {
     setMessage(e.currentTarget.value);
@@ -33,10 +32,10 @@ const Chat = () => {
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (message !== "" && inboxId && userInfo) {
+    if (message !== "" && inboxId && selectedInbox) {
       socket.emit("sendMessage", {
         content: message,
-        receiverId: userInfo?._id,
+        receiverId: selectedInbox.participant?._id,
         inboxId,
       });
 
@@ -44,45 +43,9 @@ const Chat = () => {
     }
   };
 
-  useEffect(() => {
-    async function getUser() {
-      try {
-        if (accessUser && inboxId) {
-          setLoading(true);
-          const res = await getUserParticipantInfo(
-            accessUser?.accessToken,
-            inboxId
-          );
-
-          setUserInfo(res);
-          setStatus(res.status);
-
-          setLoading(false);
-        }
-      } catch (error: any) {
-        setInfoMessage(error);
-        setLoading(false);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    getUser();
-  }, [inboxId, accessUser]);
-
   const deleteChat = () => {
     console.log("object");
   };
-
-  useEffect(() => {
-    socket.on("updateUserStatus", ({ userId, status }) => {
-      if (userInfo?._id === userId) setStatus(status);
-    });
-
-    return () => {
-      socket.off("updateUserStatus");
-    };
-  }, [userInfo?._id]);
 
   useEffect(() => {
     if (inboxId) {
@@ -97,9 +60,9 @@ const Chat = () => {
 
   return (
     <>
-      {loading ? (
+      {status === "start" || status === "loading" ? (
         <CustomSpinner />
-      ) : userInfo ? (
+      ) : selectedInbox ? (
         <div className="pl-3 flex flex-col justify-between overflow-hidden h-full">
           <header className="border-b h-20 border-gray-300">
             <div className="flex justify-between items-center p-5">
@@ -107,14 +70,18 @@ const Chat = () => {
                 <Avatar size="md" rounded statusPosition="bottom-right" />
                 <div>
                   <h1 className="font-semibold">
-                    {formatUserName(userInfo.username)}
+                    {formatUserName(selectedInbox.participant.username)}
                   </h1>
                   <span
                     className={
-                      status === "online" ? "text-green-600" : "text-gray-500"
+                      selectedInbox.participant.status === "online"
+                        ? "text-green-600"
+                        : "text-gray-500"
                     }
                   >
-                    {status === "online" ? "Active now" : "Offline"}
+                    {selectedInbox.participant.status === "online"
+                      ? "Active now"
+                      : "Offline"}
                   </span>
                 </div>
               </div>
@@ -147,7 +114,7 @@ const Chat = () => {
           </footer>
         </div>
       ) : (
-        !userInfo && <p>{infoMessage}</p>
+        status === "failed" && <p>{infoMessage}</p>
       )}
     </>
   );

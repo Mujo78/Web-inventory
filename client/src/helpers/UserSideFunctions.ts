@@ -10,16 +10,6 @@ export async function getUserInfo(token: string, userId: string) {
   return res.data;
 }
 
-export async function getUserParticipantInfo(token: string, inboxId: string) {
-  const res = await axios.get(`/api/inbox-participant/${inboxId}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  return res.data;
-}
-
 function capitalize(word: string) {
   return word.charAt(0).toLocaleUpperCase() + word.slice(1, word.length);
 }

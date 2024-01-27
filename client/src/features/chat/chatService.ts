@@ -20,9 +20,20 @@ const getInboxChat = async (token: string, inboxId: string) => {
   return res.data;
 };
 
+const getInboxById = async (token: string, inboxId: string) => {
+  const res = await axios.get(`/api/inbox/${inboxId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return res.data;
+};
+
 const chatServices = {
   getInboxes,
   getInboxChat,
+  getInboxById,
 };
 
 export default chatServices;

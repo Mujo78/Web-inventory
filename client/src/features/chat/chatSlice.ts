@@ -25,6 +25,12 @@ export type UserDataType = {
   status: "away" | "busy" | "offline" | "online" | undefined;
 };
 
+export type SelectedInboxType = {
+  _id: string;
+  deletedBy: string;
+  participant: UserDataType;
+};
+
 export type InboxType = {
   _id: string;
   deletedBy: string;
@@ -37,6 +43,7 @@ type LastMessagesType = Record<string, lastMessageType>;
 type InitialStateType = {
   messages: MessageType[];
   inbox: InboxType[];
+  selectedInbox?: SelectedInboxType;
   lastMessagesState: LastMessagesType;
   status: "start" | "idle" | "loading" | "failed";
   message: string;
@@ -59,6 +66,22 @@ export const getMyInbox = createAsyncThunk<
     const token = thunkAPI.getState().auth.accessUser?.accessToken as string;
     const safeToken = token || "";
     return await chatServices.getInboxes(safeToken);
+  } catch (error: any) {
+    const message = error.response;
+
+    return thunkAPI.rejectWithValue(message);
+  }
+});
+
+export const getInboxById = createAsyncThunk<
+  InboxType,
+  { inboxId: string },
+  { state: RootState }
+>("chat/selected-inbox", async ({ inboxId }, thunkAPI) => {
+  try {
+    const token = thunkAPI.getState().auth.accessUser?.accessToken as string;
+    const safeToken = token || "";
+    return await chatServices.getInboxById(safeToken, inboxId);
   } catch (error: any) {
     const message = error.response;
 
@@ -108,6 +131,17 @@ export const chatSlice = createSlice({
       state.lastMessagesState[action.payload.roomId] =
         action.payload.messageToSend;
     },
+    updateUserStatus: (state, action) => {
+      if (
+        state.selectedInbox &&
+        state.selectedInbox.participant._id === action.payload.userId
+      ) {
+        state.selectedInbox.participant.status = action.payload.status;
+      }
+    },
+    resetSelectedInbox: (state) => {
+      state.selectedInbox = undefined;
+    },
   },
   extraReducers(builder) {
     builder
@@ -134,12 +168,27 @@ export const chatSlice = createSlice({
       .addCase(getInboxChatHistory.fulfilled, (state, action) => {
         state.status = "idle";
         state.messages = action.payload;
+      })
+
+      .addCase(getInboxById.rejected, (state, action) => {
+        state.status = "failed";
+        state.message = action.payload as string;
+      })
+      .addCase(getInboxById.fulfilled, (state, action) => {
+        state.status = "idle";
+        state.selectedInbox = action.payload;
       });
   },
 });
 
 export const chat = (state: RootState) => state.chat;
 
-export const { reset, addNewMessage, updateMessageStatus, addLastMessage } =
-  chatSlice.actions;
+export const {
+  reset,
+  addNewMessage,
+  updateMessageStatus,
+  resetSelectedInbox,
+  updateUserStatus,
+  addLastMessage,
+} = chatSlice.actions;
 export default chatSlice.reducer;

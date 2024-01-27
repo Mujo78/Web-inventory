@@ -13,10 +13,6 @@ import {
 } from "../../features/chat/chatSlice";
 import { useAppDispatch } from "../../app/hooks";
 
-type Props = {
-  isTyping: boolean;
-};
-
 const ChatMessages = () => {
   const [isTyping, setIsTyping] = useState<boolean>(false);
   const dispatch = useAppDispatch();
@@ -39,11 +35,11 @@ const ChatMessages = () => {
       dispatch(updateMessageStatus(data));
     });
 
-    socket.on("userTyping", () => {
-      setIsTyping(true);
+    socket.on("userTyping", (data) => {
+      if (data === accessUser?.id) setIsTyping(true);
     });
-    socket.on("userStopedTyping", () => {
-      setIsTyping(false);
+    socket.on("userStopedTyping", (data) => {
+      if (data === accessUser?.id) setIsTyping(false);
     });
 
     return () => {
