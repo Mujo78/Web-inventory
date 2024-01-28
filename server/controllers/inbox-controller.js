@@ -59,16 +59,22 @@ const deleteInboxWithPerson = asyncHandler(async (req, res) => {
       await Inbox.findByIdAndDelete(inbox._id);
     }
 
-    return res.status(200).json("Successfully deleted!");
+    return res.status(200).json(inbox._id);
   }
 
-  return res.status(400).json("There was an error, please try again latter!");
+  return res
+    .status(400)
+    .json({ message: "There was an error, please try again latter!" });
 });
 
 const getInboxById = asyncHandler(async (req, res) => {
   const userId = req.user.id;
   const inbox = await Inbox.findOne({
-    $and: [{ _id: req.params.inboxId }, { participants: { $in: [userId] } }],
+    $and: [
+      { _id: req.params.inboxId },
+      { participants: { $in: [userId] } },
+      { deletedBy: { $ne: userId } },
+    ],
   }).populate({
     path: "participants",
     select: "_id username status",
@@ -81,7 +87,7 @@ const getInboxById = asyncHandler(async (req, res) => {
     onePart = inbox.participants.find((el) => el._id.toString() !== userId);
   }
 
-  if (onePart) {
+  if (onePart && inbox) {
     resObj._id = inbox._id;
     resObj.deletedBy = inbox.deletedBy;
     resObj.participant = onePart;
@@ -91,7 +97,7 @@ const getInboxById = asyncHandler(async (req, res) => {
 
   return res
     .status(400)
-    .json({ message: "There was an error, please try agian latter" });
+    .json({ message: "There was an error, please try again latter" });
 });
 
 module.exports = {

@@ -1,6 +1,6 @@
 import { Button, TextInput } from "flowbite-react";
 import React, { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
 type Props = {
   children?: React.ReactNode;
@@ -16,6 +16,16 @@ const SearchHeader: React.FC<Props> = ({
   const navigate = useNavigate();
   const location = useLocation().pathname;
   const [search, setSearch] = useState<string>("");
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const deleteSearchParam = () => {
+    if (searchParams.has("searchQuery")) {
+      searchParams.delete("searchQuery");
+      setSearch("");
+      if (searchParams.has("page")) searchParams.set("page", "1");
+      setSearchParams(searchParams);
+    }
+  };
 
   const onChangeSearch = (e: React.FormEvent<HTMLInputElement>) => {
     setSearch(e.currentTarget.value);
@@ -44,6 +54,16 @@ const SearchHeader: React.FC<Props> = ({
         <Button size="md" color="success" type="submit">
           Search
         </Button>
+        {searchParams.has("searchQuery") && (
+          <Button
+            size="md"
+            type="button"
+            color="failure"
+            onClick={deleteSearchParam}
+          >
+            Clear
+          </Button>
+        )}
       </form>
       {children}
     </header>

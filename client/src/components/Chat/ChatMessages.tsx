@@ -12,6 +12,7 @@ import {
   updateMessageStatus,
 } from "../../features/chat/chatSlice";
 import { useAppDispatch } from "../../app/hooks";
+import TypingDots from "../UI/TypingDots";
 
 const ChatMessages = () => {
   const [isTyping, setIsTyping] = useState<boolean>(false);
@@ -36,10 +37,10 @@ const ChatMessages = () => {
     });
 
     socket.on("userTyping", (data) => {
-      if (data === accessUser?.id) setIsTyping(true);
+      if (data !== accessUser?.id) setIsTyping(true);
     });
-    socket.on("userStopedTyping", (data) => {
-      if (data === accessUser?.id) setIsTyping(false);
+    socket.on("userStopedTyping", () => {
+      setIsTyping(false);
     });
 
     return () => {
@@ -51,7 +52,7 @@ const ChatMessages = () => {
   return (
     <>
       <div className="transition-all duration-300 w-full px-3 py-3 flex flex-col gap-2">
-        {status === "start" ? (
+        {status === "start" || status === "loading" ? (
           <CustomSpinner />
         ) : status === "failed" ? (
           <p>{message}</p>
@@ -69,7 +70,7 @@ const ChatMessages = () => {
                   isRead={value.isRead}
                 />
               ))}
-            {isTyping && <p>Typing...</p>}
+            {isTyping && <TypingDots />}
           </>
         )}
       </div>

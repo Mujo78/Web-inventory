@@ -30,10 +30,25 @@ const getInboxById = async (token: string, inboxId: string) => {
   return res.data;
 };
 
+const deleteInboxWithPerson = async (token: string, inboxId: string) => {
+  const res = await axios.patch(
+    `/api/delete-inbox/${inboxId}`,
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return res.data;
+};
+
 const chatServices = {
   getInboxes,
   getInboxChat,
   getInboxById,
+  deleteInboxWithPerson,
 };
 
 export default chatServices;

@@ -67,7 +67,7 @@ export const getMyInbox = createAsyncThunk<
     const safeToken = token || "";
     return await chatServices.getInboxes(safeToken);
   } catch (error: any) {
-    const message = error.response;
+    const message = error.response.data.message;
 
     return thunkAPI.rejectWithValue(message);
   }
@@ -83,7 +83,7 @@ export const getInboxById = createAsyncThunk<
     const safeToken = token || "";
     return await chatServices.getInboxById(safeToken, inboxId);
   } catch (error: any) {
-    const message = error.response;
+    const message = error.response.data.message;
 
     return thunkAPI.rejectWithValue(message);
   }
@@ -99,7 +99,23 @@ export const getInboxChatHistory = createAsyncThunk<
     const safeToken = token || "";
     return await chatServices.getInboxChat(safeToken, inboxId);
   } catch (error: any) {
-    const message = error.response;
+    const message = error.response.data.message;
+
+    return thunkAPI.rejectWithValue(message);
+  }
+});
+
+export const deleteInboxWithPerson = createAsyncThunk<
+  undefined,
+  { inboxId: string },
+  { state: RootState }
+>("chat/delete-inbox", async ({ inboxId }, thunkAPI) => {
+  try {
+    const token = thunkAPI.getState().auth.accessUser?.accessToken as string;
+    const safeToken = token || "";
+    return await chatServices.deleteInboxWithPerson(safeToken, inboxId);
+  } catch (error: any) {
+    const message = error.response.data.message;
 
     return thunkAPI.rejectWithValue(message);
   }
@@ -117,12 +133,21 @@ export const chatSlice = createSlice({
       state.messages = [...state.messages, action.payload];
     },
     updateMessageStatus: (state, action) => {
-      if (state.lastMessagesState[action.payload]) {
-        state.lastMessagesState[action.payload].isRead = true;
+      console.log("Payload:", action.payload);
+      if (
+        !state.lastMessagesState[action.payload.inboxId].isRead &&
+        state.lastMessagesState[action.payload.inboxId].senderId ===
+          action.payload.userId
+      ) {
+        state.lastMessagesState[action.payload.inboxId].isRead = true;
       }
 
       state.messages.forEach((m) => {
-        if (m.inboxId === action.payload && !m.isRead) {
+        if (
+          m.inboxId === action.payload.inboxId &&
+          !m.isRead &&
+          m.senderId === action.payload.userId
+        ) {
           m.isRead = true;
         }
       });
@@ -177,6 +202,17 @@ export const chatSlice = createSlice({
       .addCase(getInboxById.fulfilled, (state, action) => {
         state.status = "idle";
         state.selectedInbox = action.payload;
+      })
+
+      .addCase(deleteInboxWithPerson.rejected, (state, action) => {
+        state.status = "failed";
+        state.message = action.payload as string;
+      })
+      .addCase(deleteInboxWithPerson.fulfilled, (state, action) => {
+        state.status = "idle";
+        state.selectedInbox = undefined;
+
+        state.inbox = state.inbox.filter((m) => m._id !== action.payload);
       });
   },
 });

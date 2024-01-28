@@ -32,6 +32,8 @@ const Messages = () => {
           <CustomSpinner />
         ) : inbox && inbox.length > 0 ? (
           inbox.map((m) => <PersonMessage key={m._id} {...m} />)
+        ) : inbox.length === 0 ? (
+          <p className="mx-auto mt-12">No data available</p>
         ) : (
           status === "failed" && <p>{message}</p>
         )}

@@ -21,7 +21,10 @@ const PersonMessage: React.FC<InboxType> = ({ participant, _id: inboxId }) => {
   const { _id, status, username } = participant;
   const [userStatus, setUserStatus] = useState<StatusType>(status);
   const [newMessage, setNewMessage] = useState<boolean>(
-    lastMessagesState[inboxId]?.isRead ?? false
+    !lastMessagesState[inboxId]?.isRead &&
+      lastMessagesState[inboxId].senderId === _id
+      ? true
+      : false
   );
   const navigate = useNavigate();
   const locationPathname = useLocation().pathname;
@@ -31,9 +34,9 @@ const PersonMessage: React.FC<InboxType> = ({ participant, _id: inboxId }) => {
   useEffect(() => {
     if (inboxId !== undefined) {
       socket.emit("joinRoom", { inboxId });
-      dispatch(updateMessageStatus(inboxId));
+      dispatch(updateMessageStatus({ inboxId, userId: _id }));
     }
-  }, [dispatch, inboxId]);
+  }, [dispatch, inboxId, _id]);
 
   useEffect(() => {
     socket.on("updateUserStatus", ({ userId, status }) => {
@@ -43,20 +46,19 @@ const PersonMessage: React.FC<InboxType> = ({ participant, _id: inboxId }) => {
       }
     });
 
-    return () => {
-      socket.off("updateUserStatus");
-    };
-  }, [status, _id, dispatch, inboxId]);
-
-  useEffect(() => {
     socket.on("lastMessageHere", ({ messageToSend, roomId }) => {
       dispatch(addLastMessage({ messageToSend, roomId }));
+      console.log(messageToSend);
+      if (messageToSend.isRead && _id !== messageToSend.senderId) {
+        setNewMessage(false);
+      }
     });
 
     return () => {
+      socket.off("updateUserStatus");
       socket.off("lastMessageHere");
     };
-  }, [dispatch]);
+  }, [status, _id, dispatch, inboxId]);
 
   const sendMessageTo = () => {
     if (roomId !== inboxId) {
@@ -65,14 +67,17 @@ const PersonMessage: React.FC<InboxType> = ({ participant, _id: inboxId }) => {
         locationPathname.indexOf("/t") + 2
       );
       socket.emit("joinRoom", { inboxId });
+      dispatch(updateMessageStatus({ inboxId, userId: _id }));
       if (!lastMessagesState[inboxId]?.isRead) {
-        setNewMessage(false);
-      } else {
         setNewMessage(true);
+      } else {
+        setNewMessage(false);
       }
       navigate(`${baseLocationPath}/${inboxId}`);
     }
   };
+
+  console.log(lastMessagesState);
 
   return (
     <div
@@ -80,7 +85,7 @@ const PersonMessage: React.FC<InboxType> = ({ participant, _id: inboxId }) => {
       className={`${
         roomId === inboxId
           ? "bg-green-100 hover:bg-green-200"
-          : newMessage
+          : newMessage && roomId === inboxId
           ? "bg-gray-200 hover:bg-gray-300"
           : "bg-white"
       } border-y flex items-center gap-6 p-3 transition-all duration-300 cursor-pointer`}

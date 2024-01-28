@@ -4,10 +4,15 @@ import { TbDots } from "react-icons/tb";
 import { LuSendHorizonal } from "react-icons/lu";
 import socket from "../../socket";
 import ChatMessages from "./ChatMessages";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { formatUserName } from "../../helpers/UserSideFunctions";
 import { useSelector } from "react-redux";
-import { chat, getInboxById } from "../../features/chat/chatSlice";
+import {
+  chat,
+  deleteInboxWithPerson,
+  getInboxById,
+  resetSelectedInbox,
+} from "../../features/chat/chatSlice";
 import CustomSpinner from "../UI/CustomSpinner";
 import { useAppDispatch } from "../../app/hooks";
 
@@ -15,6 +20,7 @@ export type StatusType = "away" | "busy" | "offline" | "online" | undefined;
 
 const Chat = () => {
   const { inboxId } = useParams();
+  const navigate = useNavigate();
   const [message, setMessage] = useState<string>("");
   const { selectedInbox, message: infoMessage, status } = useSelector(chat);
   const dispatch = useAppDispatch();
@@ -23,6 +29,10 @@ const Chat = () => {
     if (inboxId) {
       dispatch(getInboxById({ inboxId }));
     }
+
+    return () => {
+      dispatch(resetSelectedInbox());
+    };
   }, [dispatch, inboxId]);
 
   const onChange = (e: React.FormEvent<HTMLInputElement>) => {
@@ -44,7 +54,11 @@ const Chat = () => {
   };
 
   const deleteChat = () => {
-    console.log("object");
+    if (inboxId) {
+      dispatch(deleteInboxWithPerson({ inboxId })).then(() => {
+        navigate(".");
+      });
+    }
   };
 
   useEffect(() => {
@@ -113,8 +127,10 @@ const Chat = () => {
             </form>
           </footer>
         </div>
+      ) : status !== "failed" && !selectedInbox ? (
+        <CustomSpinner />
       ) : (
-        status === "failed" && <p>{infoMessage}</p>
+        status === "failed" && <p className="ml-12 mt-12">{infoMessage}</p>
       )}
     </>
   );

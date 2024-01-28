@@ -115,8 +115,7 @@ module.exports = function (io) {
     });
 
     socket.on("stopTyping", (room) => {
-      const userId = socket.handshake.auth.authId;
-      socket.in(room).emit("userStopedTyping", userId);
+      socket.in(room).emit("userStopedTyping");
     });
 
     socket.on("disconnect", async () => {
