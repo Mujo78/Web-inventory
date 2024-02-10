@@ -58,10 +58,11 @@ const DashSidebar: React.FC = () => {
               to="dashboard"
             >
               <Avatar
-                alt="s"
-                size="lg"
+                alt="Company logo"
+                size="xxl"
+                className="w-48 h-28"
                 rounded
-                img="./assets/company_logo.jpg"
+                img="./logo.png"
               />
             </Sidebar.Item>
           </Sidebar.ItemGroup>
